@@ -1,131 +1,65 @@
-
-export function analyzeHtml(source) {
-  const findings = [];
-
-  const add = (severity, message) => {
-    findings.push({ severity, message });
-  };
-
-  const lines = source.length
-    ? source.split(/\r\n|\r|\n/).length
-    : 0;
-
-  if (!source.trim()) {
-    add("error", "The selected file is empty.");
-    return {
-      lines,
-      elements: 0,
-      findings,
-      scripts: 0,
-      styles: 0
-    };
-  }
-
-  if (!/^\uFEFF?\s*<!doctype\s+html\b/i.test(source)) {
-    add("warning", "HTML doctype is missing or not at the beginning.");
-  }
-
-  if (source.charCodeAt(0) === 0xFEFF) {
-    add("info", "A leading byte-order mark (BOM) was found.");
-  }
-
-  if (source.length > 2_000_000) {
-    add("warning", "Large HTML file: review performance before processing.");
-  }
-
-  if (/<!--(?![\s\S]*?-->)/.test(source)) {
-    add("warning", "A possible unclosed HTML comment was detected.");
-  }
-
-  if (/\{\{[\s\S]*?\}\}|<%[\s\S]*?%>|\$\{[\s\S]*?\}/.test(source)) {
-    add(
-      "info",
-      "Template markers were detected. Preserve them during refactoring."
-    );
-  }
-
-  let doc;
-
-  try {
-    doc = new DOMParser().parseFromString(source, "text/html");
-  } catch {
-    add("error", "The browser could not parse the HTML.");
-    return {
-      lines,
-      elements: 0,
-      findings,
-      scripts: 0,
-      styles: 0
-    };
-  }
-
-  const elements = [...doc.querySelectorAll("*")];
-  const idCounts = new Map();
-
-  for (const element of elements) {
-    const id = element.getAttribute("id");
-
-    if (id) {
-      idCounts.set(id, (idCounts.get(id) || 0) + 1);
-    }
-
-    for (const attribute of [...element.attributes]) {
-      const name = attribute.name.toLowerCase();
-      const value = attribute.value.trim();
-
-      if (/^on[a-z]+$/i.test(name)) {
-        add(
-          "warning",
-          `Inline event handler found: ${name} on <${element.localName}>.`
-        );
-      }
-
-      if (
-        ["href", "src", "action", "formaction", "xlink:href"].includes(name) &&
-        /^\s*javascript\s*:/i.test(value)
-      ) {
-        add(
-          "error",
-          `Potentially unsafe javascript: URL in ${name} on <${element.localName}>.`
-        );
-      }
-    }
-  }
-
-  for (const [id, count] of idCounts) {
-    if (count > 1) {
-      add("warning", `Duplicate id="${id}" found ${count} times.`);
-    }
-  }
-
-  const scripts = doc.querySelectorAll("script").length;
-  const styles = doc.querySelectorAll("style, link[rel~='stylesheet']").length;
-
-  if (scripts > 0) {
-    add(
-      "info",
-      `${scripts} script element(s) found. Review before changing script content.`
-    );
-  }
-
-  if (styles > 0) {
-    add("info", `${styles} stylesheet reference(s) or style block(s) found.`);
-  }
-
-  if (findings.length === 0) {
-    add("info", "No issues were detected by these basic checks.");
-  }
-
-  add(
-    "info",
-    "This is a heuristic report, not a complete HTML validator or security audit."
-  );
-
-  return {
-    lines,
-    elements: elements.length,
-    findings,
-    scripts,
-    styles
-  };
-}
+--- a/Refactoring-Model/index.html
++++ b/Refactoring-Model/index.html
+@@
+-      for(const m of s.matchAll(/\son[a-z]+\s*=\s*(["'])/gi))addFinding("warning",path,`Inline event handler ${m[0].trim().split("=")[0]} found.`,"high");
++      const handlerCounts=new Map();
++      for(const m of s.matchAll(/\son([a-z]+)\s*=\s*(["'])/gi)){const n=m[1].toLowerCase();handlerCounts.set(n,(handlerCounts.get(n)||0)+1)}
++      for(const [n,c] of handlerCounts)addFinding("info",path,"Inline "+n+" handler: "+c+" occurrence(s); review context before treating this as a defect.","low");
+@@
+-        if(!knownPaths.has(resolved) && !ref.startsWith("/"))addFinding("warning",path,`Referenced local file not loaded: ${ref}`,"low");
++        if(!knownPaths.has(resolved) && !ref.startsWith("/"))addFinding("info",path,`Local reference not included in uploaded files: ${ref}. This does not prove it is missing from the deployed site.`,"low");
+@@
+-  const rows=findings.map(f=>`<tr><td class="${f.level==="error"?"bad":f.level==="warning"?"warn":"muted"}">${safeText(f.level.toUpperCase())}</td><td>${safeText(f.path)}</td><td>${safeText(f.message)}</td><td>${safeText(f.confidence)}</td></tr>`).join("");
++  auditMatchedCss(entries);
++  const rows=findings.map(f=>`<tr><td class="${f.level==="error"?"bad":f.level==="warning"?"warn":"muted"}">${safeText(f.level.toUpperCase())}</td><td>${safeText(f.path)}</td><td>${safeText(f.message)}</td><td>${safeText(f.confidence)}</td></tr>`).join("");
+@@
+-function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
++function auditMatchedCss(entries){
++  const htmlEntries=entries.filter(([p])=>kind(p)==="html");
++  const cssFiles=new Map(entries.filter(([p])=>kind(p)==="css").map(([p,f])=>[p.replace(/\\/g,"/"),f.content]));
++  let reported=0;
++  for(const [htmlPath,file] of htmlEntries){
++    let doc;try{doc=new DOMParser().parseFromString(file.content,"text/html")}catch(e){continue}
++    const sources=[];
++    for(const node of [...doc.querySelectorAll("link[rel~='stylesheet'][href],style")]){
++      if(node.tagName.toLowerCase()==="style"){sources.push({name:htmlPath+" inline <style>",text:node.textContent||""});continue}
++      const href=(node.getAttribute("href")||"").split(/[?#]/)[0];
++      if(/^(https?:|\/\/|data:)/i.test(href))continue;
++      const resolved=resolvePath(htmlPath,href);
++      if(cssFiles.has(resolved))sources.push({name:resolved,text:cssFiles.get(resolved)});
++    }
++    if(!sources.length)continue;
++    const candidates=new Map();let order=0;
++    for(const source of sources){
++      const style=doc.createElement("style");style.textContent=source.text;doc.head.appendChild(style);
++      let rules=[];try{rules=[...style.sheet.cssRules]}catch(e){}
++      function walk(list,condition){
++        for(const rule of list){
++          if(rule.type===1){
++            let nodes=[];try{nodes=[...doc.querySelectorAll(rule.selectorText)]}catch(e){order++;continue}
++            for(const el of nodes){
++              const label=el.tagName.toLowerCase()+(el.id?"#"+el.id:"")+[...el.classList].map(c=>"."+c).join("");
++              for(let i=0;i<rule.style.length;i++){
++                const prop=rule.style[i],value=rule.style.getPropertyValue(prop).trim(),important=rule.style.getPropertyPriority(prop)==="important";
++                const key=label+"|"+prop,arr=candidates.get(key)||[];
++                arr.push({selector:rule.selectorText,prop,value,important,source:source.name,order:order,condition:condition});candidates.set(key,arr);
++              }
++            }
++          }else if(rule.cssRules)walk([...rule.cssRules],condition?condition+"; "+(rule.conditionText||rule.name):(rule.conditionText||rule.name||"group rule"));
++          order++;
++        }
++      }
++      walk(rules,"");style.remove();
++    }
++    for(const [key,arr] of candidates){
++      if(reported>=60)break;
++      if([...new Set(arr.map(x=>x.value+(x.important?" !important":"")))].length<2)continue;
++      const important=arr.filter(x=>x.important),pool=important.length?important:arr,last=pool[pool.length-1],split=key.split("|");
++      addFinding("info",htmlPath,"Matched CSS for "+split[0]+" → "+split[1]+": "+arr.map(x=>x.selector+" { "+x.prop+": "+x.value+(x.important?" !important":"")+" } ["+x.source+(x.condition?" / "+x.condition:"")+"]").join(" | ")+". Likely source-order candidate: "+last.value+" from "+last.selector+". This is not a computed-style guarantee: specificity, cascade layers, media state, inline styles and runtime changes may alter the winner.","medium");
++      reported++;
++    }
++  }
++  if(reported)addFinding("info","CSS audit","Reported "+reported+" matched element/property conflicts. Use browser DevTools → Computed to confirm the winning declaration for the visible element.","medium");
++}
++function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+*** End Patch
