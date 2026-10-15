@@ -2,119 +2,472 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101827">
-  <title>Template V2 Refactor Model</title>
-  <link rel="stylesheet" href="./src/styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Universal Refactoring Workbench</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1018;--panel:#141d29;--panel2:#0e1621;--line:#2b3b50;--text:#edf4ff;--muted:#a6b6ca;--blue:#80c5ff;--green:#83e0b1;--yellow:#ffd27a;--red:#ff9292}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px max(16px,calc((100vw - 1200px)/2));background:#101a27;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(1.35rem,4vw,2rem);margin:0 0 5px}
+h2{font-size:1.05rem;margin:0 0 12px}
+p{margin:7px 0}
+small,.muted{color:var(--muted)}
+main{max-width:1200px;margin:auto;padding:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:14px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.row>*{flex:1;min-width:130px}
+label{display:block;font-weight:650;margin:8px 0 4px}
+input,select,textarea,button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;width:100%}
+textarea{min-height:180px;resize:vertical;direction:ltr;text-align:left;font:13px/1.5 ui-monospace,Consolas,monospace;tab-size:2}
+button{background:#1b3853;border-color:#365c7e;font-weight:700;cursor:pointer}
+button:hover{filter:brightness(1.15)}
+button:disabled{opacity:.55;cursor:wait}
+pre,code{direction:ltr;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere}
+pre{padding:11px;background:#0a111a;border:1px solid var(--line);border-radius:8px;max-height:420px;overflow:auto}
+.badge{display:inline-block;border:1px solid var(--line);padding:2px 8px;border-radius:99px;font-size:.8rem;margin:2px}
+.good{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+th{color:var(--muted)}
+.scroll{overflow:auto}
+#fileList{padding-left:20px}
+#fileList li{margin:3px 0;overflow-wrap:anywhere}
+#preview{width:100%;height:420px;background:white;border:1px solid var(--line);border-radius:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0}
+.stat{background:var(--panel2);border:1px solid var(--line);padding:10px;border-radius:9px}
+.stat strong{display:block;font-size:1.35rem}
+footer{padding:12px;color:var(--muted);font-size:.85rem}
+</style>
 </head>
 <body>
-  <main class="app">
-    <header class="header">
-      <p class="eyebrow">LOCAL HTML TOOL · V0.1.0</p>
-      <h1>Template V2 Refactor Model</h1>
-      <p class="subtitle">
-        Inspect HTML, review possible issues and create a separate cleaned copy.
-        Your source file is never overwritten.
-      </p>
-    </header>
+<header>
+<h1>Universal Refactoring Workbench</h1>
+<p class="muted">Local project analysis · Dependency inspection · Runtime observation · Conservative refactoring</p>
+<div>
+<span class="badge">Single HTML file</span>
+<span class="badge">No mandatory API</span>
+<span class="badge">Mobile-friendly</span>
+</div>
+</header>
 
-    <section class="panel">
-      <h2>1. Select an HTML file</h2>
-      <label class="file-picker" for="fileInput">
-        <span class="file-icon">＋</span>
-        <span>
-          <strong>Choose HTML file</strong>
-          <small>HTML or HTM · Maximum 20 MB</small>
-        </span>
-      </label>
-      <input id="fileInput" type="file" accept=".html,.htm,text/html">
+<main>
+<section class="card">
+<h2>1. Load a project</h2>
+<p class="muted">Select multiple source files from the same project. Files are processed in your browser. For best results, preserve their relative paths where possible.</p>
+<label for="files">Project files</label>
+<input id="files" type="file" multiple accept=".html,.htm,.css,.js,.mjs,.cjs,.jsx,.ts,.tsx,.json,.py,.java,.kt,.kts,.xml,.md,.txt,.yml,.yaml,.php,.rb,.go,.rs,.sql,.sh,.vue,.svelte">
+<div class="row">
+<button id="analyze">Analyze project</button>
+<button id="clear">Clear project</button>
+<button id="exportReport">Download report</button>
+</div>
+<div class="stats" id="stats"></div>
+<ul id="fileList" class="muted"></ul>
+</section>
 
-      <div id="fileInfo" class="file-info">No file selected.</div>
-      <div id="status" class="status" role="status" aria-live="polite">
-        Ready.
-      </div>
-    </section>
+<section class="card">
+<h2>2. Project report</h2>
+<p class="muted">Findings are clues, not automatic proof that code is unused or defective.</p>
+<div class="scroll">
+<table>
+<thead><tr><th>Severity</th><th>File</th><th>Finding</th><th>Confidence</th></tr></thead>
+<tbody id="findings"><tr><td colspan="4">Load files and run analysis.</td></tr></tbody>
+</table>
+</div>
+</section>
 
-    <section class="panel">
-      <h2>2. Analysis options</h2>
+<section class="card">
+<h2>3. Inspect or edit a file</h2>
+<div class="row">
+<div><label for="selectedFile">Project file</label><select id="selectedFile"><option value="">No files loaded</option></select></div>
+<div><label for="mode">Conservative operation</label>
+<select id="mode">
+<option value="inspect">Inspect only</option>
+<option value="bom">Remove leading BOM</option>
+<option value="eol">Normalize line endings to LF</option>
+<option value="trim">Trim trailing whitespace (review carefully)</option>
+<option value="finalnewline">Ensure final newline</option>
+</select></div>
+</div>
+<label for="editor">Source</label>
+<textarea id="editor" spellcheck="false" placeholder="Select a project file or paste code here."></textarea>
+<div class="row">
+<button id="apply">Apply selected operation</button>
+<button id="compare">Compare before / after</button>
+<button id="downloadFile">Download edited file</button>
+</div>
+<div id="editStatus" class="muted"></div>
+<h3>Comparison</h3>
+<pre id="comparison">No comparison yet.</pre>
+</section>
 
-      <label class="option">
-        <input id="removeBom" type="checkbox" checked>
-        <span>
-          <strong>Remove leading BOM</strong>
-          <small>Remove a byte-order mark at the start of the file.</small>
-        </span>
-      </label>
+<section class="card">
+<h2>4. HTML runtime observation</h2>
+<p class="muted">This runs the selected HTML in a sandboxed preview. Network access and some browser features are blocked. Runtime logs do not prove every function or branch was tested.</p>
+<div class="row">
+<button id="runPreview">Run selected HTML in sandbox</button>
+<button id="stopPreview">Stop preview</button>
+</div>
+<div id="runtimeStatus" class="muted">Preview has not run.</div>
+<iframe id="preview" title="Sandboxed HTML preview" sandbox="allow-scripts"></iframe>
+<h3>Runtime events</h3>
+<pre id="runtimeLog">No runtime events yet.</pre>
+</section>
 
-      <label class="option">
-        <input id="normalizeLines" type="checkbox">
-        <span>
-          <strong>Normalize line endings</strong>
-          <small>Convert CRLF and CR line endings to LF.</small>
-        </span>
-      </label>
+<section class="card">
+<h2>5. Local AI API (optional)</h2>
+<p class="muted">Optional providers require your own API key and may have free-tier quotas, CORS restrictions or changing terms. Code sent to an API leaves this browser. Do not send secrets or private source code.</p>
+<label for="provider">Provider</label>
+<select id="provider">
+<option value="none">Local-only — no API</option>
+<option value="gemini">Google Gemini API</option>
+<option value="openrouter">OpenRouter API</option>
+<option value="groq">Groq API</option>
+</select>
+<label for="apiKey">API key</label>
+<input id="apiKey" type="password" autocomplete="off" placeholder="Enter your own key; not stored by this page">
+<label for="model">Model ID (optional)</label>
+<input id="model" placeholder="Leave blank for default">
+<label for="aiTask">Request</label>
+<select id="aiTask">
+<option value="review">Review and suggest changes</option>
+<option value="refactor">Refactor while preserving behavior</option>
+<option value="explain">Explain possible unused code</option>
+</select>
+<button id="askAI">Ask selected AI provider</button>
+<label for="aiResult">AI proposal</label>
+<textarea id="aiResult" spellcheck="false" placeholder="AI response appears here. Review it before applying."></textarea>
+<button id="useAI">Copy proposal to editor</button>
+</section>
 
-      <button id="analyzeBtn" class="button secondary" disabled>
-        Analyze HTML
-      </button>
-      <button id="cleanBtn" class="button primary" disabled>
-        Build cleaned copy
-      </button>
-    </section>
+<section class="card">
+<h2>6. Limitations and safety</h2>
+<ul>
+<li>Dead-code detection is approximate. A symbol not found by text search may still be used through reflection, dynamic imports, templates, dependency injection, framework conventions or generated code.</li>
+<li>Runtime observation covers only the tested path and browser environment. Unexecuted code is not automatically useless.</li>
+<li>Python, Java, Kotlin, TypeScript and other languages receive heuristic source inspection here, not full compiler-grade parsing.</li>
+<li>This page does not bundle every refactoring framework or AI assistant. It provides a common local workbench and optional API adapters.</li>
+<li>Keep backups and run the project's own tests/build before accepting a refactor.</li>
+</ul>
+</section>
+<footer>Universal Refactoring Workbench · Review all proposed changes before using them in production.</footer>
+</main>
 
-    <section class="panel">
-      <h2>3. Analysis report</h2>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const project = new Map();
+const findings = [];
+let originalText = "";
+let editedText = "";
+let activePath = "";
+let objectUrls = [];
+let runtimeEvents = [];
+let runtimeTimer = null;
 
-      <div class="metrics">
-        <div class="metric">
-          <span id="lineCount">—</span>
-          <small>Lines</small>
-        </div>
-        <div class="metric">
-          <span id="elementCount">—</span>
-          <small>Elements</small>
-        </div>
-        <div class="metric">
-          <span id="findingCount">—</span>
-          <small>Findings</small>
-        </div>
-      </div>
+const TEXT_EXT = /\.(html?|css|m?js|cjs|jsx?|tsx?|json|py|java|kts?|xml|md|txt|ya?ml|php|rb|go|rs|sql|sh|vue|svelte)$/i;
 
-      <ul id="findings" class="findings">
-        <li>Select a file to begin.</li>
-      </ul>
-    </section>
+function ext(path) {
+  const m = path.match(/\.([^.\/]+)$/);
+  return m ? m[1].toLowerCase() : "";
+}
+function kind(path) {
+  const e = ext(path);
+  if (["html","htm"].includes(e)) return "html";
+  if (e==="css") return "css";
+  if (["js","mjs","cjs","jsx"].includes(e)) return "javascript";
+  if (["ts","tsx"].includes(e)) return "typescript";
+  if (e==="py") return "python";
+  if (["java","kt","kts"].includes(e)) return "jvm";
+  if (e==="json") return "json";
+  return "other";
+}
+function addFinding(level,path,message,confidence="medium") {
+  findings.push({level,path,message,confidence});
+}
+function safeText(s) {
+  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function updateStats() {
+  const list=[...project.entries()];
+  const bytes=list.reduce((n,[,f])=>n+new Blob([f.content]).size,0);
+  const countTypes=type=>list.filter(([p])=>kind(p)===type).length;
+  $("stats").innerHTML=[
+    ["Files",list.length],["Size",bytes<1024*1024?(bytes/1024).toFixed(1)+" KB":(bytes/1024/1024).toFixed(2)+" MB"],
+    ["HTML",countTypes("html")],["CSS",countTypes("css")],["JavaScript",countTypes("javascript")],["Other",list.length-countTypes("html")-countTypes("css")-countTypes("javascript")]
+  ].map(([k,v])=>`<div class="stat"><span class="muted">${safeText(k)}</span><strong>${safeText(v)}</strong></div>`).join("");
+  $("fileList").innerHTML=list.map(([p])=>`<li>${safeText(p)}</li>`).join("");
+  const select=$("selectedFile"),prev=select.value;
+  select.innerHTML=list.map(([p])=>`<option value="${safeText(p)}">${safeText(p)}</option>`).join("");
+  if (project.has(prev)) select.value=prev;
+  else if (list.length) select.value=list[0][0];
+  if (!list.length) select.innerHTML='<option value="">No files loaded</option>';
+  loadSelected();
+}
+function loadSelected() {
+  const p=$("selectedFile").value;
+  if (!p || !project.has(p)) {activePath="";originalText="";editedText="";$("editor").value="";return;}
+  activePath=p; originalText=project.get(p).content; editedText=originalText;
+  $("editor").value=originalText;$("editStatus").textContent="Loaded "+p;
+}
+$("files").addEventListener("change",async e=>{
+  for(const f of [...e.target.files]){
+    if(f.size>15*1024*1024){alert(f.name+" is larger than the 15 MB per-file limit and was skipped.");continue;}
+    if(!TEXT_EXT.test(f.name))continue;
+    const content=await f.text();
+    // Browsers may expose only the basename. Use webkitRelativePath when directory upload is supported.
+    const path=f.webkitRelativePath||f.name;
+    project.set(path,{content,name:f.name,size:f.size});
+  }
+  updateStats();
+});
+$("selectedFile").addEventListener("change",loadSelected);
+$("clear").addEventListener("click",()=>{
+  project.clear();findings.length=0;$("findings").innerHTML='<tr><td colspan="4">Load files and run analysis.</td></tr>';
+  $("files").value="";updateStats();$("comparison").textContent="No comparison yet.";
+});
+function analyzeProject() {
+  findings.length=0;
+  const entries=[...project.entries()];
+  if(!entries.length)addFinding("error","—","No project files loaded.","high");
+  const allText=entries.map(([p,f])=>"\n/*FILE:"+p+"*/\n"+f.content).join("\n");
+  const knownPaths=new Set(entries.map(([p])=>p.replace(/\\/g,"/")));
+  for(const [path,file] of entries){
+    const s=file.content, k=kind(path);
+    if(!s.trim())addFinding("warning",path,"File is empty.","high");
+    if(s.charCodeAt(0)===0xFEFF)addFinding("info",path,"Leading BOM found.","high");
+    if(s.length>2_000_000)addFinding("warning",path,"Large source file; inspect performance.","high");
+    if(k==="html"){
+      if(!/^\uFEFF?\s*<!doctype\s+html\b/i.test(s))addFinding("warning",path,"Missing or non-leading HTML doctype.","high");
+      if(s.lastIndexOf("<!--")>s.lastIndexOf("-->"))addFinding("warning",path,"Possible unclosed HTML comment.","medium");
+      const ids=[...s.matchAll(/\bid\s*=\s*(["'])(.*?)\1/gi)].map(m=>m[2]);
+      const counts=new Map();ids.forEach(id=>counts.set(id,(counts.get(id)||0)+1));
+      for(const [id,n] of counts)if(id&&n>1)addFinding("warning",path,`Duplicate id="${id}" (${n} occurrences).`,"high");
+      for(const m of s.matchAll(/\son[a-z]+\s*=\s*(["'])/gi))addFinding("warning",path,`Inline event handler ${m[0].trim().split("=")[0]} found.`,"high");
+      if(/(?:href|src|action)\s*=\s*["']\s*javascript\s*:/i.test(s))addFinding("error",path,"Potential javascript: URL found.","high");
+      for(const m of s.matchAll(/(?:src|href)\s*=\s*["']([^"'#]+)["']/gi)){
+        const ref=m[1].split(/[?#]/)[0];
+        if(/^(?:https?:|data:|blob:|\/\/|mailto:|tel:|javascript:)/i.test(ref))continue;
+        const resolved=resolvePath(path,ref);
+        if(!knownPaths.has(resolved) && !ref.startsWith("/"))addFinding("warning",path,`Referenced local file not loaded: ${ref}`,"low");
+      }
+    }
+    if(k==="css"){
+      const ids=[...s.matchAll(/#([A-Za-z_][\w-]*)/g)].map(m=>m[1]);
+      for(const id of new Set(ids)){
+        const htmlHas=entries.some(([p,f])=>kind(p)==="html" && new RegExp("\\bid\\s*=\\s*['\"]"+escapeRegExp(id)+"['\"]","i").test(f.content));
+        if(!htmlHas)addFinding("info",path,`CSS ID selector #${id} was not found in loaded HTML. It may be dynamically generated or used elsewhere.`,"low");
+      }
+      const classes=[...s.matchAll(/\.([A-Za-z_-][\w-]*)/g)].map(m=>m[1]).filter(x=>!["5s","75em"].includes(x));
+      for(const cls of new Set(classes)){
+        const htmlHas=entries.some(([p,f])=>kind(p)==="html" && new RegExp("\\bclass\\s*=\\s*['\"][^'\"]*\\b"+escapeRegExp(cls)+"\\b","i").test(f.content));
+        if(!htmlHas)addFinding("info",path,`CSS class .${cls} not found in static HTML. Dynamic use is possible.`,"low");
+      }
+    }
+    if(["javascript","typescript"].includes(k)){
+      if(/\beval\s*\(|new\s+Function\s*\(/.test(s))addFinding("warning",path,"Dynamic code execution construct found; review carefully.","high");
+      if(/\bdebugger\s*;?/.test(s))addFinding("info",path,"debugger statement found.","high");
+      const decl=/\b(?:function|class|const|let|var)\s+([A-Za-z_$][\w$]*)/g;
+      for(const m of s.matchAll(decl)){
+        const name=m[1];
+        const re=new RegExp("\\b"+escapeRegExp(name)+"\\b","g");
+        const occurrences=[...s.matchAll(re)].length;
+        const isExported=new RegExp("\\bexport\\b[^;\\n]*\\b"+escapeRegExp(name)+"\\b|\\bexport\\s*\\{[^}]*\\b"+escapeRegExp(name)+"\\b").test(s);
+        if(occurrences===1&&!isExported)addFinding("info",path,`Possible unused declaration: ${name}. Text-based estimate only.`,"low");
+      }
+      if(/\bimport\s*(?:\(|['"])/.test(s)&&/\bimport\s*\(/.test(s))addFinding("info",path,"Dynamic imports found; static dependency analysis may be incomplete.","medium");
+    }
+    if(k==="python"){
+      for(const m of s.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm)){
+        const name=m[1], re=new RegExp("\\b"+escapeRegExp(name)+"\\b","g");
+        if([...s.matchAll(re)].length===1 && !name.startsWith("__"))addFinding("info",path,`Possible unused Python function: ${name}. Imports, reflection and external calls are not resolved.`,"low");
+      }
+      if(/\beval\s*\(|\bexec\s*\(/.test(s))addFinding("warning",path,"Dynamic Python execution found; review carefully.","high");
+    }
+    if(k==="jvm"){
+      for(const m of s.matchAll(/\b(?:public|private|protected)?\s*(?:static\s+)?(?:[\w<>?,.\[\]]+\s+)+([A-Za-z_$]\w*)\s*\([^;{}]*\)\s*(?:throws\s+[\w, ]+\s*)?\{/g)){
+        const name=m[1];
+        if(["if","for","while","switch","catch","synchronized"].includes(name))continue;
+        const re=new RegExp("\\b"+escapeRegExp(name)+"\\s*\\(","g");
+        if([...s.matchAll(re)].length===1)addFinding("info",path,`Possible unreferenced method: ${name}. Framework/reflection usage may be missed.`,"low");
+      }
+    }
+    if(k==="json"){
+      try{JSON.parse(s)}catch(e){addFinding("error",path,"JSON parse error: "+e.message,"high")}
+    }
+  }
+  const rows=findings.map(f=>`<tr><td class="${f.level==="error"?"bad":f.level==="warning"?"warn":"muted"}">${safeText(f.level.toUpperCase())}</td><td>${safeText(f.path)}</td><td>${safeText(f.message)}</td><td>${safeText(f.confidence)}</td></tr>`).join("");
+  $("findings").innerHTML=rows||'<tr><td colspan="4">No findings from these basic checks.</td></tr>';
+  return {files:entries.length,findings:findings.length,generatedAt:new Date().toISOString(),items:findings};
+}
+function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+function resolvePath(from,ref){
+  const base=from.includes("/")?from.slice(0,from.lastIndexOf("/")+1):"";
+  const parts=(base+ref).split("/");
+  const out=[];
+  for(const p of parts){if(p===".." )out.pop();else if(p&&p!==".")out.push(p)}
+  return out.join("/");
+}
+$("analyze").addEventListener("click",()=>{
+  const r=analyzeProject();
+  $("editStatus").textContent=`Analysis finished: ${r.files} files, ${r.findings} findings.`;
+});
+$("exportReport").addEventListener("click",()=>{
+  const data={generatedAt:new Date().toISOString(),files:[...project.keys()],findings};
+  download(JSON.stringify(data,null,2),"refactoring-report.json","application/json");
+});
+function applyOperation(text,op){
+  if(op==="bom")return text.charCodeAt(0)===0xFEFF?text.slice(1):text;
+  if(op==="eol")return text.replace(/\r\n?/g,"\n");
+  if(op==="trim")return text.split(/\r\n|\r|\n/).map(line=>line.replace(/[ \t]+$/g,"")).join("\n");
+  if(op==="finalnewline")return text.endsWith("\n")?text:text+"\n";
+  return text;
+}
+$("apply").addEventListener("click",()=>{
+  const before=$("editor").value,op=$("mode").value;
+  if(op==="inspect"){editedText=before;$("editStatus").textContent="Inspect only: no transformation applied.";return}
+  const after=applyOperation(before,op);
+  $("editor").value=after;editedText=after;
+  if(activePath&&project.has(activePath))project.get(activePath).content=after;
+  $("editStatus").textContent=before===after?"No changes were needed.":"Operation applied. Review comparison before downloading.";
+});
+$("compare").addEventListener("click",()=>{
+  const before=originalText,after=$("editor").value;
+  if(before===after){$("comparison").textContent="No textual differences detected.";return}
+  const a=before.split(/\r\n|\r|\n/),b=after.split(/\r\n|\r|\n/);
+  const max=Math.max(a.length,b.length),out=[];
+  for(let i=0;i<max;i++){
+    if(a[i]===b[i])continue;
+    if(a[i]!==undefined)out.push("- "+(i+1)+": "+a[i]);
+    if(b[i]!==undefined)out.push("+ "+(i+1)+": "+b[i]);
+    if(out.length>500){out.push("… comparison truncated");break}
+  }
+  $("comparison").textContent=out.join("\n")||"No textual differences detected.";
+});
+$("downloadFile").addEventListener("click",()=>{
+  const name=(activePath||"source.txt").split("/").pop();
+  download($("editor").value,name.replace(/(\.[^.]+)?$/,".refactored$1"),"text/plain;charset=utf-8");
+});
+function download(text,name,type){
+  const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 
-    <section class="panel">
-      <h2>4. Output preview</h2>
-      <p class="muted">
-        Review the output before downloading. It is a separate copy.
-      </p>
+// Runtime preview: run only in an opaque-origin sandbox; block network by CSP.
+function stopPreview(){
+  if(runtimeTimer)clearTimeout(runtimeTimer);
+  runtimeTimer=null;
+  $("preview").src="about:blank";
+}
+$("stopPreview").addEventListener("click",stopPreview);
+$("runPreview").addEventListener("click",()=>{
+  stopPreview();
+  const path=$("selectedFile").value;
+  if(!path||kind(path)!=="html"){ $("runtimeStatus").textContent="Select an HTML file first.";return; }
+  runtimeEvents=[];
+  $("runtimeLog").textContent="Starting isolated preview…";
+  const raw=$("editor").value;
+  const nonce="rt_"+Math.random().toString(36).slice(2);
+  const tracker=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' blob: data:; style-src 'unsafe-inline' blob: data:; img-src data: blob:; font-src data: blob:; media-src data: blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; form-action 'none'; base-uri 'none'">
+<script>
+(function(){
+ const send=(type,detail)=>{try{parent.postMessage({__rf:${JSON.stringify(nonce)},type,detail:String(detail).slice(0,1200)},'*')}catch(e){}};
+ window.addEventListener('error',e=>send('error',(e.message||'Error')+' at '+(e.filename||'')+':'+(e.lineno||0)));
+ window.addEventListener('unhandledrejection',e=>send('promise rejection',e.reason&&e.reason.message||e.reason));
+ const oldLog=console.log,oldWarn=console.warn,oldError=console.error;
+ console.log=(...a)=>{send('console.log',a.join(' '));oldLog.apply(console,a)};
+ console.warn=(...a)=>{send('console.warn',a.join(' '));oldWarn.apply(console,a)};
+ console.error=(...a)=>{send('console.error',a.join(' '));oldError.apply(console,a)};
+ const oldAdd=EventTarget.prototype.addEventListener;
+ EventTarget.prototype.addEventListener=function(type,listener,opts){send('event listener registered',type);return oldAdd.call(this,type,listener,opts)};
+ const oldTimeout=window.setTimeout;
+ window.setTimeout=function(fn,delay,...args){send('setTimeout scheduled',delay+' ms');return oldTimeout.call(this,fn,delay,...args)};
+ const oldInterval=window.setInterval;
+ window.setInterval=function(fn,delay,...args){send('setInterval scheduled',delay+' ms');return oldInterval.call(this,fn,delay,...args)};
+ window.addEventListener('load',()=>send('load','Document load event fired'));
+ send('start','Preview JavaScript instrumentation active');
+})();
+<\/script>`;
+  // Resolve uploaded local script and stylesheet references to Blob URLs.
+  const urls=[];
+  let html=raw;
+  const base=path.includes("/")?path.slice(0,path.lastIndexOf("/")+1):"";
+  function lookup(ref){return resolvePath(path,ref)}
+  html=html.replace(/<(script|link)\b([^>]*?)\b(src|href)\s*=\s*(["'])(.*?)\4([^>]*)>/gi,(whole,tag,pre,attr,q,ref,post)=>{
+    const r=ref.split(/[?#]/)[0];
+    if(/^(?:https?:|\/\/|data:|blob:|#)/i.test(r))return whole;
+    const target=lookup(r),f=project.get(target);
+    if(!f)return whole;
+    const type=kind(target)==="javascript"?"text/javascript":kind(target)==="css"?"text/css":"text/plain";
+    const blob=URL.createObjectURL(new Blob([f.content],{type}));
+    urls.push(blob);
+    if(tag.toLowerCase()==="script")return `<script src="${blob}"><\/script>`;
+    return `<link rel="stylesheet" href="${blob}">`;
+  });
+  html=html.replace(/<head([^>]*)>/i,`<head$1>${tracker}`);
+  if(!/<head\b/i.test(html))html=tracker+html;
+  // Remove remote scripts/styles to prevent their loading from an untrusted project.
+  html=html.replace(/<script\b[^>]*\bsrc\s*=\s*["']https?:\/\/[^"']+["'][^>]*>\s*<\/script>/gi,"<!-- remote script blocked in sandbox -->");
+  html=html.replace(/<link\b[^>]*\bhref\s*=\s*["']https?:\/\/[^"']+["'][^>]*>/gi,"<!-- remote stylesheet blocked in sandbox -->");
+  objectUrls.forEach(URL.revokeObjectURL);objectUrls=urls;
+  const frame=$("preview");
+  frame.srcdoc=html;
+  $("runtimeStatus").textContent="Preview started. External network resources are blocked; local uploaded JS/CSS may load if referenced paths match.";
+  window.addEventListener("message",function handler(e){
+    if(e.source!==frame.contentWindow||!e.data||e.data.__rf!==nonce)return;
+    runtimeEvents.push({time:new Date().toLocaleTimeString(),type:e.data.type,detail:e.data.detail});
+    $("runtimeLog").textContent=runtimeEvents.slice(-250).map(x=>`[${x.time}] ${x.type}: ${x.detail}`).join("\n");
+  });
+  runtimeTimer=setTimeout(()=>{
+    $("runtimeStatus").textContent=`Observation window ended. Captured ${runtimeEvents.length} events. This is not proof that unobserved code is dead.`;
+    objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];
+  },15000);
+});
 
-      <textarea
-        id="output"
-        spellcheck="false"
-        aria-label="Cleaned HTML preview"
-        placeholder="The cleaned HTML will appear here."
-      ></textarea>
-
-      <button id="downloadBtn" class="button primary" disabled>
-        Download cleaned HTML
-      </button>
-    </section>
-
-    <footer>
-      <p>
-        <strong>Safety:</strong> Analysis is advisory. No code is executed by
-        this tool, and no file is uploaded to a server. DOMParser may repair
-        malformed markup when analyzing it, so its findings are not a
-        guarantee of valid HTML.
-      </p>
-      <p>Template V2 Refactor Model · v0.1.0</p>
-    </footer>
-  </main>
-
-  <script type="module" src="./src/app.js"></script>
+// Optional API adapters. Keys are only held in the page's input field.
+async function askProvider(provider,key,model,prompt){
+  let url,headers={"Content-Type":"application/json"},body;
+  if(provider==="gemini"){
+    const m=model||"gemini-2.5-flash";
+    url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent?key=${encodeURIComponent(key)}`;
+    body={contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1}};
+  }else if(provider==="openrouter"){
+    url="https://openrouter.ai/api/v1/chat/completions";headers.Authorization="Bearer "+key;
+    body={model:model||"meta-llama/llama-3.3-70b-instruct:free",messages:[{role:"user",content:prompt}],temperature:0.1};
+  }else if(provider==="groq"){
+    url="https://api.groq.com/openai/v1/chat/completions";headers.Authorization="Bearer "+key;
+    body={model:model||"llama-3.3-70b-versatile",messages:[{role:"user",content:prompt}],temperature:0.1};
+  }else throw new Error("Choose an API provider.");
+  const res=await fetch(url,{method:"POST",headers,body:JSON.stringify(body)});
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok)throw new Error(`HTTP ${res.status}: ${data.error?.message||data.message||"Request failed"}`);
+  if(provider==="gemini")return data.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
+  return data.choices?.[0]?.message?.content||"";
+}
+$("askAI").addEventListener("click",async()=>{
+  const provider=$("provider").value,key=$("apiKey").value.trim(),path=$("selectedFile").value;
+  if(provider==="none"){ $("aiResult").value="Local-only mode does not call an AI model. Use Analyze project for local heuristics.";return; }
+  if(!key){$("aiResult").value="Enter your own API key first.";return}
+  const src=$("editor").value;if(!src.trim()){$("aiResult").value="Select or paste code first.";return}
+  const task=$("aiTask").value;
+  const prompt=`You are a conservative code refactoring assistant.\nTask: ${task}\nFile: ${path}\nPreserve observable behavior, APIs, comments, template markers and dependencies. Do not claim code is unused solely because text search did not find it. Do not invent files. Provide the complete proposed source code first, then a concise list of risks and tests. Separate source code from notes with a line containing exactly ---NOTES---.\n\nSOURCE:\n${src}`;
+  $("askAI").disabled=true;$("aiResult").value="Contacting API…";
+  try{$("aiResult").value=await askProvider(provider,key,$("model").value.trim(),prompt)||"Provider returned an empty response."}
+  catch(e){$("aiResult").value="API request failed: "+e.message+"\n\nCheck your API key, model ID, quota, network and browser CORS policy."}
+  finally{$("askAI").disabled=false}
+});
+$("useAI").addEventListener("click",()=>{
+  const response=$("aiResult").value;
+  if(!response.trim())return;
+  const parts=response.split(/\n---NOTES---\n/);
+  const code=parts[0].replace(/^```[\w-]*\s*/,"").replace(/\s*```$/,"");
+  $("editor").value=code;editedText=code;
+  $("editStatus").textContent="AI proposal copied into editor. Review it, compare it and run project tests before accepting.";
+});
+</script>
 </body>
 </html>
