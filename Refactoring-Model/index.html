@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Refactoring Machine · Local Workbench v0.3.0</title>
+  <style>
+*{box-sizing:border-box} :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e8edf7;background:#0b1020;font-synthesis:none} body{margin:0;min-width:320px}.topbar{padding:28px clamp(16px,4vw,48px) 24px;border-bottom:1px solid #26314a;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;background:#10182c}h1{margin:4px 0 8px;font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-.04em}h2{margin:3px 0 0;font-size:1.15rem}p{line-height:1.55}.subhead{margin:0;color:#aab6cd;max-width:700px}.eyebrow{margin:0;color:#7dd3fc;font-size:.72rem;font-weight:800;letter-spacing:.13em}.version,.status{border:1px solid #34415e;border-radius:999px;padding:6px 10px;color:#bdc9df;font-size:.75rem;white-space:nowrap}main{max-width:1050px;margin:0 auto;padding:22px clamp(12px,3vw,28px) 36px;display:grid;gap:16px}.panel{background:#111a2d;border:1px solid #263550;border-radius:18px;padding:clamp(16px,3vw,24px);min-width:0}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.dropzone{min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;border:1px dashed #526482;border-radius:14px;text-align:center;padding:20px;cursor:pointer;background:#0c1426}.dropzone:hover{border-color:#7dd3fc;background:#101d33}.dropzone input{max-width:100%;margin-top:6px;color:#b8c5db}.drop-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#153d57;color:#7dd3fc;font-size:1.5rem}.dropzone span:not(.drop-icon){color:#9baac2;font-size:.84rem}.file-meta,.help{color:#9eacc3;font-size:.86rem;overflow-wrap:anywhere}.file-meta{margin-top:12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:750;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}.primary{background:#7dd3fc;color:#062033}.secondary{background:#25334c;color:#e7edf8;border:1px solid #3b4a67}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.metric{padding:13px;border:1px solid #293751;border-radius:12px;background:#0d1527;min-width:0}.metric span{display:block;font-size:.78rem;color:#9eacc3}.metric strong{display:block;margin-top:6px;font-size:1.3rem;overflow-wrap:anywhere}.findings{display:grid;gap:8px}.findings.empty{display:block;color:#9eacc3}.finding{border:1px solid #2c3a55;border-left:4px solid #7dd3fc;border-radius:10px;padding:11px 12px;background:#0d1527}.finding.warning{border-left-color:#fbbf24}.finding.error{border-left-color:#fb7185}.finding .finding-title{display:flex;justify-content:space-between;gap:10px;font-weight:750}.finding p{margin:6px 0 0;color:#aab6cd;font-size:.88rem;overflow-wrap:anywhere}.option{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid #263550;cursor:pointer}.option input{margin-top:4px;accent-color:#7dd3fc;width:18px;height:18px;flex:0 0 auto}.option strong,.option small{display:block}.option small{color:#9eacc3;line-height:1.45;margin-top:4px}.disabled-option{opacity:.6;cursor:not-allowed}textarea{display:block;width:100%;min-height:300px;resize:vertical;border:1px solid #35445f;border-radius:12px;background:#080e1b;color:#dbeafe;padding:14px;font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2}.rule-list{padding-left:20px;color:#b9c5d9;line-height:1.7}.rule-list strong{color:#eef4ff}footer{text-align:center;color:#7888a3;font-size:.8rem;padding:0 12px 28px}@media(max-width:560px){.topbar{flex-direction:column}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.section-heading{align-items:flex-start;flex-direction:column}.version{align-self:flex-start}textarea{min-height:230px}}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div><p class="eyebrow">LOCAL-FIRST · LOCAL REFACTORING MACHINE 0.3.0</p><h1>Source Analysis &amp; Refactoring Workbench</h1><p class="subhead">Inspect first. Change only what you approve. Keep the original untouched.</p></div>
+    <span class="version">MODEL 0.3.0</span>
+  </header>
+  <main>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">01 / INPUT</p><h2>Choose a source file</h2></div><span id="fileState" class="status">No file loaded</span></div>
+      <label class="dropzone" for="fileInput"><span class="drop-icon">＋</span><strong>Choose a source file from this device</strong><span>HTML, CSS, JavaScript, TypeScript, JSON, Python, and text · processed locally</span><input id="fileInput" type="file" accept=".html,.htm,.css,.js,.mjs,.cjs,.ts,.tsx,.json,.py,.txt,text/html,text/css,text/javascript,application/json"></label>
+      <div class="file-meta" id="fileMeta">Your file is not uploaded anywhere by this tool.</div>
+      <div class="actions"><button id="analyzeBtn" class="primary" disabled>Analyze file</button><button id="resetBtn" class="secondary" disabled>Reset</button></div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">02 / DIAGNOSTICS</p><h2>Analysis report</h2></div><span id="analysisState" class="status">Waiting for file</span></div>
+      <div class="metrics" id="metrics"><div class="metric"><span>Lines</span><strong>—</strong></div><div class="metric"><span>Elements / items</span><strong>—</strong></div><div class="metric"><span>Findings</span><strong>—</strong></div><div class="metric"><span>File size</span><strong>—</strong></div></div>
+      <div id="findings" class="findings empty">Load a file and run analysis to see findings.</div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">03 / CONTROLLED CHANGES</p><h2>Refactor policy</h2></div><span class="status caution">Conservative mode</span></div>
+      <p class="help">This machine checks supported source files locally. It avoids rewriting structure, code, styles, or element order; only selected, reversible text-level cleanup is offered.</p>
+      <label class="option"><input id="removeBom" type="checkbox" checked><span><strong>Remove leading UTF-8 BOM</strong><small>Removes an invisible byte-order mark at the very start of the file, if present.</small></span></label>
+      <label class="option"><input id="normalizeEol" type="checkbox"><span><strong>Normalize line endings to LF</strong><small>Changes CRLF / CR line endings to LF. Usually safe, but can matter in exact-text comparisons.</small></span></label>
+      <label class="option disabled-option"><input type="checkbox" disabled><span><strong>Structural rewrite / comment removal</strong><small>Not enabled automatically: comments, whitespace, order, and templates can affect behavior.</small></span></label>
+      <div class="actions"><button id="previewBtn" class="primary" disabled>Build cleaned copy</button><button id="downloadBtn" class="secondary" disabled>Download cleaned copy</button></div>
+      <p id="refactorState" class="help" role="status">No changes have been applied.</p>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">03B / RELATIONSHIP REPAIR</p><h2>CSS usage & related-finding analysis</h2></div><span id="cssUsageState" class="status">Waiting for HTML file</span></div>
+      <p class="help">Checks embedded CSS selectors against the parsed HTML, groups unmatched selectors, and shows the exact source rule. A selector that is unmatched in the static document may still be used dynamically; only simple top-level rules are eligible for removal, and only after you select them.</p>
+      <div class="actions"><button id="scanCssUsage" class="primary" disabled>Find unmatched CSS rules</button><button id="repairCssUsage" class="secondary" disabled>Remove selected rules in output copy</button></div>
+      <div id="cssUsageResults" class="findings empty">Load and analyze an HTML file to inspect CSS usage.</div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">04 / REVIEW</p><h2>Output preview</h2></div><span id="changeState" class="status">No output</span></div>
+      <textarea id="output" spellcheck="false" aria-label="Refactored source output" placeholder="The cleaned copy will appear here. The original file remains unchanged." readonly></textarea>
+      <div id="diffSummary" class="file-meta">No comparison yet.</div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">05 / MODEL RULES</p><h2>Safety contract</h2></div></div>
+      <ul class="rule-list"><li><strong>Never overwrite the source.</strong> Output is a separate downloadable copy.</li><li><strong>Report before changing.</strong> Diagnostics are not automatic repair instructions.</li><li><strong>No structural rewrite by default.</strong> Markup, code, comments, and order are preserved; only selected BOM / line-ending cleanup is applied.</li><li><strong>Uncertain means review.</strong> Findings are warnings, not proof of a defect.</li><li><strong>Local-first.</strong> File contents are read in the browser and are not sent to a server by this app.</li></ul>
+    </section>
+  </main>
+  <footer>Refactoring Machine · One-file local workbench · 0.3.0</footer>
+  <script>
+/**
+ * Universal Refactoring Workbench — conservative HTML analyzer.
+ *
+ * Browser-only module; no dependencies. Import with:
+ *   import { analyzeHtml } from "./analyzer.js";
+ *
+ * This is an advisory static analyzer, not a browser-equivalent validator.
+ * It never edits the input, executes its scripts, or declares files safe to delete.
+ */
+
+const MAX_FINDINGS = 250;
+const MAX_CSS_CONFLICTS = 40;
+
+/** @typedef {{severity: "error"|"warning"|"info", title: string, detail: string, code?: string}} Finding */
+
+/**
+ * Analyze a single HTML document.
+ * @param {string} source Raw HTML source.
+ * @returns {{lines:number, elements:number, bytes:number, findings:Finding[], scripts:{total:number,inline:number,external:number}, styles:{inline:number,external:number}, comments:number, parserNote:string}}
+ */
+function analyzeHtml(source) {
+  if (typeof source !== "string") {
+    throw new TypeError("analyzeHtml(source) expects an HTML string.");
+  }
+  if (typeof DOMParser === "undefined") {
+    throw new Error("This analyzer requires a browser with DOMParser support.");
+  }
+
+  const findings = [];
+  const seen = new Set();
+  const add = (severity, message, code = "HTML_AUDIT") => {
+    const key = `${severity}\u0000${code}\u0000${message}`;
+    if (seen.has(key) || findings.length >= MAX_FINDINGS) return;
+    seen.add(key);
+    const firstSentence = message.split(/(?<=[.!?])\s+/)[0] || message;
+    findings.push({ severity, title: firstSentence.length > 92 ? `${firstSentence.slice(0, 89)}…` : firstSentence, detail: message, code });
+  };
+
+  const doc = new DOMParser().parseFromString(source, "text/html");
+  const all = [...doc.querySelectorAll("*")];
+  const lines = source.length ? source.split(/\r\n|\r|\n/).length : 0;
+  const bytes = new TextEncoder().encode(source).length;
+  const scriptNodes = [...doc.querySelectorAll("script")];
+  const scripts = { total: scriptNodes.length, inline: scriptNodes.filter(node => !node.getAttribute("src")).length, external: scriptNodes.filter(node => Boolean(node.getAttribute("src"))).length };
+  const styleNodesForCount = [...doc.querySelectorAll("style")];
+  const styles = { inline: styleNodesForCount.length, external: doc.querySelectorAll('link[rel~="stylesheet"][href]').length };
+  const comments = (source.match(/<!--[\s\S]*?-->/g) || []).length;
+
+  // Preserve useful checks from the previous stable baseline.
+  const sourceWithoutClosedComments = source.replace(/<!--[\s\S]*?-->/g, "");
+  if (sourceWithoutClosedComments.includes("<!--")) {
+    add("warning", "A possible unclosed HTML comment marker remains in the source. Template syntax may affect this heuristic; review manually.", "POSSIBLE_UNCLOSED_COMMENT");
+  }
+  if (source.includes("{{") || source.includes("{%") || source.includes("<%")) {
+    add("info", "Template markers were detected. Preserve delimiters and source order during future transformations.", "TEMPLATE_SYNTAX");
+  }
+  if (bytes > 2 * 1024 * 1024) {
+    add("info", "The HTML source exceeds 2 MiB. Keep transformations conservative and test on a copy.", "LARGE_FILE");
+  }
+
+  // Document-level checks.
+  if (!/<\s*!doctype\s+html\s*>/i.test(source)) {
+    add("warning", "Missing <!doctype html>; browsers may use quirks mode.");
+  }
+  if (!doc.documentElement.hasAttribute("lang") || !doc.documentElement.lang.trim()) {
+    add("warning", "The <html> element has no language declaration (lang).");
+  }
+  if (!/<meta\b[^>]*\bcharset\s*=/i.test(source) &&
+      !/<meta\b[^>]*http-equiv\s*=\s*["']?content-type/i.test(source)) {
+    add("info", "No character-encoding declaration was found in the source.");
+  }
+  if (!doc.querySelector("title") || !doc.querySelector("title").textContent.trim()) {
+    add("warning", "The document has no non-empty <title>.");
+  }
+  if (!doc.querySelector('meta[name="viewport" i]')) {
+    add("info", "No viewport meta tag was found; mobile layout may not scale as intended.");
+  }
+
+  // Duplicate IDs: actual parsed elements, not a text-only regex.
+  const ids = new Map();
+  for (const el of all) {
+    const id = el.getAttribute("id");
+    if (id === null || id === "") continue;
+    ids.set(id, (ids.get(id) || 0) + 1);
+  }
+  for (const [id, count] of ids) {
+    if (count > 1) add("error", `Duplicate id="${id}" appears on ${count} elements; fragment links and selectors may target the wrong element.`, "DUPLICATE_ID");
+  }
+  const uniqueIds = new Set(ids.keys());
+  for (const link of doc.querySelectorAll('a[href^="#"]')) {
+    const fragment = link.getAttribute("href").slice(1);
+    if (!fragment) continue;
+    let decoded = fragment;
+    try { decoded = decodeURIComponent(fragment); } catch (error) { decoded = fragment; }
+    if (!uniqueIds.has(decoded)) add("warning", `An in-page link points to #${fragment}, but no matching id was found in this HTML document.`, "BROKEN_FRAGMENT");
+  }
+
+  // Accessibility and semantics.
+  for (const img of doc.querySelectorAll("img")) {
+    if (!img.hasAttribute("alt")) {
+      add("warning", "An <img> has no alt attribute; add descriptive alt text or alt=\"\" if decorative.");
+    }
+    if (!img.hasAttribute("src") && !img.hasAttribute("srcset")) {
+      add("warning", "An <img> has neither src nor srcset.");
+    }
+  }
+  for (const frame of doc.querySelectorAll("iframe, frame")) {
+    if (!frame.getAttribute("title")?.trim()) {
+      add("warning", `A <${frame.tagName.toLowerCase()}> has no title for assistive technology.`);
+    }
+  }
+  for (const control of doc.querySelectorAll("input, select, textarea")) {
+    if (control.type === "hidden" || control.disabled) continue;
+    const id = control.id;
+    const hasLabel = (id && [...doc.querySelectorAll("label[for]")].some(label => label.htmlFor === id)) ||
+      Boolean(control.closest("label")) ||
+      Boolean(control.getAttribute("aria-label")?.trim()) ||
+      Boolean(control.getAttribute("aria-labelledby")?.trim());
+    if (!hasLabel) add("warning", `A <${control.tagName.toLowerCase()}${control.type ? ` type="${control.type}"` : ""}> may lack an accessible label.`);
+  }
+  for (const button of doc.querySelectorAll("button, input[type=button], input[type=submit], input[type=reset]")) {
+    const name = button.tagName.toLowerCase() === "input"
+      ? button.value
+      : button.textContent.replace(/\s+/g, " ").trim();
+    if (!name && !button.getAttribute("aria-label")?.trim() && !button.getAttribute("aria-labelledby")?.trim()) {
+      add("warning", `A <${button.tagName.toLowerCase()}> has no obvious accessible name.`);
+    }
+  }
+  for (const link of doc.querySelectorAll("a")) {
+    if (!link.hasAttribute("href")) {
+      add("info", "An <a> element has no href; confirm it is intentionally being used as a non-navigation element.");
+    }
+    if (link.getAttribute("target")?.toLowerCase() === "_blank") {
+      const rel = new Set((link.getAttribute("rel") || "").toLowerCase().split(/\s+/).filter(Boolean));
+      if (!rel.has("noopener")) add("info", 'A link uses target="_blank" without rel="noopener"; review opener isolation and intended behavior.');
+    }
+  }
+
+  // Suspicious constructs: findings are contextual, not automatic deletion instructions.
+  let inlineHandlerCount = 0;
+  const handlerNames = new Set();
+  for (const el of all) {
+    for (const attr of [...el.attributes]) {
+      if (/^on[a-z]+$/i.test(attr.name)) {
+        inlineHandlerCount++;
+        handlerNames.add(attr.name.toLowerCase());
+      }
+    }
+  }
+  if (inlineHandlerCount) {
+    add("info", `Found ${inlineHandlerCount} inline event-handler attribute(s) (${[...handlerNames].sort().join(", ")}). These are not automatically defects; inspect their behavior before changing them.`);
+  }
+
+  for (const el of all) {
+    for (const attrName of ["href", "src", "action", "formaction", "xlink:href"]) {
+      if (!el.hasAttribute(attrName)) continue;
+      const value = el.getAttribute(attrName).trim();
+      if (/^javascript\s*:/i.test(value)) {
+        add("warning", `A javascript: URL was found in ${el.tagName.toLowerCase()}[${attrName}]; verify necessity and security.`, "JAVASCRIPT_URL");
+      }
+      if (!value && ["src", "action", "formaction"].includes(attrName)) {
+        add("info", `An empty ${attrName} attribute was found on <${el.tagName.toLowerCase()}>; verify intended browser behavior.`);
+      }
+    }
+  }
+
+  // Local references cannot be proven missing when only one HTML file is supplied.
+  const localRefs = new Set();
+  const externalRefs = new Set();
+  const addReference = raw => {
+    const value = String(raw || "").trim();
+    if (!value || value.startsWith("#") || /^data:/i.test(value)) return;
+    if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(value)) {
+      if (/^(?:https?:)?\/\//i.test(value)) externalRefs.add(value);
+      return;
+    }
+    localRefs.add(value.split(/[?#]/, 1)[0]);
+  };
+  for (const el of all) {
+    for (const attr of ["src", "href", "poster", "data", "action", "formaction"]) {
+      if (el.hasAttribute(attr)) addReference(el.getAttribute(attr));
+    }
+    if (el.hasAttribute("srcset")) {
+      for (const part of el.getAttribute("srcset").split(",")) addReference(part.trim().split(/\s+/)[0]);
+    }
+  }
+  for (const style of doc.querySelectorAll("style")) {
+    for (const match of style.textContent.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)) addReference(match[1]);
+  }
+  if (localRefs.size) {
+    add("info", `${localRefs.size} relative/local resource reference(s) were found. Because only this HTML file is analyzed, their existence and deployment paths cannot be verified: ${[...localRefs].slice(0, 8).join(", ")}${localRefs.size > 8 ? ", …" : ""}.`);
+  }
+  if (externalRefs.size) {
+    add("info", `${externalRefs.size} external HTTP(S) resource reference(s) were found. Network availability and remote content were not checked.`);
+  }
+
+  // CSS matching: analyze only CSS embedded in this HTML. External stylesheets are not fetched.
+  // Report competing declarations, but never claim a definitive cascade winner.
+  const cssResult = inspectEmbeddedCss(doc);
+  for (const message of cssResult.messages.slice(0, MAX_CSS_CONFLICTS)) add("info", message);
+  if (cssResult.externalStylesheets > 0) {
+    add("info", `${cssResult.externalStylesheets} linked stylesheet(s) were found but not loaded. CSS matches from those files cannot be assessed from this single-file input.`);
+  }
+  if (cssResult.unsupportedRules > 0) {
+    add("info", `${cssResult.unsupportedRules} CSS rule(s) could not be fully inspected (for example, unsupported or malformed selector syntax).`);
+  }
+
+  if (findings.length === 0) {
+    const message = "No issues were detected by the current checks. This is not proof that the document is fully valid, accessible, secure, or behaviorally correct.";
+    findings.push({ severity: "info", title: "No issues detected by current checks", detail: message, code: "NO_FINDINGS" });
+  }
+  if (findings.length >= MAX_FINDINGS) {
+    const message = `Finding limit (${MAX_FINDINGS}) reached; remaining checks may have additional results.`;
+    findings[MAX_FINDINGS - 1] = { severity: "info", title: "Finding limit reached", detail: message, code: "LIMIT_REACHED" };
+  }
+
+  return {
+    lines, elements: all.length, bytes, findings, scripts, styles, comments,
+    parserNote: "DOMParser may repair malformed markup in its in-memory representation. Findings are advisory; the original source text is not reserialized or changed."
+  };
+}
+
+function inspectEmbeddedCss(doc) {
+  const messages = [];
+  let externalStylesheets = 0;
+  let unsupportedRules = 0;
+  const records = new Map();
+  let ruleOrder = 0;
+
+  externalStylesheets = doc.querySelectorAll('link[rel~="stylesheet"][href]').length;
+
+  const styleNodes = [...doc.querySelectorAll("style")];
+  for (let styleIndex = 0; styleIndex < styleNodes.length; styleIndex++) {
+    const styleNode = styleNodes[styleIndex];
+    // Put the style into the parsed document to let the browser CSS parser interpret rules.
+    if (!doc.head) continue;
+    const temporaryStyle = doc.createElement("style");
+    temporaryStyle.textContent = styleNode.textContent || "";
+    doc.head.append(temporaryStyle);
+    let rules;
+    try {
+      rules = [...(temporaryStyle.sheet?.cssRules || [])];
+    } catch (error) {
+      unsupportedRules++;
+      temporaryStyle.remove();
+      continue;
+    }
+
+    const walk = (ruleList, condition = "") => {
+      for (const rule of ruleList) {
+        ruleOrder++;
+        if (rule.type === 1 && rule.selectorText && rule.style) {
+          let matched = [];
+          try {
+            matched = [...doc.querySelectorAll(rule.selectorText)];
+          } catch (error) {
+            unsupportedRules++;
+            continue;
+          }
+          for (const element of matched) {
+            const elementName = describeElement(element);
+            for (let i = 0; i < rule.style.length; i++) {
+              const property = rule.style[i];
+              const value = rule.style.getPropertyValue(property).trim();
+              const important = rule.style.getPropertyPriority(property) === "important";
+              const key = `${elementName}\u0000${property}`;
+              const list = records.get(key) || [];
+              list.push({ selector: rule.selectorText, property, value, important, condition, order: ruleOrder });
+              records.set(key, list);
+            }
+          }
+        } else if (rule.cssRules) {
+          const label = rule.conditionText || rule.name || rule.constructor?.name || "nested rule";
+          walk([...rule.cssRules], condition ? `${condition}; ${label}` : label);
+        }
+      }
+    };
+
+    walk(rules);
+    temporaryStyle.remove();
+  }
+
+  for (const [key, list] of records) {
+    const uniqueValues = new Set(list.map(item => `${item.value}\u0000${item.important ? "important" : "normal"}`));
+    if (uniqueValues.size < 2) continue;
+    const [element, property] = key.split("\u0000");
+    const declarations = list.slice(0, 5).map(item =>
+      `${item.selector} { ${item.property}: ${item.value}${item.important ? " !important" : ""} }${item.condition ? ` [${item.condition}]` : ""}`
+    );
+    messages.push(`Possible embedded-CSS conflict for ${element}, property “${property}”: ${declarations.join("; ")}${list.length > 5 ? "; …" : ""}. These selectors match the parsed element, but the analyzer does not determine the final computed value; confirm in browser DevTools → Computed.`);
+    if (messages.length >= MAX_CSS_CONFLICTS) break;
+  }
+
+  return { messages, externalStylesheets, unsupportedRules };
+}
+
+function describeElement(element) {
+  let result = element.tagName.toLowerCase();
+  if (element.id) result += `#${element.id}`;
+  const classes = [...element.classList].slice(0, 4);
+  if (classes.length) result += classes.map(name => `.${name}`).join("");
+  return result;
+}
+
+
+/**
+ * Analyze supported source types without executing uploaded code.
+ * HTML keeps the original DOM-based checks; other types get conservative
+ * language-specific checks. Pattern matches are review prompts, not proof.
+ */
+function analyzeSource(source, fileName) {
+  const ext = (String(fileName).match(/\.([^.]+)$/)?.[1] || "txt").toLowerCase();
+  if (["html", "htm"].includes(ext)) return analyzeHtml(source, fileName);
+  const lines = source ? source.split(/\r\n|\r|\n/).length : 0;
+  const bytes = new TextEncoder().encode(source).length;
+  let elements = 0;
+  const findings = [];
+  const seen = new Set();
+  const add = (severity, title, detail, code = "SOURCE_AUDIT") => {
+    const key = `${severity}\u0000${title}\u0000${detail}`;
+    if (seen.has(key) || findings.length >= MAX_FINDINGS) return;
+    seen.add(key); findings.push({severity, title, detail, code});
+  };
+  const scripts = {total:0, inline:0, external:0};
+  const styles = {inline:0, external:0};
+  let comments = 0;
+  const lower = ext;
+  if (["json"].includes(lower)) {
+    try {
+      const parsed = JSON.parse(source);
+      elements = Array.isArray(parsed) ? parsed.length : parsed && typeof parsed === "object" ? Object.keys(parsed).length : 1;
+      const kind = parsed === null ? "null" : Array.isArray(parsed) ? `array (${parsed.length} items)` : typeof parsed === "object" ? `object (${Object.keys(parsed).length} top-level keys)` : typeof parsed;
+      add("info", "JSON syntax valid", `JSON.parse accepted this file. Top-level value: ${kind}.`, "JSON_VALID");
+    } catch (error) {
+      add("error", "Invalid JSON syntax", error && error.message ? error.message : String(error), "JSON_INVALID");
+    }
+  } else if (["js", "mjs", "cjs", "ts", "tsx"].includes(lower)) {
+    if (/\beval\s*\(/.test(source)) add("warning", "Dynamic eval() call", "Review whether untrusted input can reach eval(); this is a pattern check, not a data-flow proof.");
+    if (/\bnew\s+Function\s*\(/.test(source)) add("warning", "Dynamic Function constructor", "Review dynamic code generation and the trustworthiness of inputs.");
+    if (/\binnerHTML\s*=/.test(source)) add("info", "Review HTML injection sink", "An innerHTML assignment exists. It is risky only if untrusted data can reach it; prefer textContent or DOM node creation when rendering plain text.", "INNERHTML_REVIEW");
+    if (/catch\s*(?:\([^)]*\))?\s*\{\s*(?:\/\*[\s\S]*?\*\/\s*)?(?:\/\/[^\n]*\s*)?\}/.test(source)) add("warning", "Possibly empty catch block", "A catch block may swallow errors. Check whether a comment-only or empty handler needs explicit fallback, logging, or rethrow behavior.", "EMPTY_CATCH_REVIEW");
+    if (/\bdebugger\s*;?/.test(source)) add("warning", "debugger statement", "Remove or justify debugger statements before release.");
+    if (/\bconsole\.(?:log|debug|info)\s*\(/.test(source)) add("info", "Console output", "Review whether diagnostic output should remain in production.");
+    if (/\bTODO\b|\bFIXME\b|\bHACK\b/.test(source)) add("info", "TODO/FIXME marker", "Review outstanding work markers.");
+    if (/(?:api[_-]?key|secret|password|token)\s*[:=]\s*["'][^"']{8,}["']/i.test(source)) add("warning", "Possible hard-coded secret", "Pattern match only; verify whether the value is a real credential. Do not upload secrets to public repositories.");
+    if (/\bfunction\b|=>|\bconst\b|\blet\b|\bclass\b/.test(source)) add("info", "Code patterns found", "Basic static patterns were inspected. This is not a complete JavaScript/TypeScript parser or type checker.");
+  } else if (lower === "css") {
+    const opens = (source.match(/\{/g) || []).length, closes = (source.match(/\}/g) || []).length;
+    if (opens !== closes) add("error", "Unbalanced CSS braces", `Found ${opens} opening brace(s) and ${closes} closing brace(s). Strings and comments can affect this simple count; verify manually.`, "CSS_BRACE_BALANCE");
+    if (/url\(\s*["']?\s*javascript\s*:/i.test(source)) add("warning", "Suspicious javascript: CSS URL", "Review this URL; browser behavior and support vary, and it should not be treated as a safe resource reference.");
+    if (/!important\b/i.test(source)) add("info", "!important declarations found", "Review cascade overrides in context; !important is not automatically a defect.");
+    if (/\/\*\s*(?:TODO|FIXME|HACK)\b/i.test(source)) add("info", "CSS TODO/FIXME marker", "Review outstanding style work markers.");
+    try {
+      const sheet = new CSSStyleSheet(); sheet.replaceSync(source);
+      add("info", "CSS parser accepted source", "The browser CSS parser accepted the stylesheet. This does not guarantee intended visual behavior.", "CSS_PARSE_OK");
+    } catch (error) {
+      add("warning", "CSS parser could not fully parse source", error && error.message ? error.message : String(error), "CSS_PARSE_REVIEW");
+    }
+  } else if (lower === "py") {
+    if (/\beval\s*\(/.test(source)) add("warning", "eval() usage", "Review dynamic evaluation and whether input can be controlled by an untrusted party.");
+    if (/\bexec\s*\(/.test(source)) add("warning", "exec() usage", "Review dynamic execution and trust boundaries.");
+    if (/\bpickle\.loads?\s*\(/.test(source)) add("warning", "Pickle deserialization", "Never deserialize pickle data from an untrusted source.");
+    if (/\bexcept\s*(?:Exception|BaseException)?\s*(?:as\s+\w+)?\s*:\s*(?:pass\s*)?(?:\n|$)/.test(source)) add("warning", "Possible swallowed exception", "Review broad or empty exception handling; this pattern check can miss multiline cases.");
+    if (/\bTODO\b|\bFIXME\b|\bHACK\b/.test(source)) add("info", "TODO/FIXME marker", "Review outstanding work markers.");
+    if (/(?:api[_-]?key|secret|password|token)\s*=\s*["'][^"']{8,}["']/i.test(source)) add("warning", "Possible hard-coded secret", "Pattern match only; verify whether the value is a real credential.");
+    add("info", "Python syntax not executed", "This browser-only tool does not run Python or claim full syntax validation. Use a Python interpreter/linter for authoritative syntax and type checks.", "PYTHON_SCOPE");
+  } else {
+    add("info", "Text-only checks", `No language-specific parser is configured for .${lower || "txt"}; only file integrity and conservative text cleanup are available.`);
+  }
+  if (findings.length === 0) add("info", "No configured pattern detected", "This is not proof of correctness, security, accessibility, or runtime behavior.", "NO_FINDINGS");
+  return {lines, elements, bytes, findings, scripts, styles, comments, parserNote: `File type: .${lower || "txt"}. Uploaded code was not executed. Checks are advisory and parser coverage is limited.`, fileKind: lower};
+}
+
+/** Create report UI with DOM APIs so source text never becomes HTML markup. */
+function renderReport(report) {
+  const metrics = $("metrics");
+  metrics.replaceChildren();
+  const metricRows = [["Lines", report.lines], [report.fileKind === "html" || !report.fileKind ? "HTML elements" : "Elements / items", report.elements], ["Findings", report.findings.filter(f => f.code !== "NO_FINDINGS").length], ["File size", formatBytes(report.bytes)]];
+  for (const [label, value] of metricRows) {
+    const card = document.createElement("div"); card.className = "metric";
+    const name = document.createElement("span"); name.textContent = label;
+    const number = document.createElement("strong"); number.textContent = String(value);
+    card.append(name, number); metrics.append(card);
+  }
+  const box = $("findings"); box.className = "findings"; box.replaceChildren();
+  for (const finding of report.findings) {
+    const article = document.createElement("article");
+    article.className = `finding ${finding.severity === "warning" ? "warning" : finding.severity === "error" ? "error" : ""}`.trim();
+    const titleRow = document.createElement("div"); titleRow.className = "finding-title";
+    const title = document.createElement("span"); title.textContent = finding.title;
+    const severity = document.createElement("span"); severity.textContent = finding.severity.toUpperCase();
+    const detail = document.createElement("p"); detail.textContent = finding.detail;
+    titleRow.append(title, severity); article.append(titleRow, detail); box.append(article);
+  }
+  const inventory = document.createElement("article"); inventory.className = "finding";
+  const titleRow = document.createElement("div"); titleRow.className = "finding-title";
+  const title = document.createElement("span"); title.textContent = report.fileKind && report.fileKind !== "html" ? "Analysis scope" : "Structure inventory";
+  const level = document.createElement("span"); level.textContent = "INFO"; titleRow.append(title, level);
+  const detail = document.createElement("p");
+  detail.textContent = report.fileKind && report.fileKind !== "html" ? report.parserNote : `${report.scripts.total} script(s): ${report.scripts.inline} inline, ${report.scripts.external} external. ${report.styles.inline} style block(s), ${report.styles.external} external stylesheet link(s). ${report.comments} HTML comment(s). ${report.parserNote}`;
+  inventory.append(titleRow, detail); box.append(inventory);
+}
+
+/** Format byte counts for the workbench UI. */
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes) || bytes < 0) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  const units = ["KiB", "MiB", "GiB"];
+  let value = bytes / 1024;
+  let index = 0;
+  while (value >= 1024 && index < units.length - 1) { value /= 1024; index++; }
+  return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[index]}`;
+}
+
+/** Conservative source-level transformations. Never parse/re-serialize HTML. */
+function buildCleanCopy(original,options={}){
+  const changes=[];let output=original;
+  if(options.removeBom&&output.charCodeAt(0)===0xFEFF){output=output.slice(1);changes.push("Removed leading UTF-8 BOM.")}
+  if(options.normalizeEol){const normalized=output.replace(/\r\n?/g,"\n");if(normalized!==output){output=normalized;changes.push("Normalized line endings to LF.")}}
+  return {output,changes,changed:output!==original,bytesBefore:new TextEncoder().encode(original).length,bytesAfter:new TextEncoder().encode(output).length};
+}
+
+const $=id=>document.getElementById(id);const fileInput=$("fileInput");let originalText=null,currentFileName="template.html",latestOutput=null,latestReport=null;
+function status(id,message,klass="status"){const el=$(id);el.textContent=message;el.className=klass}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function clearOutput() {latestOutput=null;$("output").value="";$("downloadBtn").disabled=true;status("changeState","No output");$("diffSummary").textContent="No comparison yet."}
+fileInput.addEventListener("change",async()=>{const file=fileInput.files?.[0];clearOutput();originalText=null;latestReport=null;if(!file)return;const supported=/\.(html?|css|mjs|cjs|js|tsx?|json|py|txt)$/i.test(file.name);if(!supported){status("fileState","Unsupported file type","status caution");$("fileMeta").textContent="Supported: HTML, CSS, JS, TS, JSON, Python, TXT.";fileInput.value="";return}if(file.size>20*1024*1024){status("fileState","File over 20 MiB","status caution");$("fileMeta").textContent="This machine limits files to 20 MiB to protect browser responsiveness.";fileInput.value="";return}try{originalText=await file.text();currentFileName=file.name;status("fileState","File loaded");$("scanCssUsage").disabled=!/\.html?$/i.test(file.name);$("repairCssUsage").disabled=true;$("cssUsageResults").textContent="Ready. Run unmatched CSS analysis on this HTML file.";$("fileMeta").textContent=`${file.name} · ${formatBytes(file.size)} · local browser processing`;$("analyzeBtn").disabled=false;$("previewBtn").disabled=false;$("resetBtn").disabled=false;status("analysisState","Ready to analyze")}catch(error){status("fileState","Could not read file","status caution");$("fileMeta").textContent=String(error)}});
+$("analyzeBtn").addEventListener("click",()=>{if(originalText===null)return;try{latestReport=analyzeSource(originalText,currentFileName);renderReport(latestReport);status("analysisState","Analysis complete")}catch(error){status("analysisState","Analysis failed","status caution");const box=$("findings");box.className="findings";box.textContent=error&&error.message?error.message:String(error)}});
+$("previewBtn").addEventListener("click",()=>{if(originalText===null)return;latestOutput=buildCleanCopy(originalText,{removeBom:$("removeBom").checked,normalizeEol:$("normalizeEol").checked});$("output").value=latestOutput.output;$("downloadBtn").disabled=false;status("changeState",latestOutput.changed?"Changes ready":"Copy unchanged");let recheck="Output re-check not run.";try{const before=latestReport||analyzeSource(originalText,currentFileName);const after=analyzeSource(latestOutput.output,currentFileName);const beforeCount=before.findings.filter(f=>f.code!=="NO_FINDINGS").length;const afterCount=after.findings.filter(f=>f.code!=="NO_FINDINGS").length;recheck=` Re-check: ${beforeCount} finding(s) before → ${afterCount} after.`;latestReport=after;renderReport(after);status("analysisState","Output re-check complete");}catch(error){recheck=` Re-check failed: ${error&&error.message?error.message:String(error)}`;status("analysisState","Re-check needs review","status caution")}$("diffSummary").textContent=`${latestOutput.changes.length} change(s). Size: ${formatBytes(latestOutput.bytesBefore)} → ${formatBytes(latestOutput.bytesAfter)}. ${latestOutput.changes.join(" ")||"No selected change was needed; output matches the original."}${recheck}`;$("refactorState").textContent=latestOutput.changed?"A separate copy is ready. The original file has not been modified.":"No selected transformation was needed. The original file has not been modified."});
+$("downloadBtn").addEventListener("click",()=>{if(!latestOutput)return;const ext=(currentFileName.match(/\.([^.]+)$/)?.[1]||"").toLowerCase();const mime=(["html","htm"].includes(ext)?"text/html;charset=utf-8":ext==="css"?"text/css;charset=utf-8":ext==="json"?"application/json;charset=utf-8":["js","mjs","cjs","ts","tsx"].includes(ext)?"text/javascript;charset=utf-8":"text/plain;charset=utf-8");const blob=new Blob([latestOutput.output],{type:mime});const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download=currentFileName.replace(/(\.[^.]+)$/i,".refactored$1");document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$("resetBtn").addEventListener("click",()=>{fileInput.value="";originalText=null;latestReport=null;clearOutput();$("scanCssUsage").disabled=true;$("repairCssUsage").disabled=true;$("cssUsageResults").textContent="Load and analyze an HTML file to inspect CSS usage.";$("analyzeBtn").disabled=true;$("previewBtn").disabled=true;$("resetBtn").disabled=true;$("fileMeta").textContent="Your file is not uploaded anywhere by this tool.";const metrics=$("metrics");metrics.replaceChildren();for(const [label,value] of [["Lines","—"],["Elements / items","—"],["Findings","—"],["File size","—"]]){const card=document.createElement("div");card.className="metric";const name=document.createElement("span");name.textContent=label;const number=document.createElement("strong");number.textContent=value;card.append(name,number);metrics.append(card)}$("findings").className="findings empty";$("findings").textContent="Load a source file and run analysis to see findings.";$("refactorState").textContent="No changes have been applied.";status("fileState","No file loaded");status("analysisState","Waiting for file")});
+
+// CSS usage analysis: source-preserving scanner for simple top-level rules only.
+// Deliberately excludes nested at-rules, dynamic pseudo-classes, and complex syntax from auto-removal.
+function scanEmbeddedCssUsage(source) {
+  const doc = new DOMParser().parseFromString(source, "text/html");
+  const rules = [];
+  const styleTagRe = /<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi;
+  let tagMatch;
+  const dynamicPseudo = /:(?:hover|focus|focus-within|focus-visible|active|visited|checked|disabled|enabled|target|has|not|is|where|empty|first-child|last-child|nth-child|nth-of-type|before|after|root|valid|invalid|open|popover-open)\b/i;
+  while ((tagMatch = styleTagRe.exec(source))) {
+    const css = tagMatch[1];
+    const cssStart = tagMatch.index + tagMatch[0].indexOf(tagMatch[1]);
+    // A tiny brace-aware scanner: ignores comments and quoted braces; only top-level blocks are candidates.
+    let i = 0;
+    while (i < css.length) {
+      while (i < css.length && /\s/.test(css[i])) i++;
+      if (css.startsWith('/*', i)) { const end = css.indexOf('*/', i+2); i = end < 0 ? css.length : end+2; continue; }
+      const open = css.indexOf('{', i); if (open < 0) break;
+      const head = css.slice(i, open).trim();
+      let depth = 1, j = open+1, quote = '', comment = false;
+      for (; j < css.length && depth; j++) {
+        const c = css[j], n = css[j+1];
+        if (comment) { if (c==='*' && n==='/') { comment=false; j++; } continue; }
+        if (quote) { if (c==='\\') { j++; continue; } if (c===quote) quote=''; continue; }
+        if (c==='/' && n==='*') { comment=true; j++; continue; }
+        if (c==='"' || c==="'") { quote=c; continue; }
+        if (c==='{') depth++; else if (c==='}') depth--;
+      }
+      if (depth) break;
+      const end = j;
+      if (head && !head.startsWith('@') && !head.includes('{') && !head.includes('}')) {
+        const selectors = head.split(',').map(x=>x.trim()).filter(Boolean);
+        if (selectors.length && selectors.every(sel=>!dynamicPseudo.test(sel) && !/[+~]|\\\\|:/.test(sel))) {
+          let matched = false, parseable = true;
+          for (const selector of selectors) { try { if (doc.querySelector(selector)) matched = true; } catch { parseable = false; } }
+          if (parseable && !matched) {
+            const full = css.slice(i,end);
+            rules.push({id:rules.length, selector:head, code:full, start:cssStart+i, end:cssStart+end, line:source.slice(0,cssStart+i).split(/\r\n|\r|\n/).length, related:selectors.length, reason:'No matching element in the parsed HTML; dynamic use cannot be ruled out.'});
+          }
+        }
+      }
+      // Do not descend into nested rules. Move past this block to avoid mistaking declarations for rules.
+      i = end;
+    }
+  }
+  // Group rules with shared selector tokens/classes/IDs to expose relationships rather than a flat count.
+  const tokenMap = new Map();
+  for (const r of rules) {
+    const tokens = [...r.selector.matchAll(/[.#][A-Za-z_][\w-]*/g)].map(m=>m[0]);
+    r.tokens = tokens;
+    for (const t of tokens) tokenMap.set(t,[...(tokenMap.get(t)||[]),r.id]);
+  }
+  for (const r of rules) r.relatedIds = [...new Set(r.tokens.flatMap(t=>tokenMap.get(t)||[]).filter(id=>id!==r.id))];
+  return {rules, groups:[...tokenMap.entries()].filter(([,ids])=>ids.length>1).map(([token,ids])=>({token,ids:[...new Set(ids)]}))};
+}
+let cssUsageResult = null;
+$("scanCssUsage").addEventListener("click",()=>{
+  if(!originalText || !/\.html?$/i.test(currentFileName)) return;
+  try {
+    cssUsageResult=scanEmbeddedCssUsage(originalText);
+    const box=$("cssUsageResults"); box.replaceChildren(); box.className="findings";
+    if(!cssUsageResult.rules.length){box.textContent="No simple unmatched embedded CSS rules found. This does not prove all CSS is used; nested/media rules and dynamic states are deliberately excluded.";status("cssUsageState","No candidates");$("repairCssUsage").disabled=true;return;}
+    const groups=cssUsageResult.groups;
+    const summary=document.createElement("p");summary.className="help";summary.textContent=`${cssUsageResult.rules.length} candidate rule(s). ${groups.length} shared selector-token relationship(s) found. Auto-removal is limited to simple top-level rules; review each source excerpt.`;box.append(summary);
+    for(const r of cssUsageResult.rules){
+      const article=document.createElement("article");article.className="finding warning";
+      const label=document.createElement("label");label.style.display="flex";label.style.gap="10px";label.style.alignItems="flex-start";
+      const cb=document.createElement("input");cb.type="checkbox";cb.dataset.ruleId=String(r.id);cb.style.marginTop="5px";
+      const body=document.createElement("div");const title=document.createElement("strong");title.textContent=`Line ${r.line}: ${r.selector}`;
+      const detail=document.createElement("p");detail.textContent=`${r.reason} Related unmatched rules: ${r.relatedIds.length}. Shared tokens: ${r.tokens.join(", ")||"none"}.`;
+      const code=document.createElement("pre");code.style.whiteSpace="pre-wrap";code.style.overflowWrap="anywhere";code.textContent=r.code;
+      body.append(title,detail,code);label.append(cb,body);article.append(label);box.append(article);
+    }
+    status("cssUsageState",`${cssUsageResult.rules.length} candidate(s)`);$("repairCssUsage").disabled=false;
+  } catch(e){status("cssUsageState","Analysis failed","status caution");$("cssUsageResults").textContent=String(e);}
+});
+$("repairCssUsage").addEventListener("click",()=>{
+  if(!originalText || !cssUsageResult) return;
+  const ids=[...$("cssUsageResults").querySelectorAll('input[type="checkbox"]:checked')].map(x=>Number(x.dataset.ruleId));
+  if(!ids.length){status("cssUsageState","Select at least one candidate","status caution");return;}
+  const selected=cssUsageResult.rules.filter(r=>ids.includes(r.id)).sort((a,b)=>b.start-a.start);
+  let output=originalText;
+  for(const r of selected) output=output.slice(0,r.start)+output.slice(r.end);
+  latestOutput={output,changes:[`Removed ${selected.length} selected simple CSS rule(s) flagged as unmatched in static HTML.`],changed:output!==originalText,bytesBefore:new TextEncoder().encode(originalText).length,bytesAfter:new TextEncoder().encode(output).length};
+  $("output").value=output;$("downloadBtn").disabled=false;status("changeState","CSS cleanup preview ready");
+  let check="";
+  try { const before=analyzeSource(originalText,currentFileName), after=analyzeSource(output,currentFileName); check=` Static re-check: ${before.findings.length} finding(s) before → ${after.findings.length} after.`; latestReport=after; renderReport(after); } catch(e) { check=` Re-check failed: ${String(e)}`; }
+  $("diffSummary").textContent=`${selected.length} selected CSS rule(s) removed from the output copy. Size: ${formatBytes(latestOutput.bytesBefore)} → ${formatBytes(latestOutput.bytesAfter)}.${check} This is a preview; test interactions and responsive states in Chromium before relying on it.`;
+  $("refactorState").textContent="Selected CSS rules removed only from the separate output copy. Original source remains unchanged.";
+  status("cssUsageState",`${selected.length} rule(s) removed in preview`);
+});
+</script>
+</body>
+</html>
