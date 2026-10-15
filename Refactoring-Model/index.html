@@ -1,473 +1,392 @@
-
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="dark">
-<title>Universal Refactoring Workbench</title>
-<style>
-:root{color-scheme:dark;--bg:#0b1018;--panel:#141d29;--panel2:#0e1621;--line:#2b3b50;--text:#edf4ff;--muted:#a6b6ca;--blue:#80c5ff;--green:#83e0b1;--yellow:#ffd27a;--red:#ff9292}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
-header{padding:22px max(16px,calc((100vw - 1200px)/2));background:#101a27;border-bottom:1px solid var(--line)}
-h1{font-size:clamp(1.35rem,4vw,2rem);margin:0 0 5px}
-h2{font-size:1.05rem;margin:0 0 12px}
-p{margin:7px 0}
-small,.muted{color:var(--muted)}
-main{max-width:1200px;margin:auto;padding:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:14px;min-width:0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px}
-.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
-.row>*{flex:1;min-width:130px}
-label{display:block;font-weight:650;margin:8px 0 4px}
-input,select,textarea,button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;width:100%}
-textarea{min-height:180px;resize:vertical;direction:ltr;text-align:left;font:13px/1.5 ui-monospace,Consolas,monospace;tab-size:2}
-button{background:#1b3853;border-color:#365c7e;font-weight:700;cursor:pointer}
-button:hover{filter:brightness(1.15)}
-button:disabled{opacity:.55;cursor:wait}
-pre,code{direction:ltr;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere}
-pre{padding:11px;background:#0a111a;border:1px solid var(--line);border-radius:8px;max-height:420px;overflow:auto}
-.badge{display:inline-block;border:1px solid var(--line);padding:2px 8px;border-radius:99px;font-size:.8rem;margin:2px}
-.good{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}
-table{width:100%;border-collapse:collapse;font-size:.9rem}
-th,td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
-th{color:var(--muted)}
-.scroll{overflow:auto}
-#fileList{padding-left:20px}
-#fileList li{margin:3px 0;overflow-wrap:anywhere}
-#preview{width:100%;height:420px;background:white;border:1px solid var(--line);border-radius:8px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:10px 0}
-.stat{background:var(--panel2);border:1px solid var(--line);padding:10px;border-radius:9px}
-.stat strong{display:block;font-size:1.35rem}
-footer{padding:12px;color:var(--muted);font-size:.85rem}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Combined Stable Analyzer v0.2.0</title>
+  <style>
+*{box-sizing:border-box} :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e8edf7;background:#0b1020;font-synthesis:none} body{margin:0;min-width:320px}.topbar{padding:28px clamp(16px,4vw,48px) 24px;border-bottom:1px solid #26314a;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;background:#10182c}h1{margin:4px 0 8px;font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-.04em}h2{margin:3px 0 0;font-size:1.15rem}p{line-height:1.55}.subhead{margin:0;color:#aab6cd;max-width:700px}.eyebrow{margin:0;color:#7dd3fc;font-size:.72rem;font-weight:800;letter-spacing:.13em}.version,.status{border:1px solid #34415e;border-radius:999px;padding:6px 10px;color:#bdc9df;font-size:.75rem;white-space:nowrap}main{max-width:1050px;margin:0 auto;padding:22px clamp(12px,3vw,28px) 36px;display:grid;gap:16px}.panel{background:#111a2d;border:1px solid #263550;border-radius:18px;padding:clamp(16px,3vw,24px);min-width:0}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.dropzone{min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;border:1px dashed #526482;border-radius:14px;text-align:center;padding:20px;cursor:pointer;background:#0c1426}.dropzone:hover{border-color:#7dd3fc;background:#101d33}.dropzone input{max-width:100%;margin-top:6px;color:#b8c5db}.drop-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#153d57;color:#7dd3fc;font-size:1.5rem}.dropzone span:not(.drop-icon){color:#9baac2;font-size:.84rem}.file-meta,.help{color:#9eacc3;font-size:.86rem;overflow-wrap:anywhere}.file-meta{margin-top:12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:10px;padding:11px 16px;font:inherit;font-weight:750;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}.primary{background:#7dd3fc;color:#062033}.secondary{background:#25334c;color:#e7edf8;border:1px solid #3b4a67}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.metric{padding:13px;border:1px solid #293751;border-radius:12px;background:#0d1527;min-width:0}.metric span{display:block;font-size:.78rem;color:#9eacc3}.metric strong{display:block;margin-top:6px;font-size:1.3rem;overflow-wrap:anywhere}.findings{display:grid;gap:8px}.findings.empty{display:block;color:#9eacc3}.finding{border:1px solid #2c3a55;border-left:4px solid #7dd3fc;border-radius:10px;padding:11px 12px;background:#0d1527}.finding.warning{border-left-color:#fbbf24}.finding.error{border-left-color:#fb7185}.finding .finding-title{display:flex;justify-content:space-between;gap:10px;font-weight:750}.finding p{margin:6px 0 0;color:#aab6cd;font-size:.88rem;overflow-wrap:anywhere}.option{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid #263550;cursor:pointer}.option input{margin-top:4px;accent-color:#7dd3fc;width:18px;height:18px;flex:0 0 auto}.option strong,.option small{display:block}.option small{color:#9eacc3;line-height:1.45;margin-top:4px}.disabled-option{opacity:.6;cursor:not-allowed}textarea{display:block;width:100%;min-height:300px;resize:vertical;border:1px solid #35445f;border-radius:12px;background:#080e1b;color:#dbeafe;padding:14px;font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2}.rule-list{padding-left:20px;color:#b9c5d9;line-height:1.7}.rule-list strong{color:#eef4ff}footer{text-align:center;color:#7888a3;font-size:.8rem;padding:0 12px 28px}@media(max-width:560px){.topbar{flex-direction:column}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.section-heading{align-items:flex-start;flex-direction:column}.version{align-self:flex-start}textarea{min-height:230px}}
+
 </style>
 </head>
 <body>
-<header>
-<h1>Universal Refactoring Workbench</h1>
-<p class="muted">Local project analysis · Dependency inspection · Runtime observation · Conservative refactoring</p>
-<div>
-<span class="badge">Single HTML file</span>
-<span class="badge">No mandatory API</span>
-<span class="badge">Mobile-friendly</span>
-</div>
-</header>
+  <header class="topbar">
+    <div><p class="eyebrow">LOCAL-FIRST · COMBINED STABLE 0.2.0</p><h1>HTML Analysis &amp; Refactoring Workbench</h1><p class="subhead">Inspect first. Change only what you approve. Keep the original untouched.</p></div>
+    <span class="version">MODEL 0.2.0</span>
+  </header>
+  <main>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">01 / INPUT</p><h2>Choose an HTML file</h2></div><span id="fileState" class="status">No file loaded</span></div>
+      <label class="dropzone" for="fileInput"><span class="drop-icon">＋</span><strong>Choose HTML file from this device</strong><span>HTML / HTM · processed locally in this browser</span><input id="fileInput" type="file" accept=".html,.htm,text/html"></label>
+      <div class="file-meta" id="fileMeta">Your file is not uploaded anywhere by this tool.</div>
+      <div class="actions"><button id="analyzeBtn" class="primary" disabled>Analyze file</button><button id="resetBtn" class="secondary" disabled>Reset</button></div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">02 / DIAGNOSTICS</p><h2>Analysis report</h2></div><span id="analysisState" class="status">Waiting for file</span></div>
+      <div class="metrics" id="metrics"><div class="metric"><span>Lines</span><strong>—</strong></div><div class="metric"><span>HTML elements</span><strong>—</strong></div><div class="metric"><span>Findings</span><strong>—</strong></div><div class="metric"><span>File size</span><strong>—</strong></div></div>
+      <div id="findings" class="findings empty">Load a file and run analysis to see findings.</div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">03 / CONTROLLED CHANGES</p><h2>Refactor policy</h2></div><span class="status caution">Conservative mode</span></div>
+      <p class="help">This first model avoids rewriting the DOM, scripts, styles, or element order. Only reversible, low-risk text-level changes are offered.</p>
+      <label class="option"><input id="removeBom" type="checkbox" checked><span><strong>Remove leading UTF-8 BOM</strong><small>Removes an invisible byte-order mark at the very start of the file, if present.</small></span></label>
+      <label class="option"><input id="normalizeEol" type="checkbox"><span><strong>Normalize line endings to LF</strong><small>Changes CRLF / CR line endings to LF. Usually safe, but can matter in exact-text comparisons.</small></span></label>
+      <label class="option disabled-option"><input type="checkbox" disabled><span><strong>HTML reformatting / comment removal</strong><small>Not enabled in this initial model: comments and whitespace may be build directives or affect templates.</small></span></label>
+      <div class="actions"><button id="previewBtn" class="primary" disabled>Build cleaned copy</button><button id="downloadBtn" class="secondary" disabled>Download cleaned copy</button></div>
+      <p id="refactorState" class="help" role="status">No changes have been applied.</p>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">04 / REVIEW</p><h2>Output preview</h2></div><span id="changeState" class="status">No output</span></div>
+      <textarea id="output" spellcheck="false" aria-label="Cleaned HTML output" placeholder="The cleaned copy will appear here. The original file remains unchanged." readonly></textarea>
+      <div id="diffSummary" class="file-meta">No comparison yet.</div>
+    </section>
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">05 / MODEL RULES</p><h2>Safety contract</h2></div></div>
+      <ul class="rule-list"><li><strong>Never overwrite the source.</strong> Output is a separate downloadable copy.</li><li><strong>Report before changing.</strong> Diagnostics are not automatic repair instructions.</li><li><strong>No regex-based HTML rewriting.</strong> This model does not reorder or reconstruct markup.</li><li><strong>Uncertain means review.</strong> Findings are warnings, not proof of a defect.</li><li><strong>Local-first.</strong> File contents are read in the browser and are not sent to a server by this app.</li></ul>
+    </section>
+  </main>
+  <footer>Combined Stable Analyzer · Conservative baseline · 0.2.0</footer>
+  <script>
+/**
+ * Universal Refactoring Workbench — conservative HTML analyzer.
+ *
+ * Browser-only module; no dependencies. Import with:
+ *   import { analyzeHtml } from "./analyzer.js";
+ *
+ * This is an advisory static analyzer, not a browser-equivalent validator.
+ * It never edits the input, executes its scripts, or declares files safe to delete.
+ */
 
-<main>
-<section class="card">
-<h2>1. Load a project</h2>
-<p class="muted">Select multiple source files from the same project. Files are processed in your browser. For best results, preserve their relative paths where possible.</p>
-<label for="files">Project files</label>
-<input id="files" type="file" multiple accept=".html,.htm,.css,.js,.mjs,.cjs,.jsx,.ts,.tsx,.json,.py,.java,.kt,.kts,.xml,.md,.txt,.yml,.yaml,.php,.rb,.go,.rs,.sql,.sh,.vue,.svelte">
-<div class="row">
-<button id="analyze">Analyze project</button>
-<button id="clear">Clear project</button>
-<button id="exportReport">Download report</button>
-</div>
-<div class="stats" id="stats"></div>
-<ul id="fileList" class="muted"></ul>
-</section>
+const MAX_FINDINGS = 250;
+const MAX_CSS_CONFLICTS = 40;
 
-<section class="card">
-<h2>2. Project report</h2>
-<p class="muted">Findings are clues, not automatic proof that code is unused or defective.</p>
-<div class="scroll">
-<table>
-<thead><tr><th>Severity</th><th>File</th><th>Finding</th><th>Confidence</th></tr></thead>
-<tbody id="findings"><tr><td colspan="4">Load files and run analysis.</td></tr></tbody>
-</table>
-</div>
-</section>
+/** @typedef {{severity: "error"|"warning"|"info", title: string, detail: string, code?: string}} Finding */
 
-<section class="card">
-<h2>3. Inspect or edit a file</h2>
-<div class="row">
-<div><label for="selectedFile">Project file</label><select id="selectedFile"><option value="">No files loaded</option></select></div>
-<div><label for="mode">Conservative operation</label>
-<select id="mode">
-<option value="inspect">Inspect only</option>
-<option value="bom">Remove leading BOM</option>
-<option value="eol">Normalize line endings to LF</option>
-<option value="trim">Trim trailing whitespace (review carefully)</option>
-<option value="finalnewline">Ensure final newline</option>
-</select></div>
-</div>
-<label for="editor">Source</label>
-<textarea id="editor" spellcheck="false" placeholder="Select a project file or paste code here."></textarea>
-<div class="row">
-<button id="apply">Apply selected operation</button>
-<button id="compare">Compare before / after</button>
-<button id="downloadFile">Download edited file</button>
-</div>
-<div id="editStatus" class="muted"></div>
-<h3>Comparison</h3>
-<pre id="comparison">No comparison yet.</pre>
-</section>
-
-<section class="card">
-<h2>4. HTML runtime observation</h2>
-<p class="muted">This runs the selected HTML in a sandboxed preview. Network access and some browser features are blocked. Runtime logs do not prove every function or branch was tested.</p>
-<div class="row">
-<button id="runPreview">Run selected HTML in sandbox</button>
-<button id="stopPreview">Stop preview</button>
-</div>
-<div id="runtimeStatus" class="muted">Preview has not run.</div>
-<iframe id="preview" title="Sandboxed HTML preview" sandbox="allow-scripts"></iframe>
-<h3>Runtime events</h3>
-<pre id="runtimeLog">No runtime events yet.</pre>
-</section>
-
-<section class="card">
-<h2>5. Local AI API (optional)</h2>
-<p class="muted">Optional providers require your own API key and may have free-tier quotas, CORS restrictions or changing terms. Code sent to an API leaves this browser. Do not send secrets or private source code.</p>
-<label for="provider">Provider</label>
-<select id="provider">
-<option value="none">Local-only — no API</option>
-<option value="gemini">Google Gemini API</option>
-<option value="openrouter">OpenRouter API</option>
-<option value="groq">Groq API</option>
-</select>
-<label for="apiKey">API key</label>
-<input id="apiKey" type="password" autocomplete="off" placeholder="Enter your own key; not stored by this page">
-<label for="model">Model ID (optional)</label>
-<input id="model" placeholder="Leave blank for default">
-<label for="aiTask">Request</label>
-<select id="aiTask">
-<option value="review">Review and suggest changes</option>
-<option value="refactor">Refactor while preserving behavior</option>
-<option value="explain">Explain possible unused code</option>
-</select>
-<button id="askAI">Ask selected AI provider</button>
-<label for="aiResult">AI proposal</label>
-<textarea id="aiResult" spellcheck="false" placeholder="AI response appears here. Review it before applying."></textarea>
-<button id="useAI">Copy proposal to editor</button>
-</section>
-
-<section class="card">
-<h2>6. Limitations and safety</h2>
-<ul>
-<li>Dead-code detection is approximate. A symbol not found by text search may still be used through reflection, dynamic imports, templates, dependency injection, framework conventions or generated code.</li>
-<li>Runtime observation covers only the tested path and browser environment. Unexecuted code is not automatically useless.</li>
-<li>Python, Java, Kotlin, TypeScript and other languages receive heuristic source inspection here, not full compiler-grade parsing.</li>
-<li>This page does not bundle every refactoring framework or AI assistant. It provides a common local workbench and optional API adapters.</li>
-<li>Keep backups and run the project's own tests/build before accepting a refactor.</li>
-</ul>
-</section>
-<footer>Universal Refactoring Workbench · Review all proposed changes before using them in production.</footer>
-</main>
-
-<script>
-"use strict";
-const $ = id => document.getElementById(id);
-const project = new Map();
-const findings = [];
-let originalText = "";
-let editedText = "";
-let activePath = "";
-let objectUrls = [];
-let runtimeEvents = [];
-let runtimeTimer = null;
-
-const TEXT_EXT = /\.(html?|css|m?js|cjs|jsx?|tsx?|json|py|java|kts?|xml|md|txt|ya?ml|php|rb|go|rs|sql|sh|vue|svelte)$/i;
-
-function ext(path) {
-  const m = path.match(/\.([^.\/]+)$/);
-  return m ? m[1].toLowerCase() : "";
-}
-function kind(path) {
-  const e = ext(path);
-  if (["html","htm"].includes(e)) return "html";
-  if (e==="css") return "css";
-  if (["js","mjs","cjs","jsx"].includes(e)) return "javascript";
-  if (["ts","tsx"].includes(e)) return "typescript";
-  if (e==="py") return "python";
-  if (["java","kt","kts"].includes(e)) return "jvm";
-  if (e==="json") return "json";
-  return "other";
-}
-function addFinding(level,path,message,confidence="medium") {
-  findings.push({level,path,message,confidence});
-}
-function safeText(s) {
-  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function updateStats() {
-  const list=[...project.entries()];
-  const bytes=list.reduce((n,[,f])=>n+new Blob([f.content]).size,0);
-  const countTypes=type=>list.filter(([p])=>kind(p)===type).length;
-  $("stats").innerHTML=[
-    ["Files",list.length],["Size",bytes<1024*1024?(bytes/1024).toFixed(1)+" KB":(bytes/1024/1024).toFixed(2)+" MB"],
-    ["HTML",countTypes("html")],["CSS",countTypes("css")],["JavaScript",countTypes("javascript")],["Other",list.length-countTypes("html")-countTypes("css")-countTypes("javascript")]
-  ].map(([k,v])=>`<div class="stat"><span class="muted">${safeText(k)}</span><strong>${safeText(v)}</strong></div>`).join("");
-  $("fileList").innerHTML=list.map(([p])=>`<li>${safeText(p)}</li>`).join("");
-  const select=$("selectedFile"),prev=select.value;
-  select.innerHTML=list.map(([p])=>`<option value="${safeText(p)}">${safeText(p)}</option>`).join("");
-  if (project.has(prev)) select.value=prev;
-  else if (list.length) select.value=list[0][0];
-  if (!list.length) select.innerHTML='<option value="">No files loaded</option>';
-  loadSelected();
-}
-function loadSelected() {
-  const p=$("selectedFile").value;
-  if (!p || !project.has(p)) {activePath="";originalText="";editedText="";$("editor").value="";return;}
-  activePath=p; originalText=project.get(p).content; editedText=originalText;
-  $("editor").value=originalText;$("editStatus").textContent="Loaded "+p;
-}
-$("files").addEventListener("change",async e=>{
-  for(const f of [...e.target.files]){
-    if(f.size>15*1024*1024){alert(f.name+" is larger than the 15 MB per-file limit and was skipped.");continue;}
-    if(!TEXT_EXT.test(f.name))continue;
-    const content=await f.text();
-    // Browsers may expose only the basename. Use webkitRelativePath when directory upload is supported.
-    const path=f.webkitRelativePath||f.name;
-    project.set(path,{content,name:f.name,size:f.size});
+/**
+ * Analyze a single HTML document.
+ * @param {string} source Raw HTML source.
+ * @returns {{lines:number, elements:number, bytes:number, findings:Finding[], scripts:{total:number,inline:number,external:number}, styles:{inline:number,external:number}, comments:number, parserNote:string}}
+ */
+function analyzeHtml(source) {
+  if (typeof source !== "string") {
+    throw new TypeError("analyzeHtml(source) expects an HTML string.");
   }
-  updateStats();
-});
-$("selectedFile").addEventListener("change",loadSelected);
-$("clear").addEventListener("click",()=>{
-  project.clear();findings.length=0;$("findings").innerHTML='<tr><td colspan="4">Load files and run analysis.</td></tr>';
-  $("files").value="";updateStats();$("comparison").textContent="No comparison yet.";
-});
-function analyzeProject() {
-  findings.length=0;
-  const entries=[...project.entries()];
-  if(!entries.length)addFinding("error","—","No project files loaded.","high");
-  const allText=entries.map(([p,f])=>"\n/*FILE:"+p+"*/\n"+f.content).join("\n");
-  const knownPaths=new Set(entries.map(([p])=>p.replace(/\\/g,"/")));
-  for(const [path,file] of entries){
-    const s=file.content, k=kind(path);
-    if(!s.trim())addFinding("warning",path,"File is empty.","high");
-    if(s.charCodeAt(0)===0xFEFF)addFinding("info",path,"Leading BOM found.","high");
-    if(s.length>2_000_000)addFinding("warning",path,"Large source file; inspect performance.","high");
-    if(k==="html"){
-      if(!/^\uFEFF?\s*<!doctype\s+html\b/i.test(s))addFinding("warning",path,"Missing or non-leading HTML doctype.","high");
-      if(s.lastIndexOf("<!--")>s.lastIndexOf("-->"))addFinding("warning",path,"Possible unclosed HTML comment.","medium");
-      const ids=[...s.matchAll(/\bid\s*=\s*(["'])(.*?)\1/gi)].map(m=>m[2]);
-      const counts=new Map();ids.forEach(id=>counts.set(id,(counts.get(id)||0)+1));
-      for(const [id,n] of counts)if(id&&n>1)addFinding("warning",path,`Duplicate id="${id}" (${n} occurrences).`,"high");
-      for(const m of s.matchAll(/\son[a-z]+\s*=\s*(["'])/gi))addFinding("warning",path,`Inline event handler ${m[0].trim().split("=")[0]} found.`,"high");
-      if(/(?:href|src|action)\s*=\s*["']\s*javascript\s*:/i.test(s))addFinding("error",path,"Potential javascript: URL found.","high");
-      for(const m of s.matchAll(/(?:src|href)\s*=\s*["']([^"'#]+)["']/gi)){
-        const ref=m[1].split(/[?#]/)[0];
-        if(/^(?:https?:|data:|blob:|\/\/|mailto:|tel:|javascript:)/i.test(ref))continue;
-        const resolved=resolvePath(path,ref);
-        if(!knownPaths.has(resolved) && !ref.startsWith("/"))addFinding("warning",path,`Referenced local file not loaded: ${ref}`,"low");
-      }
+  if (typeof DOMParser === "undefined") {
+    throw new Error("This analyzer requires a browser with DOMParser support.");
+  }
+
+  const findings = [];
+  const seen = new Set();
+  const add = (severity, message, code = "HTML_AUDIT") => {
+    const key = `${severity}\u0000${code}\u0000${message}`;
+    if (seen.has(key) || findings.length >= MAX_FINDINGS) return;
+    seen.add(key);
+    const firstSentence = message.split(/(?<=[.!?])\s+/)[0] || message;
+    findings.push({ severity, title: firstSentence.length > 92 ? `${firstSentence.slice(0, 89)}…` : firstSentence, detail: message, code });
+  };
+
+  const doc = new DOMParser().parseFromString(source, "text/html");
+  const all = [...doc.querySelectorAll("*")];
+  const lines = source.length ? source.split(/\r\n|\r|\n/).length : 0;
+  const bytes = new TextEncoder().encode(source).length;
+  const scriptNodes = [...doc.querySelectorAll("script")];
+  const scripts = { total: scriptNodes.length, inline: scriptNodes.filter(node => !node.getAttribute("src")).length, external: scriptNodes.filter(node => Boolean(node.getAttribute("src"))).length };
+  const styleNodesForCount = [...doc.querySelectorAll("style")];
+  const styles = { inline: styleNodesForCount.length, external: doc.querySelectorAll('link[rel~="stylesheet"][href]').length };
+  const comments = (source.match(/<!--[\s\S]*?-->/g) || []).length;
+
+  // Preserve useful checks from the previous stable baseline.
+  const sourceWithoutClosedComments = source.replace(/<!--[\s\S]*?-->/g, "");
+  if (sourceWithoutClosedComments.includes("<!--")) {
+    add("warning", "A possible unclosed HTML comment marker remains in the source. Template syntax may affect this heuristic; review manually.", "POSSIBLE_UNCLOSED_COMMENT");
+  }
+  if (source.includes("{{") || source.includes("{%") || source.includes("<%")) {
+    add("info", "Template markers were detected. Preserve delimiters and source order during future transformations.", "TEMPLATE_SYNTAX");
+  }
+  if (bytes > 2 * 1024 * 1024) {
+    add("info", "The HTML source exceeds 2 MiB. Keep transformations conservative and test on a copy.", "LARGE_FILE");
+  }
+
+  // Document-level checks.
+  if (!/<\s*!doctype\s+html\s*>/i.test(source)) {
+    add("warning", "Missing <!doctype html>; browsers may use quirks mode.");
+  }
+  if (!doc.documentElement.hasAttribute("lang") || !doc.documentElement.lang.trim()) {
+    add("warning", "The <html> element has no language declaration (lang).");
+  }
+  if (!/<meta\b[^>]*\bcharset\s*=/i.test(source) &&
+      !/<meta\b[^>]*http-equiv\s*=\s*["']?content-type/i.test(source)) {
+    add("info", "No character-encoding declaration was found in the source.");
+  }
+  if (!doc.querySelector("title") || !doc.querySelector("title").textContent.trim()) {
+    add("warning", "The document has no non-empty <title>.");
+  }
+  if (!doc.querySelector('meta[name="viewport" i]')) {
+    add("info", "No viewport meta tag was found; mobile layout may not scale as intended.");
+  }
+
+  // Duplicate IDs: actual parsed elements, not a text-only regex.
+  const ids = new Map();
+  for (const el of all) {
+    const id = el.getAttribute("id");
+    if (id === null || id === "") continue;
+    ids.set(id, (ids.get(id) || 0) + 1);
+  }
+  for (const [id, count] of ids) {
+    if (count > 1) add("error", `Duplicate id="${id}" appears on ${count} elements; fragment links and selectors may target the wrong element.`, "DUPLICATE_ID");
+  }
+  const uniqueIds = new Set(ids.keys());
+  for (const link of doc.querySelectorAll('a[href^="#"]')) {
+    const fragment = link.getAttribute("href").slice(1);
+    if (!fragment) continue;
+    let decoded = fragment;
+    try { decoded = decodeURIComponent(fragment); } catch { /* retain raw fragment for conservative matching */ }
+    if (!uniqueIds.has(decoded)) add("warning", `An in-page link points to #${fragment}, but no matching id was found in this HTML document.`, "BROKEN_FRAGMENT");
+  }
+
+  // Accessibility and semantics.
+  for (const img of doc.querySelectorAll("img")) {
+    if (!img.hasAttribute("alt")) {
+      add("warning", "An <img> has no alt attribute; add descriptive alt text or alt=\"\" if decorative.");
     }
-    if(k==="css"){
-      const ids=[...s.matchAll(/#([A-Za-z_][\w-]*)/g)].map(m=>m[1]);
-      for(const id of new Set(ids)){
-        const htmlHas=entries.some(([p,f])=>kind(p)==="html" && new RegExp("\\bid\\s*=\\s*['\"]"+escapeRegExp(id)+"['\"]","i").test(f.content));
-        if(!htmlHas)addFinding("info",path,`CSS ID selector #${id} was not found in loaded HTML. It may be dynamically generated or used elsewhere.`,"low");
-      }
-      const classes=[...s.matchAll(/\.([A-Za-z_-][\w-]*)/g)].map(m=>m[1]).filter(x=>!["5s","75em"].includes(x));
-      for(const cls of new Set(classes)){
-        const htmlHas=entries.some(([p,f])=>kind(p)==="html" && new RegExp("\\bclass\\s*=\\s*['\"][^'\"]*\\b"+escapeRegExp(cls)+"\\b","i").test(f.content));
-        if(!htmlHas)addFinding("info",path,`CSS class .${cls} not found in static HTML. Dynamic use is possible.`,"low");
-      }
-    }
-    if(["javascript","typescript"].includes(k)){
-      if(/\beval\s*\(|new\s+Function\s*\(/.test(s))addFinding("warning",path,"Dynamic code execution construct found; review carefully.","high");
-      if(/\bdebugger\s*;?/.test(s))addFinding("info",path,"debugger statement found.","high");
-      const decl=/\b(?:function|class|const|let|var)\s+([A-Za-z_$][\w$]*)/g;
-      for(const m of s.matchAll(decl)){
-        const name=m[1];
-        const re=new RegExp("\\b"+escapeRegExp(name)+"\\b","g");
-        const occurrences=[...s.matchAll(re)].length;
-        const isExported=new RegExp("\\bexport\\b[^;\\n]*\\b"+escapeRegExp(name)+"\\b|\\bexport\\s*\\{[^}]*\\b"+escapeRegExp(name)+"\\b").test(s);
-        if(occurrences===1&&!isExported)addFinding("info",path,`Possible unused declaration: ${name}. Text-based estimate only.`,"low");
-      }
-      if(/\bimport\s*(?:\(|['"])/.test(s)&&/\bimport\s*\(/.test(s))addFinding("info",path,"Dynamic imports found; static dependency analysis may be incomplete.","medium");
-    }
-    if(k==="python"){
-      for(const m of s.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm)){
-        const name=m[1], re=new RegExp("\\b"+escapeRegExp(name)+"\\b","g");
-        if([...s.matchAll(re)].length===1 && !name.startsWith("__"))addFinding("info",path,`Possible unused Python function: ${name}. Imports, reflection and external calls are not resolved.`,"low");
-      }
-      if(/\beval\s*\(|\bexec\s*\(/.test(s))addFinding("warning",path,"Dynamic Python execution found; review carefully.","high");
-    }
-    if(k==="jvm"){
-      for(const m of s.matchAll(/\b(?:public|private|protected)?\s*(?:static\s+)?(?:[\w<>?,.\[\]]+\s+)+([A-Za-z_$]\w*)\s*\([^;{}]*\)\s*(?:throws\s+[\w, ]+\s*)?\{/g)){
-        const name=m[1];
-        if(["if","for","while","switch","catch","synchronized"].includes(name))continue;
-        const re=new RegExp("\\b"+escapeRegExp(name)+"\\s*\\(","g");
-        if([...s.matchAll(re)].length===1)addFinding("info",path,`Possible unreferenced method: ${name}. Framework/reflection usage may be missed.`,"low");
-      }
-    }
-    if(k==="json"){
-      try{JSON.parse(s)}catch(e){addFinding("error",path,"JSON parse error: "+e.message,"high")}
+    if (!img.hasAttribute("src") && !img.hasAttribute("srcset")) {
+      add("warning", "An <img> has neither src nor srcset.");
     }
   }
-  const rows=findings.map(f=>`<tr><td class="${f.level==="error"?"bad":f.level==="warning"?"warn":"muted"}">${safeText(f.level.toUpperCase())}</td><td>${safeText(f.path)}</td><td>${safeText(f.message)}</td><td>${safeText(f.confidence)}</td></tr>`).join("");
-  $("findings").innerHTML=rows||'<tr><td colspan="4">No findings from these basic checks.</td></tr>';
-  return {files:entries.length,findings:findings.length,generatedAt:new Date().toISOString(),items:findings};
-}
-function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
-function resolvePath(from,ref){
-  const base=from.includes("/")?from.slice(0,from.lastIndexOf("/")+1):"";
-  const parts=(base+ref).split("/");
-  const out=[];
-  for(const p of parts){if(p===".." )out.pop();else if(p&&p!==".")out.push(p)}
-  return out.join("/");
-}
-$("analyze").addEventListener("click",()=>{
-  const r=analyzeProject();
-  $("editStatus").textContent=`Analysis finished: ${r.files} files, ${r.findings} findings.`;
-});
-$("exportReport").addEventListener("click",()=>{
-  const data={generatedAt:new Date().toISOString(),files:[...project.keys()],findings};
-  download(JSON.stringify(data,null,2),"refactoring-report.json","application/json");
-});
-function applyOperation(text,op){
-  if(op==="bom")return text.charCodeAt(0)===0xFEFF?text.slice(1):text;
-  if(op==="eol")return text.replace(/\r\n?/g,"\n");
-  if(op==="trim")return text.split(/\r\n|\r|\n/).map(line=>line.replace(/[ \t]+$/g,"")).join("\n");
-  if(op==="finalnewline")return text.endsWith("\n")?text:text+"\n";
-  return text;
-}
-$("apply").addEventListener("click",()=>{
-  const before=$("editor").value,op=$("mode").value;
-  if(op==="inspect"){editedText=before;$("editStatus").textContent="Inspect only: no transformation applied.";return}
-  const after=applyOperation(before,op);
-  $("editor").value=after;editedText=after;
-  if(activePath&&project.has(activePath))project.get(activePath).content=after;
-  $("editStatus").textContent=before===after?"No changes were needed.":"Operation applied. Review comparison before downloading.";
-});
-$("compare").addEventListener("click",()=>{
-  const before=originalText,after=$("editor").value;
-  if(before===after){$("comparison").textContent="No textual differences detected.";return}
-  const a=before.split(/\r\n|\r|\n/),b=after.split(/\r\n|\r|\n/);
-  const max=Math.max(a.length,b.length),out=[];
-  for(let i=0;i<max;i++){
-    if(a[i]===b[i])continue;
-    if(a[i]!==undefined)out.push("- "+(i+1)+": "+a[i]);
-    if(b[i]!==undefined)out.push("+ "+(i+1)+": "+b[i]);
-    if(out.length>500){out.push("… comparison truncated");break}
+  for (const frame of doc.querySelectorAll("iframe, frame")) {
+    if (!frame.getAttribute("title")?.trim()) {
+      add("warning", `A <${frame.tagName.toLowerCase()}> has no title for assistive technology.`);
+    }
   }
-  $("comparison").textContent=out.join("\n")||"No textual differences detected.";
-});
-$("downloadFile").addEventListener("click",()=>{
-  const name=(activePath||"source.txt").split("/").pop();
-  download($("editor").value,name.replace(/(\.[^.]+)?$/,".refactored$1"),"text/plain;charset=utf-8");
-});
-function download(text,name,type){
-  const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  for (const control of doc.querySelectorAll("input, select, textarea")) {
+    if (control.type === "hidden" || control.disabled) continue;
+    const id = control.id;
+    const hasLabel = (id && [...doc.querySelectorAll("label[for]")].some(label => label.htmlFor === id)) ||
+      Boolean(control.closest("label")) ||
+      Boolean(control.getAttribute("aria-label")?.trim()) ||
+      Boolean(control.getAttribute("aria-labelledby")?.trim());
+    if (!hasLabel) add("warning", `A <${control.tagName.toLowerCase()}${control.type ? ` type="${control.type}"` : ""}> may lack an accessible label.`);
+  }
+  for (const button of doc.querySelectorAll("button, input[type=button], input[type=submit], input[type=reset]")) {
+    const name = button.tagName.toLowerCase() === "input"
+      ? button.value
+      : button.textContent.replace(/\s+/g, " ").trim();
+    if (!name && !button.getAttribute("aria-label")?.trim() && !button.getAttribute("aria-labelledby")?.trim()) {
+      add("warning", `A <${button.tagName.toLowerCase()}> has no obvious accessible name.`);
+    }
+  }
+  for (const link of doc.querySelectorAll("a")) {
+    if (!link.hasAttribute("href")) {
+      add("info", "An <a> element has no href; confirm it is intentionally being used as a non-navigation element.");
+    }
+    if (link.getAttribute("target")?.toLowerCase() === "_blank") {
+      const rel = new Set((link.getAttribute("rel") || "").toLowerCase().split(/\s+/).filter(Boolean));
+      if (!rel.has("noopener")) add("info", 'A link uses target="_blank" without rel="noopener"; review opener isolation and intended behavior.');
+    }
+  }
+
+  // Suspicious constructs: findings are contextual, not automatic deletion instructions.
+  let inlineHandlerCount = 0;
+  const handlerNames = new Set();
+  for (const el of all) {
+    for (const attr of [...el.attributes]) {
+      if (/^on[a-z]+$/i.test(attr.name)) {
+        inlineHandlerCount++;
+        handlerNames.add(attr.name.toLowerCase());
+      }
+    }
+  }
+  if (inlineHandlerCount) {
+    add("info", `Found ${inlineHandlerCount} inline event-handler attribute(s) (${[...handlerNames].sort().join(", ")}). These are not automatically defects; inspect their behavior before changing them.`);
+  }
+
+  for (const el of all) {
+    for (const attrName of ["href", "src", "action", "formaction", "xlink:href"]) {
+      if (!el.hasAttribute(attrName)) continue;
+      const value = el.getAttribute(attrName).trim();
+      if (/^javascript\s*:/i.test(value)) {
+        add("warning", `A javascript: URL was found in ${el.tagName.toLowerCase()}[${attrName}]; verify necessity and security.`, "JAVASCRIPT_URL");
+      }
+      if (!value && ["src", "action", "formaction"].includes(attrName)) {
+        add("info", `An empty ${attrName} attribute was found on <${el.tagName.toLowerCase()}>; verify intended browser behavior.`);
+      }
+    }
+  }
+
+  // Local references cannot be proven missing when only one HTML file is supplied.
+  const localRefs = new Set();
+  const externalRefs = new Set();
+  const addReference = raw => {
+    const value = String(raw || "").trim();
+    if (!value || value.startsWith("#") || /^data:/i.test(value)) return;
+    if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(value)) {
+      if (/^(?:https?:)?\/\//i.test(value)) externalRefs.add(value);
+      return;
+    }
+    localRefs.add(value.split(/[?#]/, 1)[0]);
+  };
+  for (const el of all) {
+    for (const attr of ["src", "href", "poster", "data", "action", "formaction"]) {
+      if (el.hasAttribute(attr)) addReference(el.getAttribute(attr));
+    }
+    if (el.hasAttribute("srcset")) {
+      for (const part of el.getAttribute("srcset").split(",")) addReference(part.trim().split(/\s+/)[0]);
+    }
+  }
+  for (const style of doc.querySelectorAll("style")) {
+    for (const match of style.textContent.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)) addReference(match[1]);
+  }
+  if (localRefs.size) {
+    add("info", `${localRefs.size} relative/local resource reference(s) were found. Because only this HTML file is analyzed, their existence and deployment paths cannot be verified: ${[...localRefs].slice(0, 8).join(", ")}${localRefs.size > 8 ? ", …" : ""}.`);
+  }
+  if (externalRefs.size) {
+    add("info", `${externalRefs.size} external HTTP(S) resource reference(s) were found. Network availability and remote content were not checked.`);
+  }
+
+  // CSS matching: analyze only CSS embedded in this HTML. External stylesheets are not fetched.
+  // Report competing declarations, but never claim a definitive cascade winner.
+  const cssResult = inspectEmbeddedCss(doc);
+  for (const message of cssResult.messages.slice(0, MAX_CSS_CONFLICTS)) add("info", message);
+  if (cssResult.externalStylesheets > 0) {
+    add("info", `${cssResult.externalStylesheets} linked stylesheet(s) were found but not loaded. CSS matches from those files cannot be assessed from this single-file input.`);
+  }
+  if (cssResult.unsupportedRules > 0) {
+    add("info", `${cssResult.unsupportedRules} CSS rule(s) could not be fully inspected (for example, unsupported or malformed selector syntax).`);
+  }
+
+  if (findings.length === 0) {
+    const message = "No issues were detected by the current checks. This is not proof that the document is fully valid, accessible, secure, or behaviorally correct.";
+    findings.push({ severity: "info", title: "No issues detected by current checks", detail: message, code: "NO_FINDINGS" });
+  }
+  if (findings.length >= MAX_FINDINGS) {
+    const message = `Finding limit (${MAX_FINDINGS}) reached; remaining checks may have additional results.`;
+    findings[MAX_FINDINGS - 1] = { severity: "info", title: "Finding limit reached", detail: message, code: "LIMIT_REACHED" };
+  }
+
+  return {
+    lines, elements: all.length, bytes, findings, scripts, styles, comments,
+    parserNote: "DOMParser may repair malformed markup in its in-memory representation. Findings are advisory; the original source text is not reserialized or changed."
+  };
 }
 
-// Runtime preview: run only in an opaque-origin sandbox; block network by CSP.
-function stopPreview(){
-  if(runtimeTimer)clearTimeout(runtimeTimer);
-  runtimeTimer=null;
-  $("preview").src="about:blank";
-}
-$("stopPreview").addEventListener("click",stopPreview);
-$("runPreview").addEventListener("click",()=>{
-  stopPreview();
-  const path=$("selectedFile").value;
-  if(!path||kind(path)!=="html"){ $("runtimeStatus").textContent="Select an HTML file first.";return; }
-  runtimeEvents=[];
-  $("runtimeLog").textContent="Starting isolated preview…";
-  const raw=$("editor").value;
-  const nonce="rt_"+Math.random().toString(36).slice(2);
-  const tracker=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' blob: data:; style-src 'unsafe-inline' blob: data:; img-src data: blob:; font-src data: blob:; media-src data: blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; form-action 'none'; base-uri 'none'">
-<script>
-(function(){
- const send=(type,detail)=>{try{parent.postMessage({__rf:${JSON.stringify(nonce)},type,detail:String(detail).slice(0,1200)},'*')}catch(e){}};
- window.addEventListener('error',e=>send('error',(e.message||'Error')+' at '+(e.filename||'')+':'+(e.lineno||0)));
- window.addEventListener('unhandledrejection',e=>send('promise rejection',e.reason&&e.reason.message||e.reason));
- const oldLog=console.log,oldWarn=console.warn,oldError=console.error;
- console.log=(...a)=>{send('console.log',a.join(' '));oldLog.apply(console,a)};
- console.warn=(...a)=>{send('console.warn',a.join(' '));oldWarn.apply(console,a)};
- console.error=(...a)=>{send('console.error',a.join(' '));oldError.apply(console,a)};
- const oldAdd=EventTarget.prototype.addEventListener;
- EventTarget.prototype.addEventListener=function(type,listener,opts){send('event listener registered',type);return oldAdd.call(this,type,listener,opts)};
- const oldTimeout=window.setTimeout;
- window.setTimeout=function(fn,delay,...args){send('setTimeout scheduled',delay+' ms');return oldTimeout.call(this,fn,delay,...args)};
- const oldInterval=window.setInterval;
- window.setInterval=function(fn,delay,...args){send('setInterval scheduled',delay+' ms');return oldInterval.call(this,fn,delay,...args)};
- window.addEventListener('load',()=>send('load','Document load event fired'));
- send('start','Preview JavaScript instrumentation active');
-})();
-<\/script>`;
-  // Resolve uploaded local script and stylesheet references to Blob URLs.
-  const urls=[];
-  let html=raw;
-  const base=path.includes("/")?path.slice(0,path.lastIndexOf("/")+1):"";
-  function lookup(ref){return resolvePath(path,ref)}
-  html=html.replace(/<(script|link)\b([^>]*?)\b(src|href)\s*=\s*(["'])(.*?)\4([^>]*)>/gi,(whole,tag,pre,attr,q,ref,post)=>{
-    const r=ref.split(/[?#]/)[0];
-    if(/^(?:https?:|\/\/|data:|blob:|#)/i.test(r))return whole;
-    const target=lookup(r),f=project.get(target);
-    if(!f)return whole;
-    const type=kind(target)==="javascript"?"text/javascript":kind(target)==="css"?"text/css":"text/plain";
-    const blob=URL.createObjectURL(new Blob([f.content],{type}));
-    urls.push(blob);
-    if(tag.toLowerCase()==="script")return `<script src="${blob}"><\/script>`;
-    return `<link rel="stylesheet" href="${blob}">`;
-  });
-  html=html.replace(/<head([^>]*)>/i,`<head$1>${tracker}`);
-  if(!/<head\b/i.test(html))html=tracker+html;
-  // Remove remote scripts/styles to prevent their loading from an untrusted project.
-  html=html.replace(/<script\b[^>]*\bsrc\s*=\s*["']https?:\/\/[^"']+["'][^>]*>\s*<\/script>/gi,"<!-- remote script blocked in sandbox -->");
-  html=html.replace(/<link\b[^>]*\bhref\s*=\s*["']https?:\/\/[^"']+["'][^>]*>/gi,"<!-- remote stylesheet blocked in sandbox -->");
-  objectUrls.forEach(URL.revokeObjectURL);objectUrls=urls;
-  const frame=$("preview");
-  frame.srcdoc=html;
-  $("runtimeStatus").textContent="Preview started. External network resources are blocked; local uploaded JS/CSS may load if referenced paths match.";
-  window.addEventListener("message",function handler(e){
-    if(e.source!==frame.contentWindow||!e.data||e.data.__rf!==nonce)return;
-    runtimeEvents.push({time:new Date().toLocaleTimeString(),type:e.data.type,detail:e.data.detail});
-    $("runtimeLog").textContent=runtimeEvents.slice(-250).map(x=>`[${x.time}] ${x.type}: ${x.detail}`).join("\n");
-  });
-  runtimeTimer=setTimeout(()=>{
-    $("runtimeStatus").textContent=`Observation window ended. Captured ${runtimeEvents.length} events. This is not proof that unobserved code is dead.`;
-    objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];
-  },15000);
-});
+function inspectEmbeddedCss(doc) {
+  const messages = [];
+  let externalStylesheets = 0;
+  let unsupportedRules = 0;
+  const records = new Map();
+  let ruleOrder = 0;
 
-// Optional API adapters. Keys are only held in the page's input field.
-async function askProvider(provider,key,model,prompt){
-  let url,headers={"Content-Type":"application/json"},body;
-  if(provider==="gemini"){
-    const m=model||"gemini-2.5-flash";
-    url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent?key=${encodeURIComponent(key)}`;
-    body={contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1}};
-  }else if(provider==="openrouter"){
-    url="https://openrouter.ai/api/v1/chat/completions";headers.Authorization="Bearer "+key;
-    body={model:model||"meta-llama/llama-3.3-70b-instruct:free",messages:[{role:"user",content:prompt}],temperature:0.1};
-  }else if(provider==="groq"){
-    url="https://api.groq.com/openai/v1/chat/completions";headers.Authorization="Bearer "+key;
-    body={model:model||"llama-3.3-70b-versatile",messages:[{role:"user",content:prompt}],temperature:0.1};
-  }else throw new Error("Choose an API provider.");
-  const res=await fetch(url,{method:"POST",headers,body:JSON.stringify(body)});
-  const data=await res.json().catch(()=>({}));
-  if(!res.ok)throw new Error(`HTTP ${res.status}: ${data.error?.message||data.message||"Request failed"}`);
-  if(provider==="gemini")return data.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
-  return data.choices?.[0]?.message?.content||"";
+  externalStylesheets = doc.querySelectorAll('link[rel~="stylesheet"][href]').length;
+
+  const styleNodes = [...doc.querySelectorAll("style")];
+  for (let styleIndex = 0; styleIndex < styleNodes.length; styleIndex++) {
+    const styleNode = styleNodes[styleIndex];
+    // Put the style into the parsed document to let the browser CSS parser interpret rules.
+    if (!doc.head) continue;
+    const temporaryStyle = doc.createElement("style");
+    temporaryStyle.textContent = styleNode.textContent || "";
+    doc.head.append(temporaryStyle);
+    let rules;
+    try {
+      rules = [...(temporaryStyle.sheet?.cssRules || [])];
+    } catch {
+      unsupportedRules++;
+      temporaryStyle.remove();
+      continue;
+    }
+
+    const walk = (ruleList, condition = "") => {
+      for (const rule of ruleList) {
+        ruleOrder++;
+        if (rule.type === 1 && rule.selectorText && rule.style) {
+          let matched = [];
+          try {
+            matched = [...doc.querySelectorAll(rule.selectorText)];
+          } catch {
+            unsupportedRules++;
+            continue;
+          }
+          for (const element of matched) {
+            const elementName = describeElement(element);
+            for (let i = 0; i < rule.style.length; i++) {
+              const property = rule.style[i];
+              const value = rule.style.getPropertyValue(property).trim();
+              const important = rule.style.getPropertyPriority(property) === "important";
+              const key = `${elementName}\u0000${property}`;
+              const list = records.get(key) || [];
+              list.push({ selector: rule.selectorText, property, value, important, condition, order: ruleOrder });
+              records.set(key, list);
+            }
+          }
+        } else if (rule.cssRules) {
+          const label = rule.conditionText || rule.name || rule.constructor?.name || "nested rule";
+          walk([...rule.cssRules], condition ? `${condition}; ${label}` : label);
+        }
+      }
+    };
+
+    walk(rules);
+    temporaryStyle.remove();
+  }
+
+  for (const [key, list] of records) {
+    const uniqueValues = new Set(list.map(item => `${item.value}\u0000${item.important ? "important" : "normal"}`));
+    if (uniqueValues.size < 2) continue;
+    const [element, property] = key.split("\u0000");
+    const declarations = list.slice(0, 5).map(item =>
+      `${item.selector} { ${item.property}: ${item.value}${item.important ? " !important" : ""} }${item.condition ? ` [${item.condition}]` : ""}`
+    );
+    messages.push(`Possible embedded-CSS conflict for ${element}, property “${property}”: ${declarations.join("; ")}${list.length > 5 ? "; …" : ""}. These selectors match the parsed element, but the analyzer does not determine the final computed value; confirm in browser DevTools → Computed.`);
+    if (messages.length >= MAX_CSS_CONFLICTS) break;
+  }
+
+  return { messages, externalStylesheets, unsupportedRules };
 }
-$("askAI").addEventListener("click",async()=>{
-  const provider=$("provider").value,key=$("apiKey").value.trim(),path=$("selectedFile").value;
-  if(provider==="none"){ $("aiResult").value="Local-only mode does not call an AI model. Use Analyze project for local heuristics.";return; }
-  if(!key){$("aiResult").value="Enter your own API key first.";return}
-  const src=$("editor").value;if(!src.trim()){$("aiResult").value="Select or paste code first.";return}
-  const task=$("aiTask").value;
-  const prompt=`You are a conservative code refactoring assistant.\nTask: ${task}\nFile: ${path}\nPreserve observable behavior, APIs, comments, template markers and dependencies. Do not claim code is unused solely because text search did not find it. Do not invent files. Provide the complete proposed source code first, then a concise list of risks and tests. Separate source code from notes with a line containing exactly ---NOTES---.\n\nSOURCE:\n${src}`;
-  $("askAI").disabled=true;$("aiResult").value="Contacting API…";
-  try{$("aiResult").value=await askProvider(provider,key,$("model").value.trim(),prompt)||"Provider returned an empty response."}
-  catch(e){$("aiResult").value="API request failed: "+e.message+"\n\nCheck your API key, model ID, quota, network and browser CORS policy."}
-  finally{$("askAI").disabled=false}
-});
-$("useAI").addEventListener("click",()=>{
-  const response=$("aiResult").value;
-  if(!response.trim())return;
-  const parts=response.split(/\n---NOTES---\n/);
-  const code=parts[0].replace(/^```[\w-]*\s*/,"").replace(/\s*```$/,"");
-  $("editor").value=code;editedText=code;
-  $("editStatus").textContent="AI proposal copied into editor. Review it, compare it and run project tests before accepting.";
-});
+
+function describeElement(element) {
+  let result = element.tagName.toLowerCase();
+  if (element.id) result += `#${element.id}`;
+  const classes = [...element.classList].slice(0, 4);
+  if (classes.length) result += classes.map(name => `.${name}`).join("");
+  return result;
+}
+
+
+/** Format byte counts for the workbench UI. */
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes) || bytes < 0) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  const units = ["KiB", "MiB", "GiB"];
+  let value = bytes / 1024;
+  let index = 0;
+  while (value >= 1024 && index < units.length - 1) { value /= 1024; index++; }
+  return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[index]}`;
+}
+
+/** Conservative source-level transformations. Never parse/re-serialize HTML. */
+function buildCleanCopy(original,options={}){
+  const changes=[];let output=original;
+  if(options.removeBom&&output.charCodeAt(0)===0xFEFF){output=output.slice(1);changes.push("Removed leading UTF-8 BOM.")}
+  if(options.normalizeEol){const normalized=output.replace(/\r\n?/g,"\n");if(normalized!==output){output=normalized;changes.push("Normalized line endings to LF.")}}
+  return {output,changes,changed:output!==original,bytesBefore:new TextEncoder().encode(original).length,bytesAfter:new TextEncoder().encode(output).length};
+}
+
+const $=id=>document.getElementById(id);const fileInput=$("fileInput");let originalText=null,currentFileName="template.html",latestOutput=null;
+function status(id,message,klass="status"){const el=$(id);el.textContent=message;el.className=klass}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderReport(report){
+  $("metrics").innerHTML=[["Lines",report.lines],["HTML elements",report.elements],["Findings",report.findings.filter(f=>f.code!=="NO_FINDINGS").length],["File size",formatBytes(report.bytes)]].map(([a,b])=>`<div class="metric"><span>${a}</span><strong>${b}</strong></div>`).join("");
+  $("findings").className="findings";
+  $("findings").innerHTML=report.findings.map(f=>`<article class="finding ${f.severity==="warning"?"warning":f.severity==="error"?"error":""}"><div class="finding-title"><span>${escapeHtml(f.title)}</span><span>${escapeHtml(f.severity.toUpperCase())}</span></div><p>${escapeHtml(f.detail)}</p></article>`).join("");
+  $("findings").insertAdjacentHTML("beforeend",`<article class="finding"><div class="finding-title"><span>Structure inventory</span><span>INFO</span></div><p>${report.scripts.total} script(s): ${report.scripts.inline} inline, ${report.scripts.external} external. ${report.styles.inline} style block(s), ${report.styles.external} external stylesheet link(s). ${report.comments} HTML comment(s).</p><p>${escapeHtml(report.parserNote)}</p></article>`);
+}
+function clearOutput() {latestOutput=null;$("output").value="";$("downloadBtn").disabled=true;status("changeState","No output");$("diffSummary").textContent="No comparison yet."}
+fileInput.addEventListener("change",async()=>{const file=fileInput.files?.[0];clearOutput();originalText=null;if(!file)return;if(!/\.html?$/i.test(file.name)&&file.type!=="text/html"){status("fileState","Choose an HTML file","status caution");fileInput.value="";return}if(file.size>20*1024*1024){status("fileState","File over 20 MiB","status caution");$("fileMeta").textContent="This initial model limits files to 20 MiB to protect browser responsiveness.";fileInput.value="";return}try{originalText=await file.text();currentFileName=file.name;status("fileState","File loaded");$("fileMeta").textContent=`${file.name} · ${formatBytes(file.size)} · local browser processing`;$("analyzeBtn").disabled=false;$("previewBtn").disabled=false;$("resetBtn").disabled=false;status("analysisState","Ready to analyze")}catch(error){status("fileState","Could not read file","status caution");$("fileMeta").textContent=String(error)}});
+$("analyzeBtn").addEventListener("click",()=>{if(originalText===null)return;renderReport(analyzeHtml(originalText,currentFileName));status("analysisState","Analysis complete")});
+$("previewBtn").addEventListener("click",()=>{if(originalText===null)return;latestOutput=buildCleanCopy(originalText,{removeBom:$("removeBom").checked,normalizeEol:$("normalizeEol").checked});$("output").value=latestOutput.output;$("downloadBtn").disabled=false;status("changeState",latestOutput.changed?"Changes ready":"Copy unchanged");$("diffSummary").textContent=`${latestOutput.changes.length} change(s). Size: ${formatBytes(latestOutput.bytesBefore)} → ${formatBytes(latestOutput.bytesAfter)}. ${latestOutput.changes.join(" ")||"No selected change was needed; output matches the original."}`;$("refactorState").textContent=latestOutput.changed?"Review the output before using it. The original file has not been modified.":"No selected transformation was needed. The original file has not been modified."});
+$("downloadBtn").addEventListener("click",()=>{if(!latestOutput)return;const blob=new Blob([latestOutput.output],{type:"text/html;charset=utf-8"});const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download=`${currentFileName.replace(/\.html?$/i,"")}.refactored.html`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$("resetBtn").addEventListener("click",()=>{fileInput.value="";originalText=null;clearOutput();$("analyzeBtn").disabled=true;$("previewBtn").disabled=true;$("resetBtn").disabled=true;$("fileMeta").textContent="Your file is not uploaded anywhere by this tool.";$("metrics").innerHTML='<div class="metric"><span>Lines</span><strong>—</strong></div><div class="metric"><span>HTML elements</span><strong>—</strong></div><div class="metric"><span>Findings</span><strong>—</strong></div><div class="metric"><span>File size</span><strong>—</strong></div>';$("findings").className="findings empty";$("findings").textContent="Load a file and run analysis to see findings.";$("refactorState").textContent="No changes have been applied.";status("fileState","No file loaded");status("analysisState","Waiting for file")});
 </script>
 </body>
 </html>
