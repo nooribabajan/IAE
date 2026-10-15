@@ -1,0 +1,120 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Template V2 Refactor Model</title>
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <p class="eyebrow">LOCAL HTML TOOL · V0.1.0</p>
+      <h1>Template V2 Refactor Model</h1>
+      <p class="subtitle">
+        Inspect HTML, review possible issues and create a separate cleaned copy.
+        Your source file is never overwritten.
+      </p>
+    </header>
+
+    <section class="panel">
+      <h2>1. Select an HTML file</h2>
+      <label class="file-picker" for="fileInput">
+        <span class="file-icon">＋</span>
+        <span>
+          <strong>Choose HTML file</strong>
+          <small>HTML or HTM · Maximum 20 MB</small>
+        </span>
+      </label>
+      <input id="fileInput" type="file" accept=".html,.htm,text/html">
+
+      <div id="fileInfo" class="file-info">No file selected.</div>
+      <div id="status" class="status" role="status" aria-live="polite">
+        Ready.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>2. Analysis options</h2>
+
+      <label class="option">
+        <input id="removeBom" type="checkbox" checked>
+        <span>
+          <strong>Remove leading BOM</strong>
+          <small>Remove a byte-order mark at the start of the file.</small>
+        </span>
+      </label>
+
+      <label class="option">
+        <input id="normalizeLines" type="checkbox">
+        <span>
+          <strong>Normalize line endings</strong>
+          <small>Convert CRLF and CR line endings to LF.</small>
+        </span>
+      </label>
+
+      <button id="analyzeBtn" class="button secondary" disabled>
+        Analyze HTML
+      </button>
+      <button id="cleanBtn" class="button primary" disabled>
+        Build cleaned copy
+      </button>
+    </section>
+
+    <section class="panel">
+      <h2>3. Analysis report</h2>
+
+      <div class="metrics">
+        <div class="metric">
+          <span id="lineCount">—</span>
+          <small>Lines</small>
+        </div>
+        <div class="metric">
+          <span id="elementCount">—</span>
+          <small>Elements</small>
+        </div>
+        <div class="metric">
+          <span id="findingCount">—</span>
+          <small>Findings</small>
+        </div>
+      </div>
+
+      <ul id="findings" class="findings">
+        <li>Select a file to begin.</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>4. Output preview</h2>
+      <p class="muted">
+        Review the output before downloading. It is a separate copy.
+      </p>
+
+      <textarea
+        id="output"
+        spellcheck="false"
+        aria-label="Cleaned HTML preview"
+        placeholder="The cleaned HTML will appear here."
+      ></textarea>
+
+      <button id="downloadBtn" class="button primary" disabled>
+        Download cleaned HTML
+      </button>
+    </section>
+
+    <footer>
+      <p>
+        <strong>Safety:</strong> Analysis is advisory. No code is executed by
+        this tool, and no file is uploaded to a server. DOMParser may repair
+        malformed markup when analyzing it, so its findings are not a
+        guarantee of valid HTML.
+      </p>
+      <p>Template V2 Refactor Model · v0.1.0</p>
+    </footer>
+  </main>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
