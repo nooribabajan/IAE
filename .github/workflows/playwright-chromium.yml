@@ -1,0 +1,64 @@
+
+name: IAE Playwright Chromium Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Refactoring-Model/**"
+      - ".github/workflows/playwright-chromium.yml"
+
+  pull_request:
+    branches: [main]
+    paths:
+      - "Refactoring-Model/**"
+      - ".github/workflows/playwright-chromium.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: iae-playwright-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromium-tests:
+    name: Run Chromium regression tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: Refactoring-Model
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: npm run test:chromium
+
+      - name: Upload Playwright diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iae-playwright-diagnostics
+          path: |
+            Refactoring-Model/playwright-report/
+            Refactoring-Model/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
