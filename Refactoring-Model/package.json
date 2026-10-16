@@ -1,0 +1,13 @@
+
+{
+  "name": "refactoring-model-chromium-tests",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Chromium regression tests for Refactoring Workbench",
+  "scripts": {
+    "test:chromium": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
