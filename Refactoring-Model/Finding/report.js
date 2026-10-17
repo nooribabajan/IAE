@@ -1,9 +1,9 @@
 {
   "schemaVersion": "unified-1.0",
-  "timestamp": "2026-10-17T05:38:28.731Z",
-  "fileName": "Refactoring%20Workbench-3.html",
+  "timestamp": "2026-10-17T08:33:19.403Z",
+  "fileName": "Refactoring_Workbench_two_warnings_addressed.html",
   "fileType": "html",
-  "sourceBytes": 112113,
+  "sourceBytes": 111895,
   "operations": [
     "html",
     "roles",
@@ -109,94 +109,28 @@
     },
     {
       "level": "info",
-      "title": "UNREFERENCED DECLARATION — INDIRECT USE POSSIBLE",
-      "detail": "variable $ appears 0 time(s), with no obvious call/reference beyond its declaration. Test event-driven, on-demand, reflective and externally invoked workflows before removal; if no legitimate role is demonstrated, mark for deletion.",
-      "operation": "Role & residue audit"
-    },
-    {
-      "level": "info",
-      "title": "UNREFERENCED DECLARATION — INDIRECT USE POSSIBLE",
-      "detail": "variable classRefs appears 1 time(s), with no obvious call/reference beyond its declaration. Test event-driven, on-demand, reflective and externally invoked workflows before removal; if no legitimate role is demonstrated, mark for deletion.",
-      "operation": "Role & residue audit"
-    },
-    {
-      "level": "info",
-      "title": "UNREFERENCED DECLARATION — INDIRECT USE POSSIBLE",
-      "detail": "variable emptyCount appears 1 time(s), with no obvious call/reference beyond its declaration. Test event-driven, on-demand, reflective and externally invoked workflows before removal; if no legitimate role is demonstrated, mark for deletion.",
-      "operation": "Role & residue audit"
-    },
-    {
-      "level": "warning",
-      "title": "DUPLICATE SELECTOR — compare definitions",
-      "detail": ".muted is defined 2 times at source orders 9, 10. Specificity 0-1-0; declarations: color: rgb(167, 181, 204); line-height: 1.55; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; max-width: 850px. Review cascade/context before merging or deleting.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "DUPLICATE SELECTOR — compare definitions",
-      "detail": "#unifiedOperations is defined 2 times at source orders 20, 29. Specificity 1-0-0; declarations: grid-template-columns: repeat(2, minmax(0px, 1fr)); grid-template-columns: 1fr. Review cascade/context before merging or deleting.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "DUPLICATE SELECTOR — compare definitions",
-      "detail": "#unifiedParameters .param-grid is defined 2 times at source orders 23, 29. Specificity 1-1-0; declarations: display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); row-gap: 12px; column-gap: 12px; grid-template-columns: 1fr. Review cascade/context before merging or deleting.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "DUPLICATE SELECTOR — compare definitions",
-      "detail": ".row is defined 2 times at source orders 30, 57. Specificity 0-1-0; declarations: display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); row-gap: 12px; column-gap: 12px; grid-template-columns: 1fr. Review cascade/context before merging or deleting.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "DUPLICATE SELECTOR — compare definitions",
-      "detail": ".stats is defined 2 times at source orders 40, 58. Specificity 0-1-0; declarations: display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); row-gap: 9px; column-gap: 9px; grid-template-columns: repeat(2, minmax(0px, 1fr)). Review cascade/context before merging or deleting.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "REVIEW — possible indirect reference",
-      "detail": "variable $: 0 total lexical occurrence(s), apparently declaration-only. Check event attributes, string/reflection access, external code and runtime routes before removal.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "REVIEW — possible indirect reference",
-      "detail": "variable classRefs: 1 total lexical occurrence(s), apparently declaration-only. Check event attributes, string/reflection access, external code and runtime routes before removal.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "warning",
-      "title": "REVIEW — possible indirect reference",
-      "detail": "variable emptyCount: 1 total lexical occurrence(s), apparently declaration-only. Check event attributes, string/reflection access, external code and runtime routes before removal.",
-      "operation": "Source inventory"
-    },
-    {
-      "level": "info",
       "title": "Cleanup made no changes",
-      "detail": "No source bytes were changed. no cleanup rules were selected. This is a no-op result, not an error.",
+      "detail": "No source bytes were changed. no leading BOM was present; line endings were already LF or no line endings needed normalization. This is a no-op result, not an error.",
       "operation": "Safe cleanup"
     }
   ],
   "operationResults": {
     "html": {
-      "lines": 354,
+      "lines": 353,
       "elements": 395,
-      "bytes": 112113,
+      "bytes": 111895,
       "findings": []
     },
     "roles": {
-      "timestamp": "2026-10-17T05:38:29.398Z",
+      "timestamp": "2026-10-17T08:33:19.793Z",
       "summary": {
         "elements": 395,
         "uniqueIds": 103,
         "uniqueClasses": 21,
         "cssSelectors": 62,
         "unmatchedCssCandidates": 16,
-        "jsDeclarations": 241,
-        "unreferencedJsCandidates": 3,
+        "jsDeclarations": 239,
+        "unreferencedJsCandidates": 0,
         "possibleOverrides": 0,
         "duplicateSelectorBlocks": 6,
         "externalScripts": 0,
@@ -288,21 +222,6 @@
           "level": "info",
           "title": "DYNAMIC OR CONDITIONAL CSS ROLE",
           "detail": ".badge has no static match, but an exact selector token is mentioned in embedded JavaScript. The reference may be conditional or string-based; verify the relevant workflow before changing it."
-        },
-        {
-          "level": "info",
-          "title": "UNREFERENCED DECLARATION — INDIRECT USE POSSIBLE",
-          "detail": "variable $ appears 0 time(s), with no obvious call/reference beyond its declaration. Test event-driven, on-demand, reflective and externally invoked workflows before removal; if no legitimate role is demonstrated, mark for deletion."
-        },
-        {
-          "level": "info",
-          "title": "UNREFERENCED DECLARATION — INDIRECT USE POSSIBLE",
-          "detail": "variable classRefs appears 1 time(s), with no obvious call/reference beyond its declaration. Test event-driven, on-demand, reflective and externally invoked workflows before removal; if no legitimate role is demonstrated, mark for deletion."
-        },
-        {
-          "level": "info",
-          "title": "UNREFERENCED DECLARATION — INDIRECT USE POSSIBLE",
-          "detail": "variable emptyCount appears 1 time(s), with no obvious call/reference beyond its declaration. Test event-driven, on-demand, reflective and externally invoked workflows before removal; if no legitimate role is demonstrated, mark for deletion."
         }
       ]
     },
@@ -315,9 +234,9 @@
           "detail": ".eyebrow · definitions: 1 · matched DOM elements: 15 · specificity: 0-1-0."
         },
         {
-          "level": "warning",
-          "title": "DUPLICATE SELECTOR — compare definitions",
-          "detail": ".muted is defined 2 times at source orders 9, 10. Specificity 0-1-0; declarations: color: rgb(167, 181, 204); line-height: 1.55; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; max-width: 850px. Review cascade/context before merging or deleting."
+          "level": "info",
+          "title": "REPEATED SELECTOR — review declarations",
+          "detail": ".muted is defined 2 times at source orders 9, 10. Specificity 0-1-0; declarations: color: rgb(167, 181, 204); line-height: 1.55; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; max-width: 850px. Repeated selectors are not automatically defects. Preserve responsive/context-specific rules and additive declarations unless a tested consolidation is justified."
         },
         {
           "level": "info",
@@ -375,9 +294,9 @@
           "detail": "#unifiedWorkspace · definitions: 1 · matched DOM elements: 1 · specificity: 1-0-0."
         },
         {
-          "level": "warning",
-          "title": "DUPLICATE SELECTOR — compare definitions",
-          "detail": "#unifiedOperations is defined 2 times at source orders 20, 29. Specificity 1-0-0; declarations: grid-template-columns: repeat(2, minmax(0px, 1fr)); grid-template-columns: 1fr. Review cascade/context before merging or deleting."
+          "level": "info",
+          "title": "RESPONSIVE SELECTOR REUSE — review cascade context",
+          "detail": "#unifiedOperations is defined 2 times at source orders 20, 29. Specificity 1-0-0; declarations: grid-template-columns: repeat(2, minmax(0px, 1fr)); grid-template-columns: 1fr. Repeated selectors are not automatically defects. Preserve responsive/context-specific rules and additive declarations unless a tested consolidation is justified."
         },
         {
           "level": "info",
@@ -395,9 +314,9 @@
           "detail": "#unifiedOperations input · definitions: 1 · matched DOM elements: 0 · specificity: 1-0-1 · JS token references: unifiedOperations."
         },
         {
-          "level": "warning",
-          "title": "DUPLICATE SELECTOR — compare definitions",
-          "detail": "#unifiedParameters .param-grid is defined 2 times at source orders 23, 29. Specificity 1-1-0; declarations: display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); row-gap: 12px; column-gap: 12px; grid-template-columns: 1fr. Review cascade/context before merging or deleting."
+          "level": "info",
+          "title": "RESPONSIVE SELECTOR REUSE — review cascade context",
+          "detail": "#unifiedParameters .param-grid is defined 2 times at source orders 23, 29. Specificity 1-1-0; declarations: display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); row-gap: 12px; column-gap: 12px; grid-template-columns: 1fr. Repeated selectors are not automatically defects. Preserve responsive/context-specific rules and additive declarations unless a tested consolidation is justified."
         },
         {
           "level": "info",
@@ -435,9 +354,9 @@
           "detail": "#unifiedWorkspace .item.info · definitions: 1 · matched DOM elements: 0 · specificity: 1-2-0 · JS token references: item, info."
         },
         {
-          "level": "warning",
-          "title": "DUPLICATE SELECTOR — compare definitions",
-          "detail": ".row is defined 2 times at source orders 30, 57. Specificity 0-1-0; declarations: display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); row-gap: 12px; column-gap: 12px; grid-template-columns: 1fr. Review cascade/context before merging or deleting."
+          "level": "info",
+          "title": "RESPONSIVE SELECTOR REUSE — review cascade context",
+          "detail": ".row is defined 2 times at source orders 30, 57. Specificity 0-1-0; declarations: display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); row-gap: 12px; column-gap: 12px; grid-template-columns: 1fr. Repeated selectors are not automatically defects. Preserve responsive/context-specific rules and additive declarations unless a tested consolidation is justified."
         },
         {
           "level": "info",
@@ -465,9 +384,9 @@
           "detail": ".actions · definitions: 1 · matched DOM elements: 11 · specificity: 0-1-0."
         },
         {
-          "level": "warning",
-          "title": "DUPLICATE SELECTOR — compare definitions",
-          "detail": ".stats is defined 2 times at source orders 40, 58. Specificity 0-1-0; declarations: display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); row-gap: 9px; column-gap: 9px; grid-template-columns: repeat(2, minmax(0px, 1fr)). Review cascade/context before merging or deleting."
+          "level": "info",
+          "title": "RESPONSIVE SELECTOR REUSE — review cascade context",
+          "detail": ".stats is defined 2 times at source orders 40, 58. Specificity 0-1-0; declarations: display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); row-gap: 9px; column-gap: 9px; grid-template-columns: repeat(2, minmax(0px, 1fr)). Repeated selectors are not automatically defects. Preserve responsive/context-specific rules and additive declarations unless a tested consolidation is justified."
         },
         {
           "level": "info",
@@ -620,14 +539,14 @@
           "detail": "78|BUTTON||tab|background-color|: .tab { background-color: rgb(28, 41, 65) } [specificity 0-1-0, order 14]; button { background-color: rgb(125, 211, 252) } [specificity 0-0-1, order 36]. Approximate winner: .tab { background-color: rgb(28, 41, 65) }. This is an advisory approximation; layers, shorthands, states, and media conditions can change the outcome."
         },
         {
-          "level": "warning",
-          "title": "REVIEW — possible indirect reference",
-          "detail": "variable $: 0 total lexical occurrence(s), apparently declaration-only. Check event attributes, string/reflection access, external code and runtime routes before removal."
+          "level": "info",
+          "title": "SHARED — multiple lexical references",
+          "detail": "variable $: 483 total lexical occurrences (482 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable reports: 31 total lexical occurrences (30 beyond declaration)."
+          "detail": "variable reports: 30 total lexical occurrences (29 beyond declaration)."
         },
         {
           "level": "info",
@@ -642,7 +561,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "function bytes: 62 total lexical occurrences (61 beyond declaration)."
+          "detail": "function bytes: 59 total lexical occurrences (58 beyond declaration)."
         },
         {
           "level": "info",
@@ -652,12 +571,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "function stats: 27 total lexical occurrences (26 beyond declaration)."
+          "detail": "function stats: 17 total lexical occurrences (16 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "function findings: 77 total lexical occurrences (76 beyond declaration)."
+          "detail": "function findings: 70 total lexical occurrences (69 beyond declaration)."
         },
         {
           "level": "info",
@@ -672,7 +591,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable a: 120 total lexical occurrences (119 beyond declaration)."
+          "detail": "variable a: 100 total lexical occurrences (99 beyond declaration)."
         },
         {
           "level": "info",
@@ -702,12 +621,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable p: 89 total lexical occurrences (88 beyond declaration)."
+          "detail": "variable p: 12 total lexical occurrences (11 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable start: 9 total lexical occurrences (8 beyond declaration)."
+          "detail": "variable start: 8 total lexical occurrences (7 beyond declaration)."
         },
         {
           "level": "info",
@@ -722,12 +641,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable out: 31 total lexical occurrences (30 beyond declaration)."
+          "detail": "variable out: 30 total lexical occurrences (29 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable add: 72 total lexical occurrences (71 beyond declaration)."
+          "detail": "variable add: 71 total lexical occurrences (70 beyond declaration)."
         },
         {
           "level": "info",
@@ -747,7 +666,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable id: 164 total lexical occurrences (163 beyond declaration)."
+          "detail": "variable id: 61 total lexical occurrences (60 beyond declaration)."
         },
         {
           "level": "info",
@@ -757,7 +676,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable label: 129 total lexical occurrences (128 beyond declaration)."
+          "detail": "variable label: 58 total lexical occurrences (57 beyond declaration)."
         },
         {
           "level": "info",
@@ -767,7 +686,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable missing: 11 total lexical occurrences (10 beyond declaration)."
+          "detail": "variable missing: 10 total lexical occurrences (9 beyond declaration)."
         },
         {
           "level": "info",
@@ -782,7 +701,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable local: 9 total lexical occurrences (8 beyond declaration)."
+          "detail": "variable local: 8 total lexical occurrences (7 beyond declaration)."
         },
         {
           "level": "info",
@@ -807,7 +726,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable records: 17 total lexical occurrences (16 beyond declaration)."
+          "detail": "variable records: 13 total lexical occurrences (12 beyond declaration)."
         },
         {
           "level": "info",
@@ -822,7 +741,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable rules: 20 total lexical occurrences (19 beyond declaration)."
+          "detail": "variable rules: 19 total lexical occurrences (18 beyond declaration)."
         },
         {
           "level": "info",
@@ -832,7 +751,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable context: 20 total lexical occurrences (19 beyond declaration)."
+          "detail": "variable context: 19 total lexical occurrences (18 beyond declaration)."
         },
         {
           "level": "info",
@@ -862,7 +781,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable first: 27 total lexical occurrences (26 beyond declaration)."
+          "detail": "variable first: 24 total lexical occurrences (23 beyond declaration)."
         },
         {
           "level": "info",
@@ -882,7 +801,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable c: 61 total lexical occurrences (60 beyond declaration)."
+          "detail": "variable c: 60 total lexical occurrences (59 beyond declaration)."
         },
         {
           "level": "info",
@@ -927,7 +846,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable js: 26 total lexical occurrences (25 beyond declaration)."
+          "detail": "variable js: 23 total lexical occurrences (22 beyond declaration)."
         },
         {
           "level": "info",
@@ -937,7 +856,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable suffix: 6 total lexical occurrences (5 beyond declaration)."
+          "detail": "variable suffix: 5 total lexical occurrences (4 beyond declaration)."
         },
         {
           "level": "info",
@@ -987,12 +906,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable selectors: 15 total lexical occurrences (14 beyond declaration)."
+          "detail": "variable selectors: 13 total lexical occurrences (12 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable item: 13 total lexical occurrences (12 beyond declaration)."
+          "detail": "variable item: 7 total lexical occurrences (6 beyond declaration)."
         },
         {
           "level": "info",
@@ -1007,7 +926,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable matches: 7 total lexical occurrences (6 beyond declaration)."
+          "detail": "variable matches: 6 total lexical occurrences (5 beyond declaration)."
         },
         {
           "level": "info",
@@ -1037,7 +956,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable conflicts: 7 total lexical occurrences (6 beyond declaration)."
+          "detail": "variable conflicts: 6 total lexical occurrences (5 beyond declaration)."
         },
         {
           "level": "info",
@@ -1057,7 +976,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable declarations: 26 total lexical occurrences (25 beyond declaration)."
+          "detail": "variable declarations: 22 total lexical occurrences (21 beyond declaration)."
         },
         {
           "level": "info",
@@ -1067,7 +986,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable name: 65 total lexical occurrences (64 beyond declaration)."
+          "detail": "variable name: 63 total lexical occurrences (62 beyond declaration)."
         },
         {
           "level": "info",
@@ -1097,7 +1016,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable level: 56 total lexical occurrences (55 beyond declaration)."
+          "detail": "variable level: 54 total lexical occurrences (53 beyond declaration)."
         },
         {
           "level": "info",
@@ -1112,7 +1031,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable r: 129 total lexical occurrences (128 beyond declaration)."
+          "detail": "variable r: 127 total lexical occurrences (126 beyond declaration)."
         },
         {
           "level": "info",
@@ -1122,7 +1041,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable elements: 23 total lexical occurrences (22 beyond declaration)."
+          "detail": "variable elements: 21 total lexical occurrences (20 beyond declaration)."
         },
         {
           "level": "info",
@@ -1131,13 +1050,13 @@
         },
         {
           "level": "info",
-          "title": "SHARED — multiple lexical references",
-          "detail": "class tokens: 3 total lexical occurrences (2 beyond declaration)."
+          "title": "REFERENCED — inspect dependency count",
+          "detail": "class tokens: 1 additional lexical occurrence(s) beyond declaration."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable css: 17 total lexical occurrences (16 beyond declaration)."
+          "detail": "variable css: 16 total lexical occurrences (15 beyond declaration)."
         },
         {
           "level": "info",
@@ -1147,7 +1066,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable dynamic: 20 total lexical occurrences (19 beyond declaration)."
+          "detail": "variable dynamic: 13 total lexical occurrences (12 beyond declaration)."
         },
         {
           "level": "info",
@@ -1162,7 +1081,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable value: 102 total lexical occurrences (101 beyond declaration)."
+          "detail": "variable value: 97 total lexical occurrences (96 beyond declaration)."
         },
         {
           "level": "info",
@@ -1177,7 +1096,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable selector: 56 total lexical occurrences (55 beyond declaration)."
+          "detail": "variable selector: 51 total lexical occurrences (50 beyond declaration)."
         },
         {
           "level": "info",
@@ -1203,11 +1122,6 @@
           "level": "info",
           "title": "REFERENCED — inspect dependency count",
           "detail": "variable idRefs: 1 additional lexical occurrence(s) beyond declaration."
-        },
-        {
-          "level": "warning",
-          "title": "REVIEW — possible indirect reference",
-          "detail": "variable classRefs: 1 total lexical occurrence(s), apparently declaration-only. Check event attributes, string/reflection access, external code and runtime routes before removal."
         },
         {
           "level": "info",
@@ -1252,22 +1166,22 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable source: 146 total lexical occurrences (145 beyond declaration)."
+          "detail": "variable source: 125 total lexical occurrences (124 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable role: 32 total lexical occurrences (31 beyond declaration)."
+          "detail": "variable role: 22 total lexical occurrences (21 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable runtime: 21 total lexical occurrences (20 beyond declaration)."
+          "detail": "variable runtime: 16 total lexical occurrences (15 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable residue: 18 total lexical occurrences (17 beyond declaration)."
+          "detail": "variable residue: 14 total lexical occurrences (13 beyond declaration)."
         },
         {
           "level": "info",
@@ -1282,7 +1196,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable checks: 23 total lexical occurrences (22 beyond declaration)."
+          "detail": "variable checks: 18 total lexical occurrences (17 beyond declaration)."
         },
         {
           "level": "info",
@@ -1297,12 +1211,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable report: 65 total lexical occurrences (64 beyond declaration)."
+          "detail": "variable report: 57 total lexical occurrences (56 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable rs: 6 total lexical occurrences (5 beyond declaration)."
+          "detail": "variable rs: 5 total lexical occurrences (4 beyond declaration)."
         },
         {
           "level": "info",
@@ -1317,7 +1231,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable s: 180 total lexical occurrences (179 beyond declaration)."
+          "detail": "variable s: 174 total lexical occurrences (173 beyond declaration)."
         },
         {
           "level": "info",
@@ -1332,12 +1246,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable scenario: 11 total lexical occurrences (10 beyond declaration)."
+          "detail": "variable scenario: 10 total lexical occurrences (9 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable run: 40 total lexical occurrences (39 beyond declaration)."
+          "detail": "variable run: 30 total lexical occurrences (29 beyond declaration)."
         },
         {
           "level": "info",
@@ -1362,17 +1276,17 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable original: 14 total lexical occurrences (13 beyond declaration)."
+          "detail": "variable original: 11 total lexical occurrences (10 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable output: 34 total lexical occurrences (33 beyond declaration)."
+          "detail": "variable output: 30 total lexical occurrences (29 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable changes: 19 total lexical occurrences (18 beyond declaration)."
+          "detail": "variable changes: 13 total lexical occurrences (12 beyond declaration)."
         },
         {
           "level": "info",
@@ -1382,7 +1296,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable before: 40 total lexical occurrences (39 beyond declaration)."
+          "detail": "variable before: 38 total lexical occurrences (37 beyond declaration)."
         },
         {
           "level": "info",
@@ -1392,7 +1306,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable A: 32 total lexical occurrences (31 beyond declaration)."
+          "detail": "variable A: 26 total lexical occurrences (25 beyond declaration)."
         },
         {
           "level": "info",
@@ -1427,7 +1341,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable row: 33 total lexical occurrences (32 beyond declaration)."
+          "detail": "variable row: 21 total lexical occurrences (20 beyond declaration)."
         },
         {
           "level": "info",
@@ -1452,7 +1366,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable data: 50 total lexical occurrences (49 beyond declaration)."
+          "detail": "variable data: 39 total lexical occurrences (38 beyond declaration)."
         },
         {
           "level": "info",
@@ -1467,12 +1381,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable keys: 16 total lexical occurrences (15 beyond declaration)."
+          "detail": "variable keys: 15 total lexical occurrences (14 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable items: 34 total lexical occurrences (33 beyond declaration)."
+          "detail": "variable items: 30 total lexical occurrences (29 beyond declaration)."
         },
         {
           "level": "info",
@@ -1487,12 +1401,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable width: 20 total lexical occurrences (19 beyond declaration)."
+          "detail": "variable width: 7 total lexical occurrences (6 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable headers: 9 total lexical occurrences (8 beyond declaration)."
+          "detail": "variable headers: 8 total lexical occurrences (7 beyond declaration)."
         },
         {
           "level": "info",
@@ -1517,7 +1431,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "function scanCode: 5 total lexical occurrences (4 beyond declaration)."
+          "detail": "function scanCode: 4 total lexical occurrences (3 beyond declaration)."
         },
         {
           "level": "info",
@@ -1562,12 +1476,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable select: 16 total lexical occurrences (15 beyond declaration)."
+          "detail": "variable select: 7 total lexical occurrences (6 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable current: 10 total lexical occurrences (9 beyond declaration)."
+          "detail": "variable current: 9 total lexical occurrences (8 beyond declaration)."
         },
         {
           "level": "info",
@@ -1577,17 +1491,17 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable prefix: 6 total lexical occurrences (5 beyond declaration)."
+          "detail": "variable prefix: 5 total lexical occurrences (4 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable preserved: 6 total lexical occurrences (5 beyond declaration)."
+          "detail": "variable preserved: 5 total lexical occurrences (4 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable pass: 12 total lexical occurrences (11 beyond declaration)."
+          "detail": "variable pass: 10 total lexical occurrences (9 beyond declaration)."
         },
         {
           "level": "info",
@@ -1647,12 +1561,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable selected: 18 total lexical occurrences (17 beyond declaration)."
+          "detail": "variable selected: 11 total lexical occurrences (10 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable h: 12 total lexical occurrences (11 beyond declaration)."
+          "detail": "variable h: 11 total lexical occurrences (10 beyond declaration)."
         },
         {
           "level": "info",
@@ -1662,7 +1576,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable file: 53 total lexical occurrences (52 beyond declaration)."
+          "detail": "variable file: 30 total lexical occurrences (29 beyond declaration)."
         },
         {
           "level": "info",
@@ -1697,7 +1611,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable style: 75 total lexical occurrences (74 beyond declaration)."
+          "detail": "variable style: 40 total lexical occurrences (39 beyond declaration)."
         },
         {
           "level": "info",
@@ -1717,17 +1631,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable contexts: 6 total lexical occurrences (5 beyond declaration)."
+          "detail": "variable contexts: 5 total lexical occurrences (4 beyond declaration)."
         },
         {
           "level": "info",
           "title": "REFERENCED — inspect dependency count",
           "detail": "variable selectorCount: 1 additional lexical occurrence(s) beyond declaration."
-        },
-        {
-          "level": "warning",
-          "title": "REVIEW — possible indirect reference",
-          "detail": "variable emptyCount: 1 total lexical occurrence(s), apparently declaration-only. Check event attributes, string/reflection access, external code and runtime routes before removal."
         },
         {
           "level": "info",
@@ -1747,12 +1656,12 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable title: 71 total lexical occurrences (70 beyond declaration)."
+          "detail": "variable title: 69 total lexical occurrences (68 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable m: 53 total lexical occurrences (52 beyond declaration)."
+          "detail": "variable m: 51 total lexical occurrences (50 beyond declaration)."
         },
         {
           "level": "info",
@@ -1762,7 +1671,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable candidate: 7 total lexical occurrences (6 beyond declaration)."
+          "detail": "variable candidate: 5 total lexical occurrences (4 beyond declaration)."
         },
         {
           "level": "info",
@@ -1772,7 +1681,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "function runUnified: 4 total lexical occurrences (3 beyond declaration)."
+          "detail": "function runUnified: 3 total lexical occurrences (2 beyond declaration)."
         },
         {
           "level": "info",
@@ -1782,22 +1691,22 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable lang: 9 total lexical occurrences (8 beyond declaration)."
+          "detail": "variable lang: 8 total lexical occurrences (7 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable cleaned: 18 total lexical occurrences (17 beyond declaration)."
+          "detail": "variable cleaned: 14 total lexical occurrences (13 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable checked: 36 total lexical occurrences (35 beyond declaration)."
+          "detail": "variable checked: 34 total lexical occurrences (33 beyond declaration)."
         },
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable evidence: 25 total lexical occurrences (24 beyond declaration)."
+          "detail": "variable evidence: 20 total lexical occurrences (19 beyond declaration)."
         },
         {
           "level": "info",
@@ -1817,7 +1726,7 @@
         {
           "level": "info",
           "title": "SHARED — multiple lexical references",
-          "detail": "variable second: 12 total lexical occurrences (11 beyond declaration)."
+          "detail": "variable second: 11 total lexical occurrences (10 beyond declaration)."
         },
         {
           "level": "info",
@@ -1827,10 +1736,10 @@
       ],
       "hasDynamic": true,
       "inventory": {
-        "sourceBytes": 112113,
+        "sourceBytes": 111895,
         "htmlComments": 0,
         "embeddedCssBytes": 4085,
-        "embeddedJsBytes": 84912,
+        "embeddedJsBytes": 84694,
         "cssSelectors": 57,
         "usedSelectors": 42,
         "unusedSelectorCandidates": 0,
@@ -1839,8 +1748,8 @@
         "cascadeConflicts": 696,
         "domClasses": 21,
         "domIds": 103,
-        "jsDeclarations": 241,
-        "unreferencedDeclarationCandidates": 3,
+        "jsDeclarations": 239,
+        "unreferencedDeclarationCandidates": 0,
         "sharedDeclarations": 204,
         "externalScripts": 0,
         "externalStylesheets": 0,
@@ -1850,9 +1759,9 @@
     },
     "clean": {
       "changes": [],
-      "originalBytes": 112113,
-      "outputBytes": 112113,
+      "originalBytes": 111895,
+      "outputBytes": 111895,
       "unchanged": true
     }
   }
-    }
+        }
