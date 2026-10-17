@@ -31,6 +31,7 @@
 <div class="panel"><p class="eyebrow">CLEANUP LIMITS</p><ul class="help"><li>Files are processed locally in this browser.</li><li>The automatic pass deduplicates safe CSS declarations/rules, removes simple class/ID rules with no static references, removes declaration-only const/let bindings with primitive literal values, and compacts whitespace in valid embedded JSON without changing string contents or keys. Dynamic markup or dynamic code disables the relevant removal pass; arbitrary HTML/JavaScript dead code is not guessed.</li><li>Uncertain code, comments, dynamic behavior, and conditional rules are preserved by this pass.</li><li>The original source remains unchanged; download the cleaned copy only after reviewing it.</li></ul></div>
 </main><footer>Refactoring Workbench v0.8.6 · direct refactoring workspace</footer>
 <script>
+ const escRe=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 'use strict';
 const $=id=>document.getElementById(id);const reports={html:null,data:null,code:null,inventory:null};
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -95,7 +96,6 @@ function scanDynamicCssUsage(source){
  }
  const dynamicMarkers=/classList\s*\.|className\s*=|setAttribute\s*\(\s*['"]class['"]|createElement\s*\(|innerHTML\s*=|insertAdjacentHTML\s*\(|outerHTML\s*=|document\.write\s*\(|`[^`]*\$\{/;
  const hasDynamic=dynamicMarkers.test(js),externalScripts=doc.querySelectorAll('script[src]').length,externalStylesheets=doc.querySelectorAll('link[rel~="stylesheet"][href]').length;
- const escRe=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  const rules=[],selectorDefs=new Map();let sourceOrder=0,unsupported=0;
  for(const original of [...doc.querySelectorAll('style')]){
   const temp=doc.createElement('style');temp.textContent=original.textContent||'';doc.head.append(temp);
