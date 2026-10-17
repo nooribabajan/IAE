@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light">
-<title>Refactoring Workbench v0.8.7 — source cleanup</title>
+<title>Refactoring Workbench v0.8.9 — source cleanup</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8edf7;background:#0a1020;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-width:320px}header{padding:25px clamp(16px,4vw,44px);background:#111a2e;border-bottom:1px solid #2a3853}h1{font-size:clamp(1.6rem,4vw,2.45rem);margin:.2rem 0 .5rem;letter-spacing:-.035em}h2{font-size:1.12rem;margin:0}h3{font-size:.98rem;margin:0 0 10px}.eyebrow{font-size:.72rem;letter-spacing:.14em;font-weight:800;color:#7dd3fc;margin:0 0 8px}.muted,.help{color:#a7b5cc;line-height:1.55}.muted{margin:0;max-width:850px}main{max-width:1200px;margin:auto;padding:20px clamp(12px,3vw,26px) 40px;display:grid;gap:16px}.panel{background:#111a2d;border:1px solid #293853;border-radius:16px;padding:clamp(14px,2.6vw,22px);min-width:0}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0}.tab{background:#1c2941;color:#dbe7f9;border:1px solid #394966}.tab.active{background:#7dd3fc;color:#082033;border-color:#7dd3fc}.pane{display:none}.pane.active{display:grid;gap:16px}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:block;font-size:.9rem;font-weight:650;margin-bottom:6px}.field{min-width:0}input[type=file],select,textarea{width:100%;border:1px solid #3b4a66;background:#080f1e;color:#e6edf8;border-radius:9px;padding:10px;font:inherit}textarea{min-height:190px;resize:vertical;font: .82rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}textarea.tall{min-height:300px}button{border:0;border-radius:9px;padding:10px 14px;font:inherit;font-weight:750;cursor:pointer;background:#7dd3fc;color:#082033}button.secondary{background:#263650;color:#e7eefb;border:1px solid #40516f}button:disabled{opacity:.4;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.stat{border:1px solid #2a3954;border-radius:10px;background:#0b1426;padding:11px;min-width:0}.stat small{display:block;color:#9cacc5}.stat strong{display:block;font-size:1.25rem;margin-top:4px;overflow-wrap:anywhere}.results{display:grid;gap:8px}.item{padding:11px 12px;border:1px solid #31405a;border-left:4px solid #7dd3fc;border-radius:9px;background:#0b1426;overflow-wrap:anywhere}.item.warning{border-left-color:#fbbf24}.item.error{border-left-color:#fb7185}.item.info{border-left-color:#7dd3fc}.item p{margin:5px 0 0;color:#afbdd1;line-height:1.5;font-size:.88rem}.badge{font-size:.72rem;letter-spacing:.04em;font-weight:800;color:#b7c7de}.status{padding:10px 12px;background:#0b1426;border:1px solid #2a3954;border-radius:9px;color:#aebed5;line-height:1.5}.diff{font: .8rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:560px;overflow:auto;background:#080e1a;border:1px solid #293853;border-radius:10px;padding:12px}footer{text-align:center;color:#8291aa;padding:0 12px 24px;font-size:.8rem}@media(max-width:700px){.row{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head>
 <body>
-<header><p class="eyebrow">LOCAL-FIRST · WORKBENCH 0.8.7 · SOURCE CLEANUP</p><h1>Refactoring Workbench</h1><p class="muted">Local-first source cleanup · HTML/CSS/JavaScript/JSON review · compare files · CSV/JSON profiling. Input files stay in this browser.</p></header>
+<header><p class="eyebrow">LOCAL-FIRST · WORKBENCH 0.8.9 · SOURCE CLEANUP</p><h1>Refactoring Workbench</h1><p class="muted">Local-first source cleanup · HTML/CSS/JavaScript/JSON review · compare files · CSV/JSON profiling. Input files stay in this browser.</p></header>
 <main>
 <nav class="tabs" aria-label="Workbench tools"><button class="tab active" data-tab="html">HTML audit</button><button class="tab" data-tab="compare">Compare & merge</button><button class="tab" data-tab="data">CSV / JSON analysis</button><button class="tab" data-tab="code">Code health</button><button class="tab" data-tab="repair">Repair / Refactor</button></nav>
 <section id="html" class="pane active">
@@ -162,9 +162,24 @@ function cssTopLevelParts(css){const parts=[];let start=0,i=0;while(i<css.length
 function dedupeCssDeclarations(body,selector,changes){if(body.includes('/*')||body.includes('{')||body.includes('}'))return body;const segments=[];let start=0,i=0;while(i<body.length){const c=body[i];if(c==='"'||c==="'"){const q=c;i++;while(i<body.length){if(body[i]==='\\'){i+=2;continue;}if(body[i++]===q)break;}continue;}if(c==='('||c==='['){const open=c,close=c==='('?')':']';let depth=1;i++;while(i<body.length&&depth){if(body[i]==='"'||body[i]==="'"){const q=body[i++];while(i<body.length){if(body[i]==='\\'){i+=2;continue;}if(body[i++]===q)break;}continue;}if(body[i]===open)depth++;else if(body[i]===close)depth--;i++;}continue;}if(c===';'){segments.push(body.slice(start,i+1));start=++i;continue;}i++;}if(start<body.length)segments.push(body.slice(start));const seen=new Set();let out='';for(const raw of segments){const declaration=raw.replace(/;$/,'').trim();const colon=declaration.indexOf(':');if(!declaration||colon<1){out+=raw;continue;}const property=declaration.slice(0,colon).trim(),value=declaration.slice(colon+1).trim();if(property.startsWith('--')){out+=raw;continue;}const key=property.toLowerCase()+'\u0000'+value;if(seen.has(key)){changes.push({operation:'remove-redundant-identical-css-declaration',selector,property,removedBytes:raw.length});continue;}seen.add(key);out+=raw;}return out;}
 function refactorTopLevelCss(css,changes,usageSource=null){const parts=cssTopLevelParts(css),out=[];for(let i=0;i<parts.length;i++){const p=parts[i];if(p.type==='rule'&&!p.selector.includes('/*')){const cleaned=dedupeCssDeclarations(p.body,p.selector,changes);if(cleaned!==p.body){p.body=cleaned;const open=p.raw.indexOf('{');p.raw=p.raw.slice(0,open+1)+cleaned+'}';}}if(p.type==='rule'&&!p.selector.includes('/*')&&p.body.trim()===''){changes.push({operation:'remove-empty-css-rule',selector:p.selector,removedBytes:p.raw.length});continue;}if(p.type==='rule'&&usageSource&&!p.selector.includes('/*')&&!p.selector.includes('[')&&!p.selector.includes('\\')){const branches=p.selector.split(',');const simple=branches.length>0&&branches.every(x=>/^\s*[.#][\w-]+(?::[\w-]+(?:\([^)]*\))?)*\s*$/.test(x));if(simple){const tokens=[...p.selector.matchAll(/[.#]([\w-]+)/g)].map(x=>x[1]);const used=tokens.some(token=>new RegExp('(^|[^\\w-])'+escRe(token)+'(?=$|[^\\w-])').test(usageSource));if(tokens.length&&!used){changes.push({operation:'remove-unreferenced-css-rule',selector:p.selector,removedBytes:p.raw.length});continue;}}}if(p.type==='rule'&&!p.selector.includes('/*')&&out.length){const prev=out[out.length-1];if(prev.type==='rule'&&!prev.selector.includes('/*')&&!prev.body.includes('/*')&&!p.body.includes('/*')&&prev.body===p.body&&prev.selector&&p.selector&&prev.selector!==p.selector){const prevSelectors=prev.selector.split(',').map(x=>x.trim()),nextSelectors=p.selector.split(',').map(x=>x.trim());if(!prevSelectors.some(x=>nextSelectors.includes(x))){prev.selector += ', '+p.selector;prev.raw=prev.lead+prev.selector+'{'+prev.body+'}';changes.push({operation:'merge-adjacent-identical-css-rules',selectors:[...prevSelectors,...nextSelectors],declarationBlock:prev.body,removedBytes:p.raw.length});continue;}}if(prev.type==='rule'&&!prev.body.includes('/*')&&!p.body.includes('/*')&&prev.selector===p.selector&&prev.body===p.body){changes.push({operation:'remove-adjacent-duplicate-css-rule',selector:p.selector,removedBytes:p.raw.length});continue;}}out.push({...p});}return out.map(p=>p.raw).join('');}
 function compactJsonWhitespace(json){JSON.parse(json);let out='',inString=false,escaped=false;for(const c of json){if(inString){out+=c;if(escaped)escaped=false;else if(c==='\\')escaped=true;else if(c==='"')inString=false;}else if(c==='"'){inString=true;out+=c;}else if(!/\s/.test(c))out+=c;}return out;}
+function cleanHtmlShell(source,changes){
+ // Safe source-level hygiene: normalize line endings/trailing whitespace and collapse excessive blank lines.
+ let out=source.replace(/\r\n?/g,'\n');
+ let n=0;out=out.replace(/[ \t]+(?=\n)/g,()=>{n++;return '';});
+ if(n)changes.push({operation:'remove-trailing-line-whitespace',removedBytes:n});
+ const before=out.length;out=out.replace(/\n{4,}/g,'\n\n\n');
+ if(out.length!==before)changes.push({operation:'collapse-excess-blank-lines',removedBytes:before-out.length});
+ // Ordinary HTML comments are source residue; preserve conditional comments and IE-style directives.
+ out=out.replace(/<!--[\s\S]*?-->/g,(m)=>{if(m.toLowerCase().startsWith('<!--[if')||m.toLowerCase().startsWith('<!-- <![endif'))return m;changes.push({operation:'remove-html-comment',removedBytes:m.length});return '';});
+ // Duplicate class tokens are semantically redundant. Do not touch other attributes.
+ out=out.replace(/(\bclass\s*=\s*)(["'])([^"']*)(\2)/gi,(full,prefix,q,value)=>{const toks=value.split(/\s+/).filter(Boolean),uniq=[...new Set(toks)];if(uniq.length===toks.length)return full;const cleaned=uniq.join(' ');changes.push({operation:'dedupe-html-class-tokens',removedBytes:value.length-cleaned.length});return prefix+q+cleaned+q;});
+ // Remove empty inline style/script blocks only; no surrounding markup is reflowed.
+ out=out.replace(/<style\b([^>]*)>\s*<\/style\s*>/gi,(full,attrs)=>{changes.push({operation:'remove-empty-style-element',removedBytes:full.length});return '';});
+ out=out.replace(/<script\b([^>]*)>\s*<\/script\s*>/gi,(full,attrs)=>{if(/\bsrc\s*=/.test(attrs))return full;changes.push({operation:'remove-empty-script-element',removedBytes:full.length});return '';});
+ return out;
+}
 function refactorInlineJs(source,changes){
  const scriptRe=/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
- const externalScript=/<script\b[^>]*\bsrc\s*=/i.test(source);
  const dynamicCode=/\b(?:eval|Function)\s*\(|\b(?:window|globalThis|self)\s*\[|\bwith\s*\(/;
  const literal=/(?:null|true|false|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/;
  let output='',last=0,m;
@@ -175,40 +190,41 @@ function refactorInlineJs(source,changes){
    try{const compact=compactJsonWhitespace(code);if(compact!==code)changes.push({operation:'compact-embedded-json-whitespace',removedBytes:code.length-compact.length});output+=m[0].slice(0,m[0].indexOf('>')+1)+compact+'</scr'+'ipt>';}catch{output+=m[0];}
    last=m.index+m[0].length;continue;
   }
-  if(externalScript||dynamicCode.test(source)||/\btype\s*=/.test(attrs)&&!/^(?:text\/javascript|application\/javascript)$/i.test(type.trim())){
+  if(/\bsrc\s*=/.test(attrs)||dynamicCode.test(code)||(/\btype\s*=/.test(attrs)&&!/^(?:text\/javascript|application\/javascript|module)$/i.test(type.trim()))){
    output+=m[0];last=m.index+m[0].length;continue;
   }
-  const bindingRe=new RegExp('(^|[;{}\\n])([ \t]*)(const|let)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*('+literal.source+')\\s*;','gm');
-  const cleaned=code.replace(bindingRe,(full,boundary,indent,kind,name)=>{
-   const count=(source.match(new RegExp('\\b'+escRe(name)+'\\b','g'))||[]).length;
+  let cleaned=code;
+  // debugger statements are unambiguously development residue.
+  cleaned=cleaned.replace(/(^|[;{}\n\r])[ \t]*debugger\s*;?[ \t]*(?=\n|\r|$|[;}])/gm,(full,boundary)=>{changes.push({operation:'remove-debugger-statement',removedBytes:full.length});return boundary;});
+  const bindingRe=new RegExp('(^|[;{}\\n])([ \\t]*)(const|let)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*('+literal.source+')\\s*;','gm');
+  cleaned=cleaned.replace(bindingRe,(full,boundary,indent,kind,name)=>{
+   const count=(cleaned.match(new RegExp('\\b'+escRe(name)+'\\b','g'))||[]).length;
    if(count!==1)return full;
-   changes.push({operation:'remove-unreferenced-primitive-js-binding',name,kind,removedBytes:full.length});
-   return boundary;
+   changes.push({operation:'remove-unreferenced-primitive-js-binding',name,kind,removedBytes:full.length});return boundary;
   });
   output+=m[0].slice(0,m[0].indexOf('>')+1)+cleaned+'</scr'+'ipt>';
   last=m.index+m[0].length;
  }
- output+=source.slice(last);
- return output;
+ output+=source.slice(last);return output;
 }
 function buildConservativeRefactor(source){
  const changes=[];
+ let output=cleanHtmlShell(source,changes);
  const styleRe=/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi;
- const usageSource=source.replace(styleRe,m=>' '.repeat(m.length));
- // If class/markup construction is dynamic, preserve potentially generated selectors.
- const dynamicMarkup=/\b(?:classList|setAttribute\s*\(\s*['\"]class|insertAdjacentHTML|innerHTML|outerHTML|document\.write)\b/.test(usageSource);
- let output='',last=0,m;
- while((m=styleRe.exec(source))){
-  output+=source.slice(last,m.index);
+ const usageSource=output.replace(styleRe,m=>' '.repeat(m.length));
+ const dynamicMarkup=/\b(?:classList|className\s*=|setAttribute\s*\(\s*['"]class|createElement\s*\(|insertAdjacentHTML|innerHTML\s*=|outerHTML\s*=|document\.write)\b/.test(usageSource);
+ let styled='',last=0,m;
+ while((m=styleRe.exec(output))){
+  styled+=output.slice(last,m.index);
   const tag=m[0],openEnd=tag.indexOf('>')+1,closeStart=tag.toLowerCase().lastIndexOf('</style');
   const before=tag.slice(0,openEnd),css=tag.slice(openEnd,closeStart),after=tag.slice(closeStart);
   const updated=refactorTopLevelCss(css,changes,dynamicMarkup?null:usageSource);
-  output+=before+updated+after;last=m.index+tag.length;
+  styled+=before+updated+after;last=m.index+tag.length;
  }
- output+=source.slice(last);
- output=refactorInlineJs(output,changes);
+ styled+=output.slice(last);
+ output=refactorInlineJs(styled,changes);
  return {source:output,changes};
 }
-$('buildAutoRefactor').addEventListener('click',()=>{try{const current=$('htmlSource').value;if(!current.trim())throw Error('Load or paste the target HTML in the HTML tab first.');const result=buildConservativeRefactor(current);if(result.source===current||!result.changes.length){$('repairOutput').value='';$('downloadRefactor').disabled=true;$('autoRefactorStatus').textContent='No safe CSS changes were found by this pass; the source was not altered.';return;}$('repairOutput').value=result.source;$('downloadRefactor').disabled=false;$('autoRefactorStatus').textContent=`Created a changed copy: ${result.changes.length} CSS cleanup operation(s); ${bytes(current)-bytes(result.source)} bytes removed. Original input remains unchanged.`;}catch(e){$('repairOutput').value='';$('downloadRefactor').disabled=true;$('autoRefactorStatus').textContent=`Cleanup stopped: ${e.message||String(e)}`;}});
+$('buildAutoRefactor').addEventListener('click',()=>{try{const current=$('htmlSource').value;if(!current.trim())throw Error('Load or paste the target HTML in the HTML tab first.');const result=buildConservativeRefactor(current);if(result.source===current||!result.changes.length){$('repairOutput').value=current;$('downloadRefactor').disabled=true;$('autoRefactorStatus').textContent='No safe cleanup changes were found; the source was left unchanged.';return;}$('repairOutput').value=result.source;$('downloadRefactor').disabled=false;const removed=current.length-result.source.length;const counts=result.changes.reduce((a,c)=>{const k=c.operation.includes('css')||c.operation.includes('CSS')?'CSS':c.operation.includes('js')||c.operation.includes('debugger')?'JavaScript':c.operation.includes('json')?'JSON':c.operation.includes('html')?'HTML':'Source hygiene';a[k]=(a[k]||0)+1;return a;},{});const summary=Object.entries(counts).map(([k,v])=>`${v} ${k}`).join(', ');$('autoRefactorStatus').textContent=`Created a cleaned copy: ${result.changes.length} cleanup operation(s) (${summary}); ${removed} bytes removed. Original input remains unchanged.`;}catch(e){$('repairOutput').value='';$('downloadRefactor').disabled=true;$('autoRefactorStatus').textContent=`Cleanup stopped: ${e.message||String(e)}`;}});
 $('downloadRefactor').addEventListener('click',()=>{const value=$('repairOutput').value;if(value)download('refactored-source.html',value,'text/html');});
 </script></body></html>
