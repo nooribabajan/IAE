@@ -1,6 +1,6 @@
 
 import { analyzeHtml } from "./analyzer.js";
-import { buildCleanCopy } from "./refactor.js";
+import { buildConservativeRefactor } from "./refactor.js";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
@@ -60,7 +60,6 @@ function renderReport(report) {
           ? "finding-warning"
           : "finding-info";
 
-    // Use textContent: HTML from the selected file is never inserted as markup.
     item.textContent =
       `[${finding.severity.toUpperCase()}] ${finding.message}`;
 
@@ -81,9 +80,7 @@ fileInput.addEventListener("change", async () => {
     return;
   }
 
-  const validName = /\.(html|htm)$/i.test(selectedFile.name);
-
-  if (!validName) {
+  if (!/\.(html|htm)$/i.test(selectedFile.name)) {
     fileInfo.textContent = "Unsupported file type.";
     analyzeBtn.disabled = true;
     setStatus("Choose an .html or .htm file.");
@@ -129,16 +126,29 @@ analyzeBtn.addEventListener("click", () => {
 cleanBtn.addEventListener("click", () => {
   if (originalText === null) return;
 
-  const options = {
-    removeBom: $("removeBom").checked,
-    normalizeLines: $("normalizeLines").checked
-  };
+  try {
+    const options = {
+      removeBom: $("removeBom").checked,
+      normalizeLines: $("normalizeLines").checked
+    };
 
-  outputText = buildCleanCopy(originalText, options);
-  output.value = outputText;
-  downloadBtn.disabled = false;
+    const result = buildConservativeRefactor(originalText, options);
 
-  setStatus("Separate cleaned copy is ready. Original file is unchanged.");
+    outputText = result.source;
+    output.value = outputText;
+    downloadBtn.disabled = false;
+
+    const summary = result.changes.length
+      ? result.changes.join(", ")
+      : "No changes needed";
+
+    setStatus(`Cleaned copy ready. ${summary}. Original file is unchanged.`);
+  } catch (error) {
+    outputText = null;
+    output.value = "";
+    downloadBtn.disabled = true;
+    setStatus(`Cleanup failed: ${error.message}`);
+  }
 });
 
 downloadBtn.addEventListener("click", () => {
@@ -150,11 +160,11 @@ downloadBtn.addEventListener("click", () => {
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-
   const baseName = selectedFile.name.replace(/\.(html|htm)$/i, "");
 
   link.href = url;
   link.download = `${baseName}.refactored.html`;
+
   document.body.append(link);
   link.click();
   link.remove();
