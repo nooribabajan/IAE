@@ -1,148 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="rtl" data-page="first-year-pre-medical">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Class 1 — Imperial Academy of Education</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>First Year Pre-Medical | Imperial Academy of Education</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth;width:100%;height:100%;}body{margin:0;width:100%;height:100%;overflow:hidden;background:#f3f0e8;color:#24332f;font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq",serif;line-height:2.15;overflow-wrap:anywhere;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+.site-header{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,#123c34,#285c4d);color:#fff;padding:0;border-bottom:5px solid #c79d32;overflow-wrap:anywhere;}
+.main-heading-strip{position:relative;min-height:145px;padding:28px 150px 29px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center}.main-heading-title{color:#f4d77b;font-family:Arial,sans-serif;font-weight:700;font-size:clamp(1.65rem,4.8vw,3rem);line-height:1.3;text-align:center;direction:ltr}.main-heading-subtitle{margin-top:8px;font-size:clamp(.9rem,2vw,1.15rem);text-align:center}.main-heading-logo{position:absolute;right:25px;top:20px;width:105px;max-width:18%;height:auto}.main-academy-id{position:absolute;left:10px;bottom:5px;color:#f4d77b;font:700 .68rem/1 Arial,sans-serif;direction:ltr;text-align:left;letter-spacing:.2px}.iae-logo{display:block;width:105px;max-width:40%;height:auto}
+.page-container{position:fixed;top:145px;left:3px;right:3px;bottom:3px;overflow:hidden;min-width:0;box-sizing:border-box;border-radius:0 0 10px 10px;}
+.level1-layout{position:absolute;inset:0;width:100%;max-width:100%;height:100%;margin:0;padding:20px 0 0 250px;display:block;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;direction:ltr;box-sizing:border-box;transition:padding-left .22s ease;scrollbar-gutter:stable;min-width:0;}
+.level1-layout.nav-expanded{padding-left:0}
+.reading-container{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;direction:rtl;padding:0;margin:0;}
+.level1-content{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;direction:rtl;background:#fffdf8;border-radius:22px;padding:40px;border:1px solid rgba(199,157,50,.35);box-shadow:0 8px 25px rgba(0,0,0,.08);overflow-wrap:anywhere;word-break:normal;hyphens:auto;container-type:inline-size;}
+.hero{text-align:center;padding-bottom:28px;border-bottom:1px solid #e3d9bf}.hero-icon{font-size:3rem}.hero h2{margin:8px 0;color:#173f35;font-family:Arial,sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.4}.vision-label{margin-top:15px;color:#9a7624;font-family:Arial,sans-serif;font-weight:bold;direction:ltr}.vision-text{color:#173f35;font-size:clamp(1.4rem,3vw,2rem);font-weight:bold;margin-top:8px;overflow-wrap:break-word}.gold-line{width:90px;height:4px;background:#c79d32;margin:18px auto;border-radius:10px}.introduction{width:100%;max-width:1000px;min-width:0;margin:30px auto}.introduction p{margin:0 0 22px;font-size:clamp(.96rem,1.6vw,1.1rem);overflow-wrap:break-word}.section-title{color:#173f35;margin:42px 0 15px;font-size:clamp(1.4rem,3vw,2rem);line-height:1.6}.vision-list{padding-right:30px;margin:15px 0 25px}.vision-list li{margin-bottom:7px}.highlight-box{background:#f7efd7;border-right:5px solid #c79d32;padding:20px;border-radius:12px;margin:25px 0;color:#173f35;overflow-wrap:break-word}.center{text-align:center}.final-vision{text-align:center;margin:45px -40px 0;padding:30px 40px 0;border-top:1px solid #e3d9bf;max-width:none;width:calc(100% + 80px);box-sizing:border-box}
+.class-navigation{position:fixed;left:20px;top:175px;bottom:12px;max-height:calc(100dvh - 190px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;width:230px;z-index:900;direction:rtl;transition:transform .22s ease,opacity .22s ease;will-change:transform,opacity}.class-navigation.nav-hidden{transform:translateX(calc(-100% - 24px));opacity:0;pointer-events:none}.nav-handle{position:fixed;left:0;top:205px;width:34px;min-height:108px;z-index:960;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:linear-gradient(135deg,#123c34,#285c4d);color:#f4d77b;border:1px solid #c79d32;border-left:0;border-radius:0 12px 12px 0;box-shadow:0 5px 16px rgba(0,0,0,.18);cursor:pointer;opacity:0;pointer-events:none;transition:opacity .22s ease}.nav-handle.visible{opacity:1;pointer-events:auto}.nav-handle span{font:700 .62rem/1 Arial,sans-serif;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.4px}.nav-reveal-zone{display:none}.class-heading{background:linear-gradient(135deg,#123c34,#285c4d);color:#f4d77b;text-align:center;padding:12px 8px;border-radius:12px;font-family:Arial,sans-serif;font-weight:bold;margin-bottom:10px}.class-tabs{display:flex;flex-direction:column;gap:1px}.class-tab{display:flex;width:100%;height:44px;min-height:44px;align-items:center;justify-content:center;text-decoration:none;text-align:center;background:#fff;color:#173f35;padding:6px 8px;border-radius:10px;border-right:4px solid #c79d32;box-shadow:0 4px 12px rgba(0,0,0,.07);transition:.2s}.class-tab:hover{transform:translateX(-3px);box-shadow:0 7px 18px rgba(0,0,0,.12)}.class-tab.active{background:linear-gradient(135deg,#173f35,#285c4d);border-right-color:#f4d77b;color:#fff}.class-name{display:block;font-family:Arial,sans-serif;font-weight:bold;font-size:1rem;line-height:1.25}.class-status{display:block;color:#9a7624;font-size:.7rem;margin-top:3px}.class-tab.active .class-name{color:#f4d77b}.class-tab.active .class-status{color:#fff}
+.iae-introduction-section{display:block;scroll-margin-top:20px}.iae-introduction{max-width:1000px;margin:30px auto}.intro-brand{background:linear-gradient(135deg,#123c34,#285c4d);color:#fff;text-align:center;padding:18px 15px 8px;border-radius:14px;border-bottom:4px solid #c79d32}.intro-brand h2{margin:0;color:#f4d77b;font-family:Arial,sans-serif;line-height:1.4}.intro-brand .iae-logo{margin:0 auto 10px}.intro-id{direction:ltr;text-align:left;margin-left:10px;margin-bottom:-5px;color:#f4d77b;font:.62rem/1 Arial,sans-serif}.iae-main-pillars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.iae-pillar{background:#fffaf0;border-right:5px solid #c79d32;padding:18px 20px;border-radius:12px;margin:18px 0;min-width:0;overflow-wrap:anywhere}.iae-pillar h3{margin:0 0 8px;color:#173f35}.level2-reserved{display:none}
+@media(max-width:700px){.iae-main-pillars{grid-template-columns:1fr}.level1-layout{padding:12px 6px 0}.class-navigation{left:6px;top:137px;bottom:8px;width:105px;max-height:calc(100dvh - 155px);overflow-y:auto;overscroll-behavior:contain}.nav-handle{top:160px;width:30px;min-height:92px}.main-heading-strip{min-height:120px;padding:22px 82px 27px 12px}.main-heading-logo{right:10px;top:18px;width:62px;max-width:none}.main-heading-title{font-size:clamp(1.25rem,6vw,1.8rem)}.main-heading-subtitle{font-size:.72rem}.main-academy-id{left:10px;bottom:5px;font-size:.58rem}.level1-content{padding:20px 13px;border-radius:15px}.introduction p{font-size:clamp(.86rem,3.7vw,1rem)}.section-title{font-size:1.35rem}.class-heading{font-size:.65rem;padding:7px 3px}.class-tab{padding:10px 3px;border-radius:8px;border-right-width:3px}.class-name{font-size:.62rem;line-height:1.4}.class-status{font-size:.48rem}.hero h2{font-size:1.45rem}.vision-text{font-size:1.25rem}.site-header .iae-logo,.intro-brand .iae-logo{width:80px}.final-vision{margin-left:-13px;margin-right:-13px;padding-left:13px;padding-right:13px;width:calc(100% + 26px)}.site-footer{left:-6px;width:calc(100% + 27px)}.level1-layout.nav-expanded .site-footer{left:0;width:calc(100% + 21px)}}
+.site-footer{position:relative;left:-250px;width:calc(100% + 265px);max-width:none;box-sizing:border-box;background:#123c34;color:#fff;text-align:center;padding:14px 15px;border-top:4px solid #c79d32}.site-footer strong{color:#f4d77b}.level1-layout.nav-expanded .site-footer{left:0;width:calc(100% + 15px)}.screen-frame{position:fixed;inset:0;z-index:2000;border:3px solid #c79d32;pointer-events:none;box-sizing:border-box;}
+.level1-content p,.level1-content li,.level1-content h1,.level1-content h2,.level1-content h3,.level1-content h4,.iae-pillar,.highlight-box,.section-title,.vision-text{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal;}
+.level1-content :is(p,li,h1,h2,h3,h4,blockquote,td,th,.vision-text,.highlight-box,.iae-pillar){box-sizing:border-box;}
+img{max-width:100%;height:auto;}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+/* First Year page: subject navigation and compact class introduction */
+.subject-tabs .class-tab{height:auto;min-height:44px;padding:9px 8px}
+.subject-tabs .class-name{font-size:.9rem}
+.teacher-card{margin:30px 0;padding:24px 22px;background:linear-gradient(135deg,#f8f1dc,#fffaf0);border:1px solid rgba(199,157,50,.5);border-right:5px solid #c79d32;border-radius:14px}
+.teacher-card h3{margin:0 0 10px;color:#173f35}
+.teacher-signature{margin-top:18px;color:#173f35;font-weight:bold}
+.subject-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.subject-card{min-width:0;background:#fffaf0;border:1px solid #e7dcc0;border-radius:12px;padding:15px 16px}
+.subject-card h4{margin:0 0 6px;color:#173f35;font-size:1.05rem}
+.subject-card p{margin:0;font-size:.95rem}
+@media(max-width:700px){.subject-grid{grid-template-columns:1fr}.teacher-card{padding:18px 14px}.subject-card{padding:13px}}
 
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #f4f0df, #e8f0e8);
-      color: #183b2b;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    header {
-      background: linear-gradient(135deg, #164d36, #236b4b);
-      color: #fff;
-      padding: 28px 20px;
-      text-align: center;
-      border-bottom: 4px solid #c9a227;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
-
-    header p {
-      margin: 8px 0 0;
-      font-size: 16px;
-      opacity: 0.95;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-    }
-
-    .welcome-card {
-      width: min(760px, 100%);
-      background: #fffdf5;
-      border: 2px solid #c9a227;
-      border-radius: 24px;
-      padding: 55px 35px;
-      text-align: center;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-    }
-
-    .icon {
-      font-size: 58px;
-      margin-bottom: 15px;
-    }
-
-    h2 {
-      margin: 0 0 18px;
-      color: #164d36;
-      font-size: 30px;
-    }
-
-    .message {
-      font-size: 20px;
-      line-height: 1.7;
-      color: #405348;
-      margin: 0;
-    }
-
-    .urdu {
-      margin-top: 20px;
-      font-size: 19px;
-      color: #6b5420;
-      direction: rtl;
-    }
-
-    footer {
-      background: #164d36;
-      color: #fff;
-      text-align: center;
-      padding: 16px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 24px;
-      }
-
-      .welcome-card {
-        padding: 40px 22px;
-      }
-
-      h2 {
-        font-size: 25px;
-      }
-
-      .message {
-        font-size: 18px;
-      }
-    }
-  </style>
+</style>
 </head>
-
 <body>
+<header class="site-header"><div class="main-heading-strip"><div class="main-academy-id">IAE0000000000</div><div class="main-heading-title">Imperial Academy of Education</div><img class="main-heading-logo" src="https://raw.githubusercontent.com/nooribabajan/imperial-academy/6d105e3eafa314c47af7bf0655fb7a4cd0fe44a7/IAE-logo-final.png" alt="Imperial Academy of Education"><div class="main-heading-subtitle">First Year Pre-Medical · Class XI · علم، فہم، کردار اور مستقبل</div></div></header>
+<div class="page-container" id="pageContainer"><div class="level1-layout"><div class="reading-container"><main class="level1-content" id="level1-main-page">
+<section class="hero">
+  <div class="vision-label">FIRST YEAR · PRE-MEDICAL</div>
+  <h2>خوش آمدید، مستقبل کے معمارو!</h2>
+  <div class="vision-text">خواب تمہارے، تعبیر ہم دیں گے</div>
+  <div class="gold-line"></div>
+  <p><strong>Imperial Academy of Education — Class XI</strong></p>
+</section>
+<section class="introduction">
+  <h3 class="section-title">🌿 ہماری کلاس میں خوش آمدید</h3>
+  <p>پیارے طالب علمو! فرسٹ ایئر پری میڈیکل آپ کے تعلیمی سفر کا ایک اہم اور دلچسپ مرحلہ ہے۔ یہاں آپ زندگی کے بنیادی سائنسی اصولوں کو گہرائی سے سمجھنا، سوال کرنا، مشاہدہ کرنا اور اپنے علم کو حقیقی دنیا سے جوڑنا سیکھیں گے۔</p>
+  <p>یہ صفحہ آپ کے لیے ایک منظم تعلیمی رہنما ہے۔ ہم چاہتے ہیں کہ آپ اعتماد کے ساتھ آگے بڑھیں، مستقل مزاجی اختیار کریں، اپنی غلطیوں سے سیکھیں اور اپنی صلاحیتوں کو روزانہ بہتر بنائیں۔ کامیابی ایک ہی دن میں نہیں بنتی؛ یہ چھوٹی، درست اور مسلسل کوششوں سے تعمیر ہوتی ہے۔</p>
 
-  <header>
-    <h1>🎓 Imperial Academy of Education</h1>
-    <p>Class 1</p>
-  </header>
+  <h3 class="section-title">🔬 آپ کے مضامین — علم کی نئی دنیا</h3>
+  <p>بائیں جانب موجود مضامین کے ٹیبز اس نمونے میں آپ کی رہنمائی کے لیے ہیں۔ ہر مضمون کے صفحے پر آگے چل کر تعارف، موضوعات، کورس آؤٹ لائن، اہم تصورات، مشقیں اور امتحانی تیاری شامل کی جا سکتی ہے۔ حتمی مواد متعلقہ بورڈ اور کالج کے منظور شدہ نصاب کے مطابق ترتیب دیا جائے گا۔</p>
+  <div class="subject-grid">
+    <article class="subject-card" id="biology"><h4>🧬 Biology — حیاتیات</h4><p>زندگی، خلیات، حیاتیاتی نظاموں اور جانداروں کے باہمی تعلق کو سمجھنے کا سفر۔</p></article>
+    <article class="subject-card" id="chemistry"><h4>⚗️ Chemistry — کیمیا</h4><p>مادّے کی ساخت، خواص، تبدیلیوں اور کیمیائی اصولوں کی دریافت۔</p></article>
+    <article class="subject-card" id="physics"><h4>⚙️ Physics — طبیعیات</h4><p>حرکت، توانائی، قوت اور کائنات کے بنیادی قوانین کو سمجھنے کی کوشش۔</p></article>
+    <article class="subject-card" id="english"><h4>📘 English — انگریزی</h4><p>مطالعہ، تحریر، اظہار اور سائنسی معلومات تک رسائی کی اہم مہارتیں۔</p></article>
+    <article class="subject-card" id="urdu"><h4>✍️ Urdu — اردو</h4><p>زبان، فہم، تحریر اور مؤثر اظہار کو بہتر بنانے کا موقع۔</p></article>
+    <article class="subject-card" id="islamiat"><h4>🌙 Islamiat — اسلامیات</h4><p>مقررہ نصاب کے مطابق دینی علم، اخلاقی شعور اور ذمہ دارانہ کردار۔</p></article>
+  </div>
 
-  <main>
-    <section class="welcome-card">
-      <div class="icon">🌱</div>
+  <div class="highlight-box center"><strong>یاد رکھیے:</strong><br>سوال کرنا کمزوری نہیں؛ سمجھنے کی طرف پہلا قدم ہے۔<br>غلطی ناکامی نہیں؛ درست رہنمائی کے ساتھ یہ سیکھنے کا موقع ہے۔</div>
 
-      <h2> Welcome To Your Educational Home</h2>
+  <section class="teacher-card" aria-labelledby="teacher-heading">
+    <h3 id="teacher-heading" class="section-title">🌷 آپ کی کلاس ٹیچر کی طرف سے نیک تمنائیں</h3>
+    <p><strong>محترمہ سکینہ فاطمہ — Class XI Mentor</strong></p>
+    <p>میرے عزیز طالب علمو! میں آپ کو اس نئے تعلیمی مرحلے پر دل سے خوش آمدید کہتی ہوں۔ اپنے مقصد کو واضح رکھیے، وقت کی قدر کیجیے، بنیادی تصورات کو مضبوط بنائیے اور کسی مشکل سوال کے سامنے ہمت نہ ہاریے۔ بڑے خواب ضرور دیکھیے، مگر انہیں روزانہ کی محنت، دیانت داری اور نظم و ضبط کے ساتھ حقیقت میں بدلیے۔</p>
+    <p>آپ کے ہر جائز سوال، ہر نئی کوشش اور ہر قدمِ پیش رفت کی اہمیت ہے۔ اپنی صحت، آرام اور ذہنی تازگی کا بھی خیال رکھیے؛ متوازن طالب علم زیادہ بہتر سیکھتا ہے۔ میری دعا ہے کہ یہ سال آپ کے لیے علم، اعتماد، اچھے کردار اور روشن امکانات کا ذریعہ بنے۔</p>
+    <p class="teacher-signature">آپ کے لیے خلوص اور بہترین تمناؤں کے ساتھ،<br>محترمہ سکینہ فاطمہ<br><span style="font-weight:normal">IAE کی علامتی کلاس مینٹر</span></p>
+    <p><small>وضاحت: سکینہ فاطمہ IAE کے لیے منتخب کردہ ایک علامتی اور حوصلہ افزا استادانہ نام ہے، حقیقی طور پر تعینات شخص کا دعویٰ نہیں۔ تعلیمی رہنمائی IAE کے تیار کردہ مواد، معاون ٹیکنالوجی، اور بانی کے زندگی کے تجربات، محنت اور سیکھے ہوئے اسباق سے تشکیل پائے گی۔</small></p>
+  </section>
 
-      <p class="message">
-        Your classes will be loaded soon,<br>
-        till that enjoy your leisure.
-      </p>
+  <h3 class="section-title">🎓 فرسٹ ایئر کا عہد</h3>
+  <p>ہم رٹنے کے بجائے سمجھنے، جلد بازی کے بجائے مستقل مزاجی، اور مایوسی کے بجائے بہتر کوشش کا راستہ اختیار کریں گے۔ ہمارا مقصد صرف امتحان میں نمبر حاصل کرنا نہیں، بلکہ مضبوط علمی بنیاد، واضح سوچ اور ذمہ دار کردار پیدا کرنا ہے۔</p>
+  <div class="highlight-box center"><strong>آپ کا مستقبل اہم ہے۔ آپ کی محنت اہم ہے۔ آپ کا یہاں خیرمقدم ہے۔</strong></div>
+  <section class="final-vision">
+    <div class="vision-label">OUR VISION</div>
+    <div class="vision-text">خواب تمہارے، تعبیر ہم دیں گے</div>
+    <div class="gold-line"></div>
+    <p><strong>Imperial Academy of Education</strong></p>
+    <p><strong>جہاں خواب راستہ پاتے ہیں۔</strong></p>
+  </section>
+</section>
+</main></div>
+<aside class="class-navigation" aria-label="First Year subjects">
+<div class="class-heading">CLASS XI<br><span style="font-size:.78rem">SUBJECTS</span></div>
+<nav class="class-tabs subject-tabs">
+<a href="#biology" class="class-tab"><span class="class-name">Biology</span></a>
+<a href="#chemistry" class="class-tab"><span class="class-name">Chemistry</span></a>
+<a href="#physics" class="class-tab"><span class="class-name">Physics</span></a>
+<a href="#english" class="class-tab"><span class="class-name">English</span></a>
+<a href="#urdu" class="class-tab"><span class="class-name">Urdu</span></a>
+<a href="#islamiat" class="class-tab"><span class="class-name">Islamiat</span></a>
+</nav>
+</aside><footer class="site-footer"><strong>Imperial Academy of Education</strong><br>First Year Pre-Medical · Class XI</footer></div></div>
 
-      <p class="urdu">
-        آپ کی کلاسیں جلد یہاں موجود ہوں گی۔<br>
-        تب تک اپنے فرصت کے وقت سے لطف اٹھائیں۔
-      </p>
-    </section>
-  </main>
-
-  <footer>
-    Imperial Academy of Education<br>
-    علم، فہم، کردار اور مستقبل
-  </footer>
-
-</body>
-  </html>
+<button class="nav-handle" type="button" aria-label="Show subject navigation" aria-expanded="false"><span>TABS</span><span>SUBJECTS</span></button>
+<script>
+(function(){
+  'use strict';
+  const nav=document.querySelector('.class-navigation');
+  const content=document.querySelector('.level1-content');
+  const layout=document.querySelector('.level1-layout');
+  const handle=document.querySelector('.nav-handle');
+  const header=document.querySelector('.site-header');
+  const pageContainer=document.getElementById('pageContainer');
+  if(!nav||!content||!layout||!handle||!pageContainer)return;
+  function syncFixedShell(){
+    const h=header?header.getBoundingClientRect().height:0;
+    pageContainer.style.top=h+'px';
+    nav.style.top=(h+12)+'px';
+    nav.style.maxHeight='calc(100dvh - '+(h+24)+'px)';
+    handle.style.top=(h+30)+'px';
+  }
+  syncFixedShell();
+  window.addEventListener('resize',syncFixedShell,{passive:true});
+  if(window.visualViewport)window.visualViewport.addEventListener('resize',syncFixedShell,{passive:true});
+  let interactionLock=false,lockTimer=null;
+  function lockNavigationForOneSecond(){
+    interactionLock=true;nav.style.pointerEvents='none';handle.style.pointerEvents='none';
+    if(lockTimer!==null)clearTimeout(lockTimer);
+    lockTimer=setTimeout(function(){interactionLock=false;nav.style.pointerEvents='';handle.style.pointerEvents='';lockTimer=null;},1000);
+  }
+  function hideNavigation(){if(interactionLock)return;nav.classList.add('nav-hidden');layout.classList.add('nav-expanded');handle.classList.add('visible');handle.setAttribute('aria-expanded','false');}
+  function showNavigation(){if(interactionLock)return;nav.classList.remove('nav-hidden');layout.classList.remove('nav-expanded');handle.classList.remove('visible');handle.setAttribute('aria-expanded','true');lockNavigationForOneSecond();}
+  content.addEventListener('click',hideNavigation);
+  layout.addEventListener('scroll',hideNavigation,{passive:true});
+  handle.addEventListener('click',function(event){event.preventDefault();event.stopPropagation();showNavigation();});
+  document.addEventListener('touchstart',function(event){const t=event.touches&&event.touches[0];if(t&&handle.classList.contains('visible')&&t.clientX<=60)showNavigation();},{passive:true});
+  /* Pinch zoom scales text inside the independent reading container; fixed shell stays unchanged. */
+  const textSelector='h1,h2,h3,h4,p,li,blockquote,td,th,.vision-text,.vision-label,.highlight-box,.iae-pillar,.section-title';
+  let zoom=1,gesture=null;const minZoom=1,maxZoom=2.5;
+  function collectText(){content.querySelectorAll(textSelector).forEach(function(el){if(!el.dataset.reflowBaseSize){const base=parseFloat(getComputedStyle(el).fontSize);if(Number.isFinite(base)&&base>0)el.dataset.reflowBaseSize=String(base);}});}
+  function applyZoom(value){
+    zoom=Math.max(minZoom,Math.min(maxZoom,value));collectText();
+    content.querySelectorAll(textSelector).forEach(function(el){const base=parseFloat(el.dataset.reflowBaseSize||'');if(Number.isFinite(base)&&base>0)el.style.fontSize=(base*zoom)+'px';el.style.maxWidth='100%';el.style.minWidth='0';el.style.overflowWrap='anywhere';el.style.boxSizing='border-box';});
+  }
+  function touchDistance(t){return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);}
+  content.style.touchAction='pan-y';
+  content.addEventListener('touchstart',function(e){if(e.touches.length!==2){if(e.touches.length<2)gesture=null;return;}if(!e.target.closest(textSelector)){gesture=null;return;}gesture={distance:touchDistance(e.touches),zoom:zoom};},{passive:true});
+  content.addEventListener('touchmove',function(e){if(!gesture||e.touches.length!==2||!gesture.distance)return;if(e.cancelable)e.preventDefault();applyZoom(gesture.zoom*(touchDistance(e.touches)/gesture.distance));},{passive:false});
+  function endGesture(e){if(!e.touches||e.touches.length<2)gesture=null;}
+  content.addEventListener('touchend',endGesture,{passive:true});content.addEventListener('touchcancel',endGesture,{passive:true});
+  collectText();
+})();
+</script>
+<div class="screen-frame" aria-hidden="true"></div>
+</body></html>
