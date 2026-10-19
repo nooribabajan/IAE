@@ -29,7 +29,7 @@ img{max-width:100%;height:auto;}
 .teacher-card h3{margin:0 0 10px;color:#173f35}
 .teacher-signature{margin-top:18px;color:#173f35;font-weight:bold}
 .subject-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
-.subject-card{min-width:0;height:42px;min-height:42px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#fffaf0;border:1px solid #e7dcc0;border-radius:10px;padding:6px 8px}
+.subject-card{min-width:0;height:42px;text-decoration:none;color:inherit;min-height:42px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#fffaf0;border:1px solid #e7dcc0;border-radius:10px;padding:6px 8px}
 .subject-card h4{margin:0;color:#173f35;font-size:.95rem;line-height:1.2;text-align:center;font-weight:bold;white-space:nowrap}.subject-alternative-note{min-width:0;min-height:42px;display:flex;align-items:center;justify-content:center;color:#173f35;font-size:.9rem;font-weight:normal;line-height:1.2;text-align:center;direction:rtl;overflow-wrap:normal}
 @media(max-width:700px){.subject-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.teacher-card{padding:18px 14px}.subject-card{padding:6px 4px}.subject-card h4{font-size:.78rem}.subject-alternative-note{font-size:.72rem;line-height:1.15}}
 
@@ -51,15 +51,16 @@ img{max-width:100%;height:auto;}
   <h3 class="section-title">🔬 آپ کے مضامین — علم کی نئی دنیا</h3>
   <p>مضامین کے ٹیبز سے اپنی مطلوبہ رہنمائی منتخب کریں۔ ہر مضمون کے لیے کورس آؤٹ لائن، اہم تصورات، مشقیں، عملی کام اور امتحانی تیاری مرحلہ وار شامل کی جا سکتی ہے۔ حتمی تدریسی مواد متعلقہ بورڈ کے منظور شدہ نصاب کے مطابق ترتیب دیا جائے گا؛ تیاری میں تصوراتی سمجھ، درست اصطلاحات، واضح جوابات اور وقت کی پابندی کو اہمیت دیں۔</p>
   <div class="subject-grid">
-    <article class="subject-card" id="english"><h4>English</h4></article>
-    <article class="subject-card" id="urdu"><h4>Urdu</h4></article>
-    <article class="subject-card" id="mathematics"><h4>Mathematics</h4></article>
-    <article class="subject-card" id="general-science"><h4>General Science</h4></article>
-    <article class="subject-card" id="social-studies"><h4>Social Studies</h4></article>
-    <article class="subject-card" id="islamiat"><h4>Islamiat</h4></article>
-    <article class="subject-card" id="ethics"><h4>Ethics</h4></article>
-    <article class="subject-card" id="nazra-quran"><h4>Nazra Quran</h4></article>
-    <article class="subject-card" id="pashto"><h4>Pashto</h4></article>
+    <a class="subject-card" id="urdu" href="Urdu/index.html"><h4>Urdu</h4></a>
+    <a class="subject-card" id="english" href="English/index.html"><h4>English</h4></a>
+    <a class="subject-card" id="mathematics" href="Mathematics/index.html"><h4>Mathematics</h4></a>
+    <a class="subject-card" id="general-science" href="General-Science/index.html"><h4>General Science</h4></a>
+    <a class="subject-card" id="social-studies" href="Social-Studies/index.html"><h4>Social Studies</h4></a>
+    <a class="subject-card" id="islamiat" href="Islamiat/index.html"><h4>Islamiat</h4></a>
+    <a class="subject-card" id="ethics" href="Ethics/index.html"><h4>Ethics</h4></a>
+    <a class="subject-card" id="nazra-quran" href="Nazra-Quran/index.html"><h4>Nazra Quran</h4></a>
+    <a class="subject-card" id="pashto" href="Pashto/index.html"><h4>Pashto</h4></a>
+    <a class="subject-card" id="art-drawing" href="Art-Drawing/index.html"><h4>Art &amp; Drawing</h4></a>
   </div>
 
   <div class="highlight-box center"><strong>یاد رکھیے:</strong><br>سوال کرنا کمزوری نہیں؛ سمجھنے کی طرف پہلا قدم ہے۔<br>غلطی ناکامی نہیں؛ درست رہنمائی کے ساتھ یہ سیکھنے کا موقع ہے۔</div>
@@ -74,8 +75,8 @@ img{max-width:100%;height:auto;}
 <aside class="class-navigation" aria-label="Class 4 subjects">
 <div class="class-heading">Subjects</div>
 <nav class="class-tabs subject-tabs">
-<a href="English/index.html" class="class-tab"><span class="class-name">English</span></a>
 <a href="Urdu/index.html" class="class-tab"><span class="class-name">Urdu</span></a>
+<a href="English/index.html" class="class-tab"><span class="class-name">English</span></a>
 <a href="Mathematics/index.html" class="class-tab"><span class="class-name">Mathematics</span></a>
 <a href="General-Science/index.html" class="class-tab"><span class="class-name">General Science</span></a>
 <a href="Social-Studies/index.html" class="class-tab"><span class="class-name">Social Studies</span></a>
@@ -83,6 +84,7 @@ img{max-width:100%;height:auto;}
 <a href="Ethics/index.html" class="class-tab"><span class="class-name">Ethics</span></a>
 <a href="Nazra-Quran/index.html" class="class-tab"><span class="class-name">Nazra Quran</span></a>
 <a href="Pashto/index.html" class="class-tab"><span class="class-name">Pashto</span></a>
+<a href="Art-Drawing/index.html" class="class-tab"><span class="class-name">Art &amp; Drawing</span></a>
 <a href="Dictionary/index.html" class="class-tab utility-tab"><span class="class-name">Dictionary</span></a>
 <a href="Revision/index.html" class="class-tab utility-tab"><span class="class-name">Revision</span></a>
 <a href="Strategies/index.html" class="class-tab utility-tab"><span class="class-name">Strategies</span></a>
