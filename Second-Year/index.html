@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ur" dir="rtl" data-page="second-year-pre-medical">
 <head>
@@ -112,7 +113,7 @@ img{max-width:100%;height:auto;}
   function syncFixedShell(){
     const h=header?header.getBoundingClientRect().height:0;
     pageContainer.style.top=h+'px';
-    nav.style.top=(h+12)+'px';
+    nav.style.top=h+'px';
     nav.style.maxHeight='calc(100dvh - '+(h+24)+'px)';
     handle.style.top=(h+30)+'px';
   }
@@ -180,10 +181,7 @@ img{max-width:100%;height:auto;}
     }
   });
   document.getElementById('previousPageButton').addEventListener('click',function(){
-    const ref=document.referrer;
-    if(ref){try{const previous=new URL(ref,window.location.href);if(previous.origin===window.location.origin&&previous.href!==window.location.href){window.location.assign(previous.href);return;}}catch(e){}}
-    if(window.history.length>1){window.history.back();return;}
-    window.location.assign('Imperial-Academy-Fixed-Containers-Reflow-main.html');
+    window.location.assign('../Imperial-Academy-Fixed-Containers-Reflow-main.html');
   });
   collectText();
 })();
