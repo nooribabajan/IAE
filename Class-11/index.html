@@ -175,9 +175,11 @@ img{max-width:100%;height:auto;}
       result.textContent=matches.length?('اس صفحے میں لفظ ملا: '+matches.slice(0,4).map(function(el){return el.textContent.trim();}).join('\n')):'یہ لفظ اس صفحے میں موجود نہیں۔ مکمل لغوی تعریف کے لیے مستند لغت دیکھیں۔';
     }
   });
-  document.getElementById('previousPageButton').addEventListener('click', function() {
+    document.getElementById('previousPageButton').addEventListener('click',function(){
     window.location.assign('../index.html');
-});
+  });
+  collectText();
+})();
 </script>
 <div class="screen-frame" aria-hidden="true"></div>
 </body></html>
