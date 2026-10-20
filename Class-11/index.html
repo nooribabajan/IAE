@@ -70,7 +70,8 @@ document.getElementById('previousPageButton').addEventListener('click', function
     } 
     // 3. Agar koi history nahi hai (Direct/New Tab open hua), toh safe fallback URL
     else {
-        window.location.href = '../../index.html'; // Ya phir absolute path jaise '/index.html'
+        window.location.href = '../index.html'; // Ya phir absolute path jaise '/index.html'
+ });
     }
 });
 collectText();
