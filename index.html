@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
@@ -79,7 +80,7 @@ img{max-width:100%;height:auto;}
   function syncFixedShell(){
     const h=header?header.getBoundingClientRect().height:0;
     pageContainer.style.top=h+'px';
-    nav.style.top=(h+12)+'px';
+    nav.style.top=h+'px';
     nav.style.maxHeight='calc(100dvh - '+(h+24)+'px)';
     handle.style.top=(h+1)+'px';
   }
