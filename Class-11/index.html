@@ -68,11 +68,7 @@ const tools={dictionary:{title:'Dictionary',html:'<p>کسی لفظ کا مطلب
 function openTool(key){const item=tools[key];if(!item)return;dialogTitle.textContent=item.title;dialogBody.innerHTML=item.html;dialog.hidden=false;const first=dialogBody.querySelector('input');if(first)first.focus();}closeDialog.addEventListener('click',function(){dialog.hidden=true;});dialog.addEventListener('click',function(e){if(e.target===dialog)dialog.hidden=true;});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!dialog.hidden)dialog.hidden=true;});
 dialogBody.addEventListener('click',function(e){const button=e.target.closest('[data-action]');if(!button)return;const result=document.getElementById('utilityResult');if(button.dataset.action==='search'){const q=(document.getElementById('pageSearchInput').value||'').trim().toLowerCase();if(!q){result.textContent='براہِ کرم تلاش کے لیے لفظ درج کریں۔';return;}const matches=Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,.subject-card')).filter(function(el){return el.textContent.toLowerCase().includes(q);});result.textContent=matches.length?('نتائج: '+matches.length+'\n'+matches.slice(0,8).map(function(el){return el.textContent.trim();}).join('\n')):'اس صفحے پر اس لفظ کا کوئی نتیجہ نہیں ملا۔';}else if(button.dataset.action==='dictionary'){const q=(document.getElementById('dictionaryInput').value||'').trim();if(!q){result.textContent='براہِ کرم پہلے کوئی لفظ درج کریں۔';return;}const matches=Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li')).filter(function(el){return el.textContent.toLowerCase().includes(q.toLowerCase());});result.textContent=matches.length?('اس صفحے میں لفظ ملا: '+matches.slice(0,4).map(function(el){return el.textContent.trim();}).join('\n')):'یہ لفظ اس صفحے میں موجود نہیں۔ مکمل لغوی تعریف کے لیے مستند لغت دیکھیں۔';}});
 document.getElementById('previousPageButton').addEventListener('click', function () {
-    if (window.history.length > 1) {
-        window.history.back();
-    } else {
-        window.location.assign('../index.html');
-    }
+    window.location.assign('../index.html');
 });
 collectText();
 })();
