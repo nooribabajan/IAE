@@ -187,8 +187,9 @@ img{max-width:100%;height:auto;}
     }
   });
   document.getElementById('previousPageButton').addEventListener('click', function() {
-    window.history.back(); // یہ سرور کے فولڈر والے مسئلے کو بائی پاس کر دے گا
+    window.location.assign('../../index.html'); // ایک اور '../' بڑھا دیا ہے
 });
+
 
   collectText();
 })();
