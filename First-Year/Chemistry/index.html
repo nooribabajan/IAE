@@ -1,0 +1,799 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperial Academy of Education</title>
+
+<style>
+:root {
+    --green-dark: #123c34;
+    --green: #1f6654;
+    --gold: #c59b35;
+    --gold-light: #f2d46f;
+    --blue: #1769aa;
+    --purple: #7048a8;
+    --red: #b83b4b;
+    --cream: #fffaf0;
+    --text: #18332d;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 10% 10%, rgba(242,212,111,.20), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(23,105,170,.13), transparent 25%),
+        linear-gradient(135deg, #f7f4e9, #eef6f2 50%, #f8f1df);
+}
+
+.top-bar {
+    height: 8px;
+    background: linear-gradient(
+        90deg, #123c34, #c59b35, #1769aa,
+        #7048a8, #b83b4b, #1f6654
+    );
+}
+
+header {
+    position: relative;
+    padding: 38px 20px 32px;
+    text-align: center;
+    background: linear-gradient(
+        135deg, rgba(18,60,52,.98), rgba(31,102,84,.96)
+    );
+    color: white;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,.16);
+}
+
+header::before,
+header::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    border: 1px solid rgba(242,212,111,.25);
+    border-radius: 50%;
+}
+
+header::before {
+    left: -90px;
+    top: -90px;
+}
+
+header::after {
+    right: -90px;
+    bottom: -100px;
+}
+
+.logo {
+    position: relative;
+    z-index: 2;
+    width: min(180px, 62vw);
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 118px;
+    object-fit: contain;
+    background: transparent;
+}
+
+.academy-name {
+    position: relative;
+    z-index: 2;
+    font-size: clamp(1.8rem, 6vw, 3.2rem);
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-shadow: 0 3px 10px rgba(0,0,0,.25);
+}
+
+.academy-subtitle {
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+    font-family: Arial, sans-serif;
+    font-size: .75rem;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+}
+
+.motto {
+    position: relative;
+    z-index: 2;
+    margin: 18px auto 0;
+    max-width: 650px;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: #f7f0d6;
+}
+
+.motto::before,
+.motto::after {
+    content: "◆";
+    color: var(--gold);
+    margin: 0 10px;
+    font-size: .6rem;
+}
+
+main {
+    width: min(1050px, 92%);
+    margin: 42px auto;
+}
+
+.welcome {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.welcome .subject-label {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(197,155,53,.14);
+    border: 1px solid rgba(197,155,53,.45);
+    color: #8a6820;
+    font-family: Arial, sans-serif;
+    font-size: .72rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.welcome h2 {
+    color: var(--green-dark);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    font-family: Arial, sans-serif;
+    color: #61716d;
+    font-size: .92rem;
+}
+
+/* Two-column lecture layout */
+.lecture-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(20, 44px);
+    grid-auto-flow: column;
+    gap: 1px;
+}
+
+.lecture-card {
+    position: relative;
+    min-width: 0;
+    height: 44px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+    box-shadow: 0 3px 8px rgba(0,0,0,.12);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.lecture-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg, rgba(255,255,255,.17), transparent 55%
+    );
+}
+
+.lecture-card::after {
+    content: "";
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.14);
+    right: -24px;
+    bottom: -24px;
+}
+
+.lecture-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0,0,0,.18);
+}
+
+.lecture-number {
+    position: relative;
+    z-index: 2;
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.4);
+    font-family: Arial, sans-serif;
+    font-size: .68rem;
+    font-weight: bold;
+}
+
+.lecture-title {
+    position: relative;
+    z-index: 2;
+    font-size: .82rem;
+    font-weight: bold;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.lecture-caption {
+    position: relative;
+    z-index: 2;
+    margin: 0 0 0 auto;
+    font-family: Arial, sans-serif;
+    font-size: .58rem;
+    opacity: .82;
+    white-space: nowrap;
+}
+
+/* Original lecture colour classes */
+.lecture-one { background: linear-gradient(135deg,#246da6,#154a79); }
+.lecture-two { background: linear-gradient(135deg,#8050aa,#57317d); }
+.lecture-three { background: linear-gradient(135deg,#c35459,#8b2937); }
+.lecture-four { background: linear-gradient(135deg,#267a72,#18564f); }
+.lecture-five { background: linear-gradient(135deg,#a56b22,#765018); }
+.lecture-six { background: linear-gradient(135deg,#3d6fa8,#274b76); }
+.lecture-seven { background: linear-gradient(135deg,#8a4f9f,#5e326f); }
+.lecture-eight { background: linear-gradient(135deg,#b94e55,#803039); }
+.lecture-nine { background: linear-gradient(135deg,#2e806d,#1c594c); }
+.lecture-ten { background: linear-gradient(135deg,#b0772b,#7c531c); }
+.lecture-eleven { background: linear-gradient(135deg,#356fa0,#244c72); }
+.lecture-twelve { background: linear-gradient(135deg,#7653a3,#4f3575); }
+.lecture-thirteen { background: linear-gradient(135deg,#b34f56,#7c3038); }
+.lecture-fourteen { background: linear-gradient(135deg,#27786c,#18554d); }
+.lecture-fifteen { background: linear-gradient(135deg,#a36b25,#704a1b); }
+.lecture-sixteen { background: linear-gradient(135deg,#3b6fa4,#274a70); }
+.lecture-seventeen { background: linear-gradient(135deg,#8150a1,#583471); }
+.lecture-eighteen { background: linear-gradient(135deg,#b64e58,#7f303a); }
+.lecture-nineteen { background: linear-gradient(135deg,#2c7a6a,#1b554a); }
+.lecture-twenty { background: linear-gradient(135deg,#aa7428,#754e1b); }
+.lecture-twenty-one { background: linear-gradient(135deg,#326c9c,#244969); }
+.lecture-twenty-two { background: linear-gradient(135deg,#7950a0,#53336f); }
+.lecture-twenty-three { background: linear-gradient(135deg,#ad4c55,#773039); }
+.lecture-twenty-four { background: linear-gradient(135deg,#287569,#194f47); }
+.lecture-twenty-five { background: linear-gradient(135deg,#a36c27,#704a1b); }
+.lecture-twenty-six { background: linear-gradient(135deg,#386d9e,#274866); }
+.lecture-twenty-seven { background: linear-gradient(135deg,#7e4e9c,#55316a); }
+.lecture-twenty-eight { background: linear-gradient(135deg,#b14e56,#78303a); }
+.lecture-twenty-nine { background: linear-gradient(135deg,#2b7869,#1a5148); }
+.lecture-thirty { background: linear-gradient(135deg,#a87329,#744d1b); }
+.lecture-thirty-one { background: linear-gradient(135deg,#326d9d,#244a6b); }
+.lecture-thirty-two { background: linear-gradient(135deg,#7950a0,#52326e); }
+.lecture-thirty-three { background: linear-gradient(135deg,#b04d55,#783039); }
+.lecture-thirty-four { background: linear-gradient(135deg,#2a7769,#1a5148); }
+.lecture-thirty-five { background: linear-gradient(135deg,#a16b26,#70491a); }
+.lecture-thirty-six { background: linear-gradient(135deg,#376e9f,#264866); }
+.lecture-thirty-seven { background: linear-gradient(135deg,#7c4d9b,#53316a); }
+.lecture-thirty-eight { background: linear-gradient(135deg,#ae4c55,#773039); }
+.lecture-thirty-nine { background: linear-gradient(135deg,#2b7868,#1b5148); }
+.lecture-forty { background: linear-gradient(135deg,#a87329,#744d1b); }
+
+.academy-strip {
+    margin-top: 40px;
+    padding: 23px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(197,155,53,.45);
+    border-bottom: 1px solid rgba(197,155,53,.45);
+    background: rgba(255,255,255,.55);
+    backdrop-filter: blur(5px);
+}
+
+.academy-strip strong {
+    color: var(--green-dark);
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.academy-strip span {
+    display: block;
+    margin-top: 6px;
+    font-family: Arial, sans-serif;
+    color: #65736f;
+    font-size: .78rem;
+}
+
+/* Back button centred exactly 15px above the footer */
+.back-button-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 15px;
+    padding: 0 12px;
+}
+
+#previousPageButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 25px;
+    border: 2px solid var(--gold);
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: .9rem;
+    font-weight: bold;
+    letter-spacing: .4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(18,60,52,.2);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+#previousPageButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(18,60,52,.25);
+}
+
+#previousPageButton:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
+}
+
+footer {
+    margin-top: 0;
+    padding: 25px 15px;
+    text-align: center;
+    color: #dce9e4;
+    background: var(--green-dark);
+    border-top: 4px solid var(--gold);
+}
+
+.footer-name {
+    font-size: 1.05rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.footer-motto {
+    margin-top: 7px;
+    color: var(--gold-light);
+    font-style: italic;
+    font-size: .85rem;
+}
+
+.copyright {
+    margin-top: 12px;
+    font-family: Arial, sans-serif;
+    font-size: .7rem;
+    opacity: .65;
+}
+
+@media (max-width: 800px) {
+    .lecture-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(20, 44px);
+        grid-auto-flow: column;
+        gap: 1px;
+    }
+
+    .lecture-card {
+        height: 44px;
+        padding: 4px 6px;
+        gap: 6px;
+    }
+
+    .lecture-title {
+        font-size: .73rem;
+    }
+
+    .lecture-caption {
+        display: none;
+    }
+}
+
+@media (max-width: 520px) {
+    header {
+        padding: 30px 15px 27px;
+    }
+
+    .logo {
+        width: min(145px, 62vw);
+        margin-bottom: 13px;
+    }
+
+    .logo img {
+        max-height: 96px;
+    }
+
+    .academy-name {
+        letter-spacing: 1.5px;
+    }
+
+    .academy-subtitle {
+        letter-spacing: 1.5px;
+        font-size: .62rem;
+    }
+
+    .motto {
+        font-size: .9rem;
+    }
+
+    main {
+        width: 96%;
+        margin: 30px auto;
+    }
+
+    .lecture-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(20, 40px);
+        grid-auto-flow: column;
+        gap: 1px;
+    }
+
+    .lecture-card {
+        height: 40px;
+        padding: 3px 5px;
+        gap: 5px;
+        border-radius: 5px;
+    }
+
+    .lecture-number {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        font-size: .62rem;
+    }
+
+    .lecture-title {
+        font-size: .67rem;
+    }
+
+    #previousPageButton {
+        padding: 10px 21px;
+        font-size: .84rem;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar"></div>
+
+<header>
+    <div class="logo">
+        <img
+            src="../IAE-Logo-Transparent.png"
+            alt="Imperial Academy of Education Logo"
+        >
+    </div>
+
+    <h1 class="academy-name">Imperial Academy of Education</h1>
+
+    <div class="academy-subtitle">Academy of Education</div>
+
+    <div class="motto">
+        Learn with Purpose • Lead with Knowledge
+    </div>
+</header>
+
+<main>
+    <section class="welcome">
+        <div class="subject-label">Chemistry</div>
+
+        <h2>Chemistry Lecture Series</h2>
+
+        <p>
+            Structured lectures for academic learning, practice and mastery.
+        </p>
+    </section>
+
+    <nav class="lecture-grid" aria-label="Chemistry Lecture Series">
+
+        <a href="Chemione/" class="lecture-card lecture-one">
+            <div class="lecture-number">01</div>
+            <div class="lecture-title">Chemistry Lecture One</div>
+            <div class="lecture-caption">Begin the Chemistry journey</div>
+        </a>
+
+        <a href="Chemitwo/" class="lecture-card lecture-two">
+            <div class="lecture-number">02</div>
+            <div class="lecture-title">Chemistry Lecture Two</div>
+            <div class="lecture-caption">Continue your learning</div>
+        </a>
+
+        <a href="Chemithree/" class="lecture-card lecture-three">
+            <div class="lecture-number">03</div>
+            <div class="lecture-title">Chemistry Lecture Three</div>
+            <div class="lecture-caption">Advance toward mastery</div>
+        </a>
+
+        <a href="Chemi04/" class="lecture-card lecture-four">
+            <div class="lecture-number">04</div>
+            <div class="lecture-title">Chemistry Lecture Four</div>
+            <div class="lecture-caption">Build deeper understanding</div>
+        </a>
+
+        <a href="Chemi05/" class="lecture-card lecture-five">
+            <div class="lecture-number">05</div>
+            <div class="lecture-title">Chemistry Lecture Five</div>
+            <div class="lecture-caption">Expand your knowledge</div>
+        </a>
+
+        <a href="Chemi06/" class="lecture-card lecture-six">
+            <div class="lecture-number">06</div>
+            <div class="lecture-title">Chemistry Lecture Six</div>
+            <div class="lecture-caption">Strengthen your concepts</div>
+        </a>
+
+        <a href="Chemi07/" class="lecture-card lecture-seven">
+            <div class="lecture-number">07</div>
+            <div class="lecture-title">Chemistry Lecture Seven</div>
+            <div class="lecture-caption">Develop deeper mastery</div>
+        </a>
+
+        <a href="Chemi08/" class="lecture-card lecture-eight">
+            <div class="lecture-number">08</div>
+            <div class="lecture-title">Chemistry Lecture Eight</div>
+            <div class="lecture-caption">Connect ideas and concepts</div>
+        </a>
+
+        <a href="Chemi09/" class="lecture-card lecture-nine">
+            <div class="lecture-number">09</div>
+            <div class="lecture-title">Chemistry Lecture Nine</div>
+            <div class="lecture-caption">Strengthen your understanding</div>
+        </a>
+
+        <a href="Chemi10/" class="lecture-card lecture-ten">
+            <div class="lecture-number">10</div>
+            <div class="lecture-title">Chemistry Lecture Ten</div>
+            <div class="lecture-caption">Move toward excellence</div>
+        </a>
+
+        <a href="Chemi11/" class="lecture-card lecture-eleven">
+            <div class="lecture-number">11</div>
+            <div class="lecture-title">Chemistry Lecture Eleven</div>
+            <div class="lecture-caption">Advance your learning</div>
+        </a>
+
+        <a href="Chemi12/" class="lecture-card lecture-twelve">
+            <div class="lecture-number">12</div>
+            <div class="lecture-title">Chemistry Lecture Twelve</div>
+            <div class="lecture-caption">Master essential concepts</div>
+        </a>
+
+        <a href="Chemi13/" class="lecture-card lecture-thirteen">
+            <div class="lecture-number">13</div>
+            <div class="lecture-title">Chemistry Lecture Thirteen</div>
+            <div class="lecture-caption">Deepen your academic skills</div>
+        </a>
+
+        <a href="Chemi14/" class="lecture-card lecture-fourteen">
+            <div class="lecture-number">14</div>
+            <div class="lecture-title">Chemistry Lecture Fourteen</div>
+            <div class="lecture-caption">Build stronger foundations</div>
+        </a>
+
+        <a href="Chemi15/" class="lecture-card lecture-fifteen">
+            <div class="lecture-number">15</div>
+            <div class="lecture-title">Chemistry Lecture Fifteen</div>
+            <div class="lecture-caption">Develop conceptual mastery</div>
+        </a>
+
+        <a href="Chemi16/" class="lecture-card lecture-sixteen">
+            <div class="lecture-number">16</div>
+            <div class="lecture-title">Chemistry Lecture Sixteen</div>
+            <div class="lecture-caption">Continue toward excellence</div>
+        </a>
+
+        <a href="Chemi17/" class="lecture-card lecture-seventeen">
+            <div class="lecture-number">17</div>
+            <div class="lecture-title">Chemistry Lecture Seventeen</div>
+            <div class="lecture-caption">Strengthen your knowledge</div>
+        </a>
+
+        <a href="Chemi18/" class="lecture-card lecture-eighteen">
+            <div class="lecture-number">18</div>
+            <div class="lecture-title">Chemistry Lecture Eighteen</div>
+            <div class="lecture-caption">Advance your concepts</div>
+        </a>
+
+        <a href="Chemi19/" class="lecture-card lecture-nineteen">
+            <div class="lecture-number">19</div>
+            <div class="lecture-title">Chemistry Lecture Nineteen</div>
+            <div class="lecture-caption">Prepare for higher learning</div>
+        </a>
+
+        <a href="Chemi20/" class="lecture-card lecture-twenty">
+            <div class="lecture-number">20</div>
+            <div class="lecture-title">Chemistry Lecture Twenty</div>
+            <div class="lecture-caption">Reach the next level</div>
+        </a>
+
+        <a href="Chemi21/" class="lecture-card lecture-twenty-one">
+            <div class="lecture-number">21</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-One</div>
+            <div class="lecture-caption">Expand conceptual mastery</div>
+        </a>
+
+        <a href="Chemi22/" class="lecture-card lecture-twenty-two">
+            <div class="lecture-number">22</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Two</div>
+            <div class="lecture-caption">Strengthen academic understanding</div>
+        </a>
+
+        <a href="Chemi23/" class="lecture-card lecture-twenty-three">
+            <div class="lecture-number">23</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Three</div>
+            <div class="lecture-caption">Connect knowledge and practice</div>
+        </a>
+
+        <a href="Chemi24/" class="lecture-card lecture-twenty-four">
+            <div class="lecture-number">24</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Four</div>
+            <div class="lecture-caption">Advance toward mastery</div>
+        </a>
+
+        <a href="Chemi25/" class="lecture-card lecture-twenty-five">
+            <div class="lecture-number">25</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Five</div>
+            <div class="lecture-caption">Deepen your understanding</div>
+        </a>
+
+        <a href="Chemi26/" class="lecture-card lecture-twenty-six">
+            <div class="lecture-number">26</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Six</div>
+            <div class="lecture-caption">Build advanced knowledge</div>
+        </a>
+
+        <a href="Chemi27/" class="lecture-card lecture-twenty-seven">
+            <div class="lecture-number">27</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Seven</div>
+            <div class="lecture-caption">Strengthen your mastery</div>
+        </a>
+
+        <a href="Chemi28/" class="lecture-card lecture-twenty-eight">
+            <div class="lecture-number">28</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Eight</div>
+            <div class="lecture-caption">Develop academic excellence</div>
+        </a>
+
+        <a href="Chemi29/" class="lecture-card lecture-twenty-nine">
+            <div class="lecture-number">29</div>
+            <div class="lecture-title">Chemistry Lecture Twenty-Nine</div>
+            <div class="lecture-caption">Prepare for mastery</div>
+        </a>
+
+        <a href="Chemi30/" class="lecture-card lecture-thirty">
+            <div class="lecture-number">30</div>
+            <div class="lecture-title">Chemistry Lecture Thirty</div>
+            <div class="lecture-caption">Reach advanced understanding</div>
+        </a>
+
+        <a href="Chemi31/" class="lecture-card lecture-thirty-one">
+            <div class="lecture-number">31</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-One</div>
+            <div class="lecture-caption">Extend your knowledge</div>
+        </a>
+
+        <a href="Chemi32/" class="lecture-card lecture-thirty-two">
+            <div class="lecture-number">32</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Two</div>
+            <div class="lecture-caption">Strengthen advanced concepts</div>
+        </a>
+
+        <a href="Chemi33/" class="lecture-card lecture-thirty-three">
+            <div class="lecture-number">33</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Three</div>
+            <div class="lecture-caption">Continue toward mastery</div>
+        </a>
+
+        <a href="Chemi34/" class="lecture-card lecture-thirty-four">
+            <div class="lecture-number">34</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Four</div>
+            <div class="lecture-caption">Apply your understanding</div>
+        </a>
+
+        <a href="Chemi35/" class="lecture-card lecture-thirty-five">
+            <div class="lecture-number">35</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Five</div>
+            <div class="lecture-caption">Build complete mastery</div>
+        </a>
+
+        <a href="Chemi36/" class="lecture-card lecture-thirty-six">
+            <div class="lecture-number">36</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Six</div>
+            <div class="lecture-caption">Advance toward excellence</div>
+        </a>
+
+        <a href="Chemi37/" class="lecture-card lecture-thirty-seven">
+            <div class="lecture-number">37</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Seven</div>
+            <div class="lecture-caption">Refine your knowledge</div>
+        </a>
+
+        <a href="Chemi38/" class="lecture-card lecture-thirty-eight">
+            <div class="lecture-number">38</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Eight</div>
+            <div class="lecture-caption">Strengthen final concepts</div>
+        </a>
+
+        <a href="Chemi39/" class="lecture-card lecture-thirty-nine">
+            <div class="lecture-number">39</div>
+            <div class="lecture-title">Chemistry Lecture Thirty-Nine</div>
+            <div class="lecture-caption">Prepare for completion</div>
+        </a>
+
+        <a href="Chemi40/" class="lecture-card lecture-forty">
+            <div class="lecture-number">40</div>
+            <div class="lecture-title">Chemistry Lecture Forty</div>
+            <div class="lecture-caption">Complete the Chemistry journey</div>
+        </a>
+
+    </nav>
+
+    <div class="academy-strip">
+        <strong>IMPERIAL ACADEMY OF EDUCATION</strong>
+        <span>
+            Knowledge organized for understanding, practice and excellence.
+        </span>
+    </div>
+</main>
+
+<!-- Back button centered 15px above the footer -->
+<div class="back-button-wrap">
+    <button type="button" id="previousPageButton">
+        &#8592; Back to Class Index
+    </button>
+</div>
+
+<footer>
+    <div class="footer-name">IMPERIAL ACADEMY OF EDUCATION</div>
+    <div class="footer-motto">
+        Learn with Purpose • Lead with Knowledge
+    </div>
+    <div class="copyright">Chemistry Academic Portal</div>
+</footer>
+
+<script>
+(function () {
+    document.getElementById('previousPageButton').addEventListener('click', function () {
+        window.location.assign('../index.html');
+    });
+
+    if (typeof collectText === 'function') {
+        collectText();
+    }
+})();
+</script>
+
+</body>
+</html>
