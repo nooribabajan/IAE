@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Academic Content Executor — v2.3</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Academic Content Executor — v3.1</title>
 <style>
 :root{color-scheme:light;--ink:#17352c;--muted:#5e7068;--line:#d8e3dd;--paper:#fff;--wash:#f3f7f4;--accent:#245843;--danger:#9b2c2c}*{box-sizing:border-box}body{margin:0;background:var(--wash);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#17231d}main{max-width:980px;margin:0 auto;padding:24px 16px 56px}.hero{padding:24px;border-radius:18px;background:#173e34;color:#fff;margin-bottom:18px}h1{margin:0 0 8px;font-size:clamp(1.6rem,4vw,2.2rem)}.hero p{margin:0;color:#e1eee6;max-width:760px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 3px 14px #173e3408}h2{font-size:1.12rem;margin:0 0 10px;color:var(--ink)}p.help{margin:4px 0 12px;color:var(--muted);font-size:.94rem}label{display:block;font-weight:700;margin:10px 0 6px}input[type=file],textarea{width:100%;font:inherit;border:1px solid #bdcdc3;border-radius:10px;padding:11px;background:#fff}textarea{min-height:290px;resize:vertical;font:14px/1.55 system-ui,sans-serif}.jsonarea{min-height:190px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:10px;padding:11px 16px;font:700 15px system-ui;cursor:pointer;background:var(--accent);color:#fff}.btn.secondary{background:#e7eee9;color:var(--ink);border:1px solid var(--line)}.status{padding:12px 14px;border-radius:10px;margin-top:12px;background:#eef4ef;color:var(--ink);white-space:pre-wrap}.status.error{background:#fff0f0;color:var(--danger)}.status:empty{display:none}.small{font-size:.88rem;color:var(--muted)}code{background:#eef3ef;padding:2px 5px;border-radius:5px}.check{display:flex;gap:10px;align-items:flex-start;font-weight:500}.check input{margin-top:6px}footer{color:var(--muted);font-size:.86rem;margin-top:20px}
 </style></head><body><main>
-<header class="hero"><h1>Academic Content Executor <span style="font-size:.62em;opacity:.82">v2.3</span></h1><p>Audit the template, organize academic text into editable JSON, validate the structure, and build a separate HTML output. The original template file is never modified.</p></header>
+<header class="hero"><h1>Academic Content Executor <span style="font-size:.62em;opacity:.82">v3.1</span></h1><p>Audit the template, organize academic text into editable JSON, validate the structure, and build a separate HTML output. The original template file is never modified.</p></header>
 <section class="panel"><h2>1. Choose the template</h2><p class="help">Select your working copy of <code>Template-v2.html</code>.</p><label for="templateFile">Template HTML file</label><input id="templateFile" type="file" accept=".html,.htm,text/html"><div class="small" id="templateInfo">No template selected.</div><div id="auditBox" class="status" role="status" aria-live="polite"></div></section>
-<section class="panel"><h2>2. Paste academic text</h2><p class="help">No JSON writing required. Builds a hierarchy: # = course title, ## or 2.1 = topic, ### or 2.1.1 = subheading, and #### = deeper subheading (flattened with its parent path for template compatibility). Paragraphs become definitions; labeled and bullet lists become subtopics. Numbered sections (1., 2.) become topics; numbered children (1.1) become subtopics. Plain-text headings are also detected. Learning-outcome bullets stay in course outcomes. The organizer is deterministic, not generative AI, so inspect the JSON before building.</p><label for="plainText">Academic content (plain text)</label><textarea id="plainText" spellcheck="true" placeholder="# Chapter 1: Example Subject
+<section class="panel"><h2>2. Paste academic text</h2><p class="help">No JSON writing required. Hierarchy-first parsing: # = course title, ## = topic, ### = subheading, deeper Markdown headings = nested subheadings. Numbered headings use 1., 1.1, 1.1.1, etc. First body paragraph is stored as definition; subsequent paragraphs, examples, divisions, formulas, numbered steps, bullet lists, tables, and other supporting material go under explanation. Explicit Definition: and Explanation: labels are respected. JSON retains recursive nesting; the legacy HTML template receives a flattened display-compatible view. Parsing preserves source text and does not judge academic quality.</p><label for="plainText">Academic content (plain text)</label><textarea id="plainText" spellcheck="true" placeholder="# Chapter 1: Example Subject
 Course overview: Introduce the subject and explain why it matters.
 Learning outcomes: Students should be able to explain the core concepts.
 
@@ -19,9 +19,10 @@ Explain the principles students need to understand.
 ### Principle one
 Explain the first principle in detail."></textarea><div class="row" style="margin-top:10px"><button class="btn secondary" id="makeJson" type="button">Organize text into JSON</button><button class="btn secondary" id="clearText" type="button">Clear text</button></div><label for="contentJson">Generated JSON (optional to inspect or edit)</label><textarea id="contentJson" class="jsonarea" spellcheck="false" placeholder="The generated JSON will appear here after you organize the text."></textarea></section>
 <section class="panel"><h2>3. Generate the new HTML</h2><label class="check"><input id="confirmSeparate" type="checkbox" checked><span>Save as a separate output file and leave the selected template untouched.</span></label><label class="check"><input id="ackReview" type="checkbox"><span>I have reviewed the template audit warnings. Template-specific questions, labels, visuals, or translations outside the central academic content bank may still belong to the original subject.</span></label><div class="row" style="margin-top:14px"><button class="btn" id="buildBtn" type="button">Validate & generate HTML</button><button class="btn secondary" id="downloadJson" type="button">Download JSON</button><button class="btn secondary" id="downloadAudit" type="button">Download audit report</button></div><div id="status" class="status" role="status" aria-live="polite"></div></section>
-<footer>Version 2.3 fixes numbered-heading hierarchy, recognizes plain-text headings, fills missing definitions with clearly marked review placeholders, and adds stronger structure diagnostics; it retains the template audit and output-integrity checks. It does not rewrite subject-specific code outside the central academic bank; use the template for the same subject unless you separately adapt those features.</footer>
+<footer>Version 3.1 uses hierarchy-first parsing, preserves definition and explanation separately, and validates JSON structure without judging academic content. It retains template audit and output-integrity checks. Subject-specific code outside the central academic bank remains unchanged; use the template for the same subject unless you separately adapt those features.</footer>
 </main><script>
 'use strict';
+// Academic Content Executor v3.1 — hierarchy-first parsing, source preservation, and safe generation.
 const $=id=>document.getElementById(id);
 let templateText='',templateName='',templateAudit=null,lastAuditReport='';
 function setStatus(message,isError=false){const el=$('status');el.textContent=message;el.classList.toggle('error',isError)}
@@ -59,126 +60,216 @@ $('templateFile').addEventListener('change',async e=>{
 function parseAcademicText(raw){
  const lines=String(raw||'').replace(/\r/g,'').split('\n');
  const course={title:'',definition:'',learningOutcomes:''},topics=[];
- let currentTopic=null,currentSub=null,mode='body',outcomeSection=false;
- const append=(obj,key,text)=>{const t=clean(text);if(t)obj[key]=(obj[key]?obj[key]+' ':'')+t};
- const addTopic=(title,number='')=>{currentTopic={title:clean(title),definition:'',subtopics:[]};if(number)currentTopic.number=number;topics.push(currentTopic);currentSub=null;mode='topic';outcomeSection=false;return currentTopic};
- const addSub=(title,definition='',number='')=>{if(!currentTopic)addTopic('Topic 1');currentSub={title:clean(title),definition:clean(definition)};if(number)currentSub.number=number;currentTopic.subtopics.push(currentSub);mode='sub';outcomeSection=false;return currentSub};
- const isBullet=s=>/^\s*(?:[-*•]|\d+[.)])\s+/.test(s);
- const stripBullet=s=>s.replace(/^\s*(?:[-*•]|\d+[.)])\s+/,'');
- const numberedHeading=line=>{let m=line.match(/^\s*(\d+(?:\.\d+){0,5})\s*[.)]?\s+(.+?)\s*$/);if(!m)m=line.match(/^\s*(\d+(?:\.\d+){1,5})\s*[:.)-]\s*(.+?)\s*$/);if(!m)return null;const number=m[1],title=m[2].replace(/^[:.)\-\s]+/,'').trim();return title?{number,title,depth:number.split('.').length}:null};
- const isLikelyPlainHeading=(line,index)=>{
-  if(!line||line.length>95||/[.!?]$/.test(line)||isBullet(line)||/^#{1,6}\s/.test(line))return false;
-  if(/^(?:course\s|chapter\s|unit\s|learning\s|objectives?\s|overview\s|definition\s|explanation\s|description\s)/i.test(line))return false;
+ let currentTopic=null,currentNode=null,mode='body',outcomeSection=false,lastBlank=true,paragraphTarget=null,decimalSectionsAreTopics=false,numberedTopLevelMode=false;
+ const cleanTitle=s=>clean(String(s||'').replace(/^#{1,6}\s*/, '').replace(/^\*\*(.*?)\*\*$/, '$1'));
+ const append=(obj,key,text,separator=' ')=>{const value=clean(text);if(!value)return;obj[key]=obj[key]?obj[key]+separator+value:value;};
+ const getCurrent=()=>currentNode||currentTopic;
+ const resetParagraph=()=>{paragraphTarget=null;};
+ const makeNode=(title,number='')=>({title:cleanTitle(title),definition:'',explanation:'',subtopics:[],...(number?{number}:{})});
+ const addTopic=(title,number='')=>{currentTopic=makeNode(title,number);topics.push(currentTopic);currentNode=currentTopic;mode='topic';outcomeSection=false;resetParagraph();return currentTopic;};
+ const addSub=(title,number='',depth=2)=>{
+  if(!currentTopic)addTopic('Topic 1');
+  const node=makeNode(title,number);
+  // Keep a recursive tree in JSON. Markdown/numbered heading depth determines the parent.
+  let parent=currentTopic;
+  if(depth>2){
+   let path=currentTopic;
+   for(let d=2;d<depth;d++){
+    const last=path.subtopics[path.subtopics.length-1];
+    if(last)path=last;
+   }
+   parent=path;
+  } else if(currentNode && currentNode!==currentTopic && depth===2) parent=currentTopic;
+  parent.subtopics.push(node);currentNode=node;mode='sub';outcomeSection=false;resetParagraph();return node;
+ };
+ const isBullet=s=>/^\s*(?:[-*+•]|\d+[.)])\s+/.test(s);
+ const stripBullet=s=>s.replace(/^\s*(?:[-*+•]|\d+[.)])\s+/,'');
+ const isSupportingLabel=s=>/^(?:examples?|e\.g\.?|for example|illustration|division|divisions|classification|classifications|types?|kinds?|formula|formulas|equation|equations|steps?|procedure|method|note|notes|remark|remarks|properties|applications?|table|comparison|cases?)\s*[:—–-]/i.test(s);
+ const headingNumber=s=>{
+  const m=s.match(/^\s*(\d+(?:\.\d+){0,5})\s*[.)]?\s+(.+?)\s*$/);
+  if(!m)return null;
+  const title=m[2].replace(/^[:.)\-\s]+/,'').trim();
+  if(!title)return null;
+  const depth=m[1].split('.').length;
+  const sentenceLike=/[.!?;:]$/.test(title)||title.length>115;
+  const stepLike=/^(?:find|calculate|determine|solve|add|subtract|multiply|divide|take|draw|show|prove|write|identify|state|explain|consider|let|suppose|assume|substitute|evaluate|measure|compute|repeat|record|compare|use)\b/i.test(title);
+  // Bare 1., 2., ... are often list items. Treat them as headings only when they look like short labels.
+  if(depth===1&&(sentenceLike||stepLike))return null;
+  if(depth===1&&title.split(/\s+/).length>14)return null;
+  if(depth>1&&(sentenceLike||title.length>150))return null;
+  return {number:m[1],title,depth};
+ };
+ const isPlainHeading=(line,index)=>{
+  if(!line||line.length>100||/[.!?;]$/.test(line)||isBullet(line)||/^#{1,6}\s/.test(line))return false;
+  if(/^(?:definition|explanation|description|example|examples|note|formula|equation|steps?|division|classification|course\s|chapter\s|unit\s|learning\s|objectives?\s|overview\s)/i.test(line))return false;
   const prev=(lines[index-1]||'').trim(),next=(lines[index+1]||'').trim();
-  const separatedBefore=!prev,separatedAfter=!next;
-  const titleLike=/^[A-Z0-9][\w\s&(),:/+'’–—-]{1,94}$/.test(line)&&line.split(/\s+/).length<=12;
-  const allCaps=/^[A-Z0-9][A-Z0-9\s&(),:/+'’–—-]{2,94}$/.test(line);
-  return (separatedBefore||separatedAfter)&&(titleLike||allCaps);
+  const titleLike=/^[A-Z0-9][\w\s&(),:/+'’–—-]{1,99}$/.test(line)&&line.split(/\s+/).length<=12;
+  const allCaps=/^[A-Z0-9][A-Z0-9\s&(),:/+'’–—-]{2,99}$/.test(line);
+  return (( !prev && !next) || !prev || !next) && (titleLike||allCaps);
+ };
+ const addBody=(text,{forceExplanation=false,separator=' '}={})=>{
+  const target=getCurrent();
+  if(!target){append(course,'definition',text,separator);return;}
+  if(forceExplanation){append(target,'explanation',text,separator);paragraphTarget='explanation';return;}
+  if(paragraphTarget&&!lastBlank){
+   append(target,paragraphTarget,text,separator);
+  }else if(target.definition.trim()){
+   append(target,'explanation',text,lastBlank?'\n\n':separator);paragraphTarget='explanation';
+  }else{
+   append(target,'definition',text,separator);paragraphTarget='definition';
+  }
  };
  for(let i=0;i<lines.length;i++){
-  const original=lines[i],line=clean(original);if(!line)continue;let m;
-  // Explicit Markdown hierarchy: H1 course, H2 topic, H3 subtopic, H4 deeper subtopic.
-  if(/^####\s+/.test(line)){const title=line.replace(/^####\s+/,'');addSub(currentSub?`${currentSub.title} › ${title}`:title);continue}
-  if(/^###\s+/.test(line)){addSub(line.replace(/^###\s+/,''));continue}
-  if(/^##\s+/.test(line)){addTopic(line.replace(/^##\s+/,''));continue}
-  if(/^#\s+/.test(line)){if(!course.title)course.title=clean(line.replace(/^#\s+/,''));else addTopic(line.replace(/^#\s+/,''));continue}
-  // Explicit course/chapter labels must not be mistaken for topic headings.
-  m=line.match(/^(?:(?:Course|Chapter|Unit)\s+(?:title|name)\s*:\s*|(?:Chapter|Unit)\s+\d+\s*[:—–-]\s*)(.+)$/i);if(m){course.title=clean(m[1]);continue}
-  m=line.match(/^(?:Course\s+overview|Overview|Course\s+definition|Chapter\s+overview|Unit\s+overview)\s*:\s*(.*)$/i);if(m){mode='overview';append(course,'definition',m[1]);continue}
-  m=line.match(/^(?:Learning\s+outcomes?|Objectives|Learning\s+objectives)\s*:\s*(.*)$/i);if(m){mode='outcomes';outcomeSection=true;append(course,'learningOutcomes',m[1]);continue}
-  if(mode==='outcomes'&&!/^(?:#|##|###|####)\s/.test(line)&&!numberedHeading(line)){append(course,'learningOutcomes',stripBullet(line));continue}
-  const nh=numberedHeading(line);
+  const original=lines[i],line=clean(original);
+  if(!line){lastBlank=true;resetParagraph();continue;}
+  let m;
+  // Explicit Markdown heading levels define hierarchy unambiguously.
+  if(/^#{1,6}\s+/.test(line)){
+   const level=(line.match(/^#+/)[0]).length,rawTitle=line.replace(/^#{1,6}\s+/,''),nh=headingNumber(rawTitle),title=nh?nh.title:cleanTitle(rawTitle),number=nh?.number||'';
+   if(level===1){if(!course.title)course.title=title;else addTopic(title,number);decimalSectionsAreTopics=false;numberedTopLevelMode=false;}
+   else if(level===2){addTopic(title,number);decimalSectionsAreTopics=false;numberedTopLevelMode=false;}
+   else {
+    if(!currentTopic)addTopic('Topic 1');
+    addSub(title,number,level-1);
+   }
+   lastBlank=false;continue;
+  }
+  // Course title labels and course-level metadata.
+  m=line.match(/^(?:(?:Course|Chapter|Unit)\s+(?:title|name)\s*:\s*|(?:Chapter|Unit)\s+\d+\s*[:—–-]\s*)(.+)$/i);
+  if(m){course.title=clean(m[1]);lastBlank=false;continue;}
+  m=line.match(/^(?:Course\s+overview|Overview|Course\s+definition|Chapter\s+overview|Unit\s+overview)\s*:\s*(.*)$/i);
+  if(m){mode='overview';append(course,'definition',m[1]);lastBlank=false;continue;}
+  m=line.match(/^(?:Learning\s+outcomes?|Objectives|Learning\s+objectives)\s*:\s*(.*)$/i);
+  if(m){mode='outcomes';outcomeSection=true;append(course,'learningOutcomes',m[1]);lastBlank=false;continue;}
+  if(mode==='outcomes'&&!/^#{1,6}\s/.test(line)&&!headingNumber(line)){append(course,'learningOutcomes',stripBullet(line));lastBlank=false;continue;}
+  // Explicit Definition / Explanation labels remain distinct JSON fields.
+  m=line.match(/^(?:Definition|Define)\s*:\s*(.*)$/i);
+  if(m&&getCurrent()){append(getCurrent(),'definition',m[1]);paragraphTarget='definition';lastBlank=false;continue;}
+  m=line.match(/^(?:Explanation|Description|Details?)\s*:\s*(.*)$/i);
+  if(m&&getCurrent()){append(getCurrent(),'explanation',m[1]);paragraphTarget='explanation';lastBlank=false;continue;}
+  // Numbered section headings: decimal depth is structural; bare numbers are headings only when label-like.
+  const nh=headingNumber(line);
   if(nh){
-   // If the source uses 1., 2., 3. as section numbers, these are topics—not the course title.
-   // If it uses 2.1, 2.2, ... without 2. as a visible heading, those are topics.
-   const hasTopLevelNumbers=topics.some(t=>t.number&&/^\d+$/.test(t.number));
-   if(nh.depth===1){addTopic(nh.title,nh.number);continue}
-   if(nh.depth===2&&hasTopLevelNumbers){addSub(nh.title,'',nh.number);continue}
-   if(nh.depth===2){addTopic(nh.title,nh.number);continue}
-   // Flatten deeper levels for the target template while preserving the parent path in the label.
-   const parent=currentSub?currentSub.title:currentTopic?.title;
-   addSub(parent?`${parent} › ${nh.title}`:nh.title,'',nh.number);continue;
+   if(nh.depth===1){
+    const previousNumberedTopLevel=topics.length>0&&topics.every(t=>t.number&&/^\d+$/.test(t.number));
+    if(!currentTopic||numberedTopLevelMode||previousNumberedTopLevel){numberedTopLevelMode=true;addTopic(nh.title,nh.number);}
+    else addSub(nh.title,nh.number,2);
+    decimalSectionsAreTopics=false;lastBlank=false;continue;
+   }
+   if(nh.depth===2){
+    // A 1.1, 1.2 sequence without a visible 1. parent is treated as a top-level topic sequence.
+    const hasNumberedParent=topics.some(t=>t.number&&/^\d+$/.test(t.number));
+    if(!hasNumberedParent&&(decimalSectionsAreTopics||!currentTopic)){decimalSectionsAreTopics=true;addTopic(nh.title,nh.number);}
+    else addSub(nh.title,nh.number,2);
+    lastBlank=false;continue;
+   }
+   if(!currentTopic)addTopic('Topic 1');
+   addSub(nh.title,nh.number,nh.depth);lastBlank=false;continue;
   }
-  m=line.match(/^(?:Topic\s+\d+\s*[:.)-]\s*)(.+)$/i);if(m){addTopic(m[1]);continue}
-  m=line.match(/^(?:Definition|Explanation|Description)\s*:\s*(.*)$/i);if(m&&(currentSub||currentTopic)){append(currentSub||currentTopic,'definition',m[1]);continue}
-  if(mode==='overview'&&!topics.length){append(course,'definition',stripBullet(line));continue}
-  if(isBullet(line)){
-   const item=stripBullet(line),split=item.match(/^([^:—–]{2,90})\s*[:—–]\s*(.+)$/),indented=/^\s{2,}/.test(original);
-   if(indented&&currentSub)append(currentSub,'definition',item);
-   else if(split)addSub(split[1],split[2]);
-   else if(currentTopic)addSub(item);
-   else append(course,'definition',item);
-   continue;
-  }
+  m=line.match(/^Topic\s+\d+\s*[:.)-]\s*(.+)$/i);
+  if(m){addTopic(m[1]);lastBlank=false;continue;}
+  // Bullets and numbered procedural lines are supporting explanation, never automatic subheadings.
+  if(isBullet(line)){addBody(line,{forceExplanation:true,separator:'\n'});lastBlank=false;continue;}
+  if(isSupportingLabel(line)){addBody(line,{forceExplanation:true,separator:'\n'});lastBlank=false;continue;}
+  // Preserve Markdown and tab-separated table rows as line-oriented explanation content.
+  if(/^\s*\|/.test(line)||/\t/.test(original)){addBody(line,{forceExplanation:true,separator:'\n'});lastBlank=false;continue;}
+  // Bold standalone labels are headings; inline bold text remains ordinary content.
   m=line.match(/^\*\*(.+?)\*\*\s*:?$/);
-  if(m){if(currentTopic)addSub(m[1]);else append(course,'definition',m[1]);continue}
-  // Plain-text headings are common in pasted notes. Infer their level from whether a topic exists.
-  if(isLikelyPlainHeading(line,i)){
-   if(!course.title&&!topics.length){course.title=line;continue}
-   if(!currentTopic||mode==='overview')addTopic(line);else addSub(line);
-   continue;
+  if(m){
+   const title=m[1].trim();
+   if(!currentTopic)addTopic(title);else addSub(title,'',currentNode===currentTopic?2:3);
+   lastBlank=false;continue;
   }
-  if(currentSub)append(currentSub,'definition',line);else if(currentTopic)append(currentTopic,'definition',line);else append(course,'definition',line);
+  // Conservative plain-text heading inference: a short title surrounded by whitespace.
+  if(isPlainHeading(line,i)){
+   if(!course.title&&!topics.length){course.title=line;lastBlank=false;continue;}
+   if(!currentTopic||mode==='overview')addTopic(line);else addSub(line,'',currentNode===currentTopic?2:3);
+   lastBlank=false;continue;
+  }
+  if(mode==='overview'&&!topics.length){append(course,'definition',line);lastBlank=false;continue;}
+  // First paragraph after a heading is its definition; later paragraphs and all support material are explanation.
+  addBody(line,{forceExplanation:!lastBlank&&paragraphTarget==='explanation'});
+  lastBlank=false;
  }
+ // Preserve the recursive hierarchy and normalize field types without inventing content.
+ const normalizeNode=node=>{
+  node.title=cleanTitle(node.title);node.definition=String(node.definition||'').trim();node.explanation=String(node.explanation||'').trim();
+  node.subtopics=(Array.isArray(node.subtopics)?node.subtopics:[]).map(normalizeNode);return node;
+ };
+ for(const t of topics)normalizeNode(t);
  course.title=clean(course.title);course.definition=clean(course.definition);course.learningOutcomes=clean(course.learningOutcomes);
- // Ensure a topic receives a concise structural overview if its text is only under subheadings.
- for(const t of topics){
-  t.subtopics=t.subtopics.map(sub=>({title:clean(sub.title),definition:clean(sub.definition),...(sub.number?{number:sub.number}:{})}));
-  if(!t.definition&&t.subtopics.length)t.definition='Covers '+t.subtopics.map(x=>x.title).filter(Boolean).join(', ')+'.';
-  // Never emit blank definitions from the organizer. If the source has a heading
-  // but no explanatory paragraph, provide an explicit draft placeholder for review.
-  for(const sub of t.subtopics){
-   if(!sub.definition&&sub.title)sub.definition=`Introduces ${sub.title} and explains its role in ${t.title}. [Review and replace with the source explanation.]`;
-  }
- }
- // For unlabelled textbook text, infer a course title from the first topic without consuming that topic.
  if(!course.title&&topics.length)course.title=topics[0].title;
  return {course,topics};
 }
-function completeMissingDefinitions(data){
- // Recover from headings that were captured correctly but have no attached paragraph.
- // Placeholders are intentionally marked so they can be searched and reviewed before publication.
- if(!data||!Array.isArray(data.topics))return data;
- for(const t of data.topics){
-  if(!t||typeof t!=='object')continue;
-  if(!String(t.definition||'').trim()&&t.title){
-   const names=Array.isArray(t.subtopics)?t.subtopics.map(s=>Array.isArray(s)?s[0]:s?.title).filter(Boolean):[];
-   t.definition=names.length?`Covers ${names.join(', ')}. [Review and replace with a topic overview.]`:`Introduces ${t.title}. [Review and replace with the source explanation.]`;
-  }
-  if(Array.isArray(t.subtopics))t.subtopics=t.subtopics.map(sub=>{
-   if(Array.isArray(sub)){
-    const title=String(sub[0]||'').trim(),def=String(sub[1]||'').trim();
-    return [sub[0],def||(title?`Introduces ${title} within ${t.title}. [Review and replace with the source explanation.]`:'')];
-   }
-   if(sub&&typeof sub==='object'&&!String(sub.definition||'').trim()&&String(sub.title||'').trim()){
-    sub.definition=`Introduces ${sub.title} within ${t.title}. [Review and replace with the source explanation.]`;
-   }
-   return sub;
-  });
+function prepareAcademicData(data){
+ // Structural normalization only: preserve supplied text; do not grade, rewrite, or invent content.
+ if(!data||typeof data!=='object'||Array.isArray(data))return data;
+ if(!Array.isArray(data.topics))return data;
+ const normalize=(node)=>{
+  // Backward compatibility: the previous schema used [title, definition] subtopic pairs.
+  if(Array.isArray(node))return {title:String(node[0]??''),definition:String(node[1]??''),explanation:'',subtopics:[]};
+  if(!node||typeof node!=='object')return node;
+  if(node.definition===undefined)node.definition='';
+  if(node.explanation===undefined)node.explanation='';
+  if(node.subtopics===undefined)node.subtopics=[];
+  if(Array.isArray(node.subtopics))node.subtopics=node.subtopics.map(normalize);
+  return node;
+ };
+ data.topics=data.topics.map(normalize);
+ if(data.course&&typeof data.course==='object'){
+  if(data.course.definition===undefined)data.course.definition='';
+  if(data.course.learningOutcomes===undefined)data.course.learningOutcomes='';
  }
  return data;
 }
+function isReviewPlaceholder(value){
+ return typeof value==='string' && /\[(?:review|replace|add|insert|write|provide)\b[^\]]*\]/i.test(value);
+}
+
 function validate(data){
  const errors=[],warnings=[];
  if(!data||typeof data!=='object'||Array.isArray(data))return {errors:['The JSON root must be an object.'],warnings};
- if(!data.course||typeof data.course!=='object'||Array.isArray(data.course))errors.push('Add a course object.');
- if(!String(data.course?.title||'').trim())errors.push('course.title is required; add a course/chapter title or a # heading.');
- for(const k of ['definition','learningOutcomes'])if(!String(data.course?.[k]||'').trim())warnings.push(`course.${k} is empty; add it if the template requires a course overview or learning outcomes.`);
- if(!Array.isArray(data.topics)||!data.topics.length)errors.push('Add at least one topic heading (## Topic title or a numbered 2.1 heading).');
- const titles=new Set();(Array.isArray(data.topics)?data.topics:[]).forEach((t,i)=>{
-  if(!t||typeof t!=='object'||Array.isArray(t)){errors.push(`Topic ${i+1} must be an object.`);return}
-  if(!String(t.title||'').trim())errors.push(`Topic ${i+1} needs a title.`);
-  const normalized=String(t.title||'').trim().toLocaleLowerCase();if(normalized&&titles.has(normalized))warnings.push(`Topic title repeats: “${t.title}”.`);titles.add(normalized);
-  if(!String(t.definition||'').trim())errors.push(`Topic ${i+1} needs a definition.`);
-  if(!Array.isArray(t.subtopics))errors.push(`Topic ${i+1} needs a subtopics array.`);
-  if(Array.isArray(t.subtopics)&&t.subtopics.length===0)warnings.push(`Topic ${i+1} (“${t.title}”) has no subheadings; consider adding ### headings or numbered 2.1.1 sections.`);
-  (Array.isArray(t.subtopics)?t.subtopics:[]).forEach((sub,j)=>{const title=Array.isArray(sub)?sub[0]:sub?.title,def=Array.isArray(sub)?sub[1]:sub?.definition;if(!String(title||'').trim())errors.push(`Topic ${i+1}, subtopic ${j+1} needs a title.`);if(!String(def||'').trim())errors.push(`Topic ${i+1}, subtopic ${j+1} needs a definition.`)});
- });
- if(Array.isArray(data.topics)&&data.topics.length>50)warnings.push('More than 50 topics were supplied; check template navigation and performance.');
+ if(!data.course||typeof data.course!=='object'||Array.isArray(data.course))errors.push('The JSON must contain a course object.');
+ else if(typeof data.course.title!=='string'||!data.course.title.trim())errors.push('course.title must be a non-empty string.');
+ if(!Array.isArray(data.topics)||!data.topics.length)errors.push('topics must be a non-empty array.');
+ const checkNodes=(nodes,path='Topic',ancestors=[])=>{
+  if(!Array.isArray(nodes)){errors.push(`${path} collection must be an array.`);return;}
+  const siblingTitles=new Set();
+  nodes.forEach((node,i)=>{
+   const label=`${path} ${i+1}`;
+   if(!node||typeof node!=='object'||Array.isArray(node)){errors.push(`${label} must be an object.`);return;}
+   if(typeof node.title!=='string'||!node.title.trim())errors.push(`${label}.title must be a non-empty string.`);
+   const title=String(node.title||'').trim().toLocaleLowerCase();
+   if(title&&siblingTitles.has(title))warnings.push(`${label} duplicates sibling title “${node.title}”.`);
+   if(title)siblingTitles.add(title);
+   for(const key of ['definition','explanation'])if(node[key]!==undefined&&typeof node[key]!=='string')errors.push(`${label}.${key} must be a string when supplied.`);
+   if(node.number!==undefined&&typeof node.number!=='string'&&typeof node.number!=='number')errors.push(`${label}.number must be a string or number when supplied.`);
+   if(node.subtopics===undefined)node.subtopics=[];
+   if(!Array.isArray(node.subtopics)){errors.push(`${label}.subtopics must be an array.`);return;}
+   checkNodes(node.subtopics,`${label}, subheading`,ancestors.concat(title));
+  });
+ };
+ checkNodes(Array.isArray(data.topics)?data.topics:[]);
+ if(Array.isArray(data.topics)&&data.topics.length>100)warnings.push('More than 100 top-level topics were supplied; check navigation and performance.');
+ const countNodes=nodes=>(Array.isArray(nodes)?nodes.reduce((n,x)=>n+1+countNodes(x?.subtopics),0):0);
+ if(countNodes(data.topics)>1000)warnings.push('More than 1,000 total headings were supplied; check navigation and performance.');
  return {errors,warnings};
 }
+
 function jsString(v){return JSON.stringify(String(v??''))}
-function buildAcademic(topic){const subs=topic.subtopics.map(s=>Array.isArray(s)?[String(s[0]),String(s[1])]:[String(s.title),String(s.definition)]);return {title:String(topic.title),definition:String(topic.definition),subtopics:subs}}
+function combinedText(node){return [String(node?.definition||'').trim(),String(node?.explanation||'').trim()].filter(Boolean).join('\n\n')}
+function buildAcademic(topic){
+ const subs=[];
+ const flatten=(nodes,parentPath='')=>{
+  for(const node of (Array.isArray(nodes)?nodes:[])){
+   const title=parentPath?`${parentPath} › ${String(node.title||'')}`:String(node.title||'');
+   subs.push([title,combinedText(node)]);
+   flatten(node.subtopics,title);
+  }
+ };
+ flatten(topic.subtopics);
+ return {title:String(topic.title||''),definition:combinedText(topic),subtopics:subs};
+}
 function execute(source,data){
  let html=source;const course=data.course;
  const cbPattern=/const\s+CB\s*=\s*\{[\s\S]*?\n\};/;
@@ -196,21 +287,21 @@ function execute(source,data){
  const outputRecords=[...html.matchAll(/^\s*topicData\[(\d+)\]\.academic\s*=/gm)].map(m=>Number(m[1]));
  if(outputRecords.length!==data.topics.length||outputRecords.some((n,i)=>n!==i+1))throw new Error(`Output integrity check failed: expected ${data.topics.length} consecutive topic records; found ${outputRecords.length}.`);
  if(!html.includes(jsString(course.title)))throw new Error('Output integrity check failed: course title not found in generated content.');
- return {html,oldTopicCount:count,newTopicCount:data.topics.length,subtopicCount:data.topics.reduce((n,t)=>n+t.subtopics.length,0)};
+ return {html,oldTopicCount:count,newTopicCount:data.topics.length,subtopicCount:data.topics.reduce((n,t)=>n+(function count(a){return (Array.isArray(a)?a.reduce((sum,x)=>sum+1+count(x.subtopics),0):0)})(t.subtopics),0)};
 }
 function downloadBlob(content,type,name){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 function slugify(s){const out=String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);return out||'academic-course'}
-$('makeJson').addEventListener('click',()=>{try{const data=completeMissingDefinitions(parseAcademicText($('plainText').value)),result=validate(data);$('contentJson').value=JSON.stringify(data,null,2);const msg=[`Organized ${data.topics.length} topic(s), ${data.topics.reduce((n,t)=>n+t.subtopics.length,0)} subtopic(s).`,result.errors.length?'ERRORS:\n• '+result.errors.join('\n• '):'Structure validation passed.',result.warnings.length?'WARNINGS:\n• '+result.warnings.join('\n• '):''].filter(Boolean).join('\n\n');setStatus(msg,result.errors.length>0)}catch(e){setStatus(e.message,true)}});
+$('makeJson').addEventListener('click',()=>{try{const data=prepareAcademicData(parseAcademicText($('plainText').value)),result=validate(data);$('contentJson').value=JSON.stringify(data,null,2);const msg=[`Organized ${data.topics.length} topic(s), ${data.topics.reduce((n,t)=>n+(function count(a){return (Array.isArray(a)?a.reduce((sum,x)=>sum+1+count(x.subtopics),0):0)})(t.subtopics),0)} subtopic(s).`,result.errors.length?'ERRORS:\n• '+result.errors.join('\n• '):'Structure validation passed.',result.warnings.length?'WARNINGS:\n• '+result.warnings.join('\n• '):'No validation warnings.'].filter(Boolean).join('\n\n');setStatus(msg,result.errors.length>0)}catch(e){setStatus(e.message,true)}});
 $('clearText').addEventListener('click',()=>{$('plainText').value='';$('contentJson').value='';setStatus('')});
 $('buildBtn').addEventListener('click',()=>{try{
  if(!templateText||!templateAudit)throw new Error('Choose a template HTML file first.');if(!templateAudit.ok)throw new Error('Template audit has blockers. Do not generate from this template.');if(!$('confirmSeparate').checked)throw new Error('Confirm that the original template must remain untouched.');if(!$('ackReview').checked)throw new Error('Review and acknowledge the template audit warnings before building.');
- if(!$('contentJson').value.trim())$('contentJson').value=JSON.stringify(completeMissingDefinitions(parseAcademicText($('plainText').value)),null,2);
+ if(!$('contentJson').value.trim())$('contentJson').value=JSON.stringify(prepareAcademicData(parseAcademicText($('plainText').value)),null,2);
  let data;try{data=JSON.parse($('contentJson').value)}catch(e){throw new Error('JSON is invalid. Click “Organize text into JSON” and fix the reported errors.')}
- completeMissingDefinitions(data);$('contentJson').value=JSON.stringify(data,null,2);
+ prepareAcademicData(data);$('contentJson').value=JSON.stringify(data,null,2);
  const check=validate(data);if(check.errors.length)throw new Error('Content validation failed:\n• '+check.errors.join('\n• '));
- const result=execute(templateText,data);const report=[`ACADEMIC CONTENT EXECUTOR — BUILD REPORT`,`Template: ${templateName}`,`Original course detected: ${templateAudit.originalTitle}`,`New course: ${data.course.title}`,`Original academic records replaced: ${result.oldTopicCount}`,`New topics: ${result.newTopicCount}`,`Subtopics: ${result.subtopicCount}`,`Template modified in place: No`,`Subject-specific code outside the academic bank rewritten: No`,`Validation warnings: ${check.warnings.length?check.warnings.join(' | '):'None'}`,`Template warnings: ${templateAudit.issues.join(' | ')||'None'}`].join('\n');lastAuditReport=report;
+ const result=execute(templateText,data);const report=[`ACADEMIC CONTENT EXECUTOR — BUILD REPORT`,`Template: ${templateName}`,`Original course detected: ${templateAudit.originalTitle}`,`New course: ${data.course.title}`,`Original academic records replaced: ${result.oldTopicCount}`,`New topics: ${result.newTopicCount}`,`Subtopics: ${result.subtopicCount}`,`Template modified in place: No`,`Subject-specific code outside the academic bank rewritten: No`,`Validation warnings: ${check.warnings.length?check.warnings.join(' | '):'None'}`,`Structural validation only; academic text is preserved without content-quality judgments: Yes`,`Template warnings: ${templateAudit.issues.join(' | ')||'None'}`].join('\n');lastAuditReport=report;
  downloadBlob(result.html,'text/html;charset=utf-8',slugify(data.course.title)+'.html');setStatus(`Generated and integrity-checked a separate HTML file.\nCourse: ${data.course.title}\nTopics inserted: ${result.newTopicCount}\nSubtopics inserted: ${result.subtopicCount}\nOld academic records replaced: ${result.oldTopicCount}\nOutput records verified: ${result.newTopicCount}\nOriginal template modified: No\n\nImportant: template-specific visuals, labels, assessments, and language resources outside the academic bank remain unchanged. Open and test the output before publishing.`)
  }catch(e){setStatus(e.message||String(e),true)}});
-$('downloadJson').addEventListener('click',()=>{try{if(!$('contentJson').value.trim())$('contentJson').value=JSON.stringify(completeMissingDefinitions(parseAcademicText($('plainText').value)),null,2);const data=completeMissingDefinitions(JSON.parse($('contentJson').value));$('contentJson').value=JSON.stringify(data,null,2);const check=validate(data);if(check.errors.length)throw new Error(check.errors.join('\n'));downloadBlob(JSON.stringify(data,null,2),'application/json;charset=utf-8','academic-content.json');setStatus('Validated JSON downloaded.')}catch(e){setStatus('Could not download JSON: '+e.message,true)}});
+$('downloadJson').addEventListener('click',()=>{try{if(!$('contentJson').value.trim())$('contentJson').value=JSON.stringify(prepareAcademicData(parseAcademicText($('plainText').value)),null,2);const data=prepareAcademicData(JSON.parse($('contentJson').value));$('contentJson').value=JSON.stringify(data,null,2);const check=validate(data);if(check.errors.length)throw new Error(check.errors.join('\n'));downloadBlob(JSON.stringify(data,null,2),'application/json;charset=utf-8','academic-content.json');setStatus('Validated JSON downloaded.')}catch(e){setStatus('Could not download JSON: '+e.message,true)}});
 $('downloadAudit').addEventListener('click',()=>{const text=lastAuditReport||'No audit/build report yet. Select a template and run the audit first.';downloadBlob(text,'text/plain;charset=utf-8','academic-executor-audit.txt')});
 </script></body></html>
