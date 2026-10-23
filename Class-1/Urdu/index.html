@@ -1,289 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Academic Content Executor</title>
+<style>
+:root{color-scheme:light;--ink:#17352c;--muted:#5e7068;--line:#d8e3dd;--paper:#fff;--wash:#f3f7f4;--accent:#245843;--danger:#9b2c2c}*{box-sizing:border-box}body{margin:0;background:var(--wash);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#17231d}main{max-width:980px;margin:0 auto;padding:24px 16px 56px}.hero{padding:24px;border-radius:18px;background:#173e34;color:#fff;margin-bottom:18px}h1{margin:0 0 8px;font-size:clamp(1.6rem,4vw,2.2rem)}.hero p{margin:0;color:#e1eee6;max-width:760px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 3px 14px #173e3408}h2{font-size:1.12rem;margin:0 0 10px;color:var(--ink)}p.help{margin:4px 0 12px;color:var(--muted);font-size:.94rem}label{display:block;font-weight:700;margin:10px 0 6px}input[type=file],textarea{width:100%;font:inherit;border:1px solid #bdcdc3;border-radius:10px;padding:11px;background:#fff}textarea{min-height:290px;resize:vertical;font:14px/1.55 system-ui,sans-serif}.jsonarea{min-height:190px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:10px;padding:11px 16px;font:700 15px system-ui;cursor:pointer;background:var(--accent);color:#fff}.btn.secondary{background:#e7eee9;color:var(--ink);border:1px solid var(--line)}.status{padding:12px 14px;border-radius:10px;margin-top:12px;background:#eef4ef;color:var(--ink);white-space:pre-wrap}.status.error{background:#fff0f0;color:var(--danger)}.status:empty{display:none}.small{font-size:.88rem;color:var(--muted)}code{background:#eef3ef;padding:2px 5px;border-radius:5px}.check{display:flex;gap:10px;align-items:flex-start;font-weight:500}.check input{margin-top:6px}footer{color:var(--muted);font-size:.86rem;margin-top:20px}
+</style></head><body><main>
+<header class="hero"><h1>Academic Content Executor</h1><p>Paste academic text. This tool organizes it into JSON internally, then inserts that content into a separate copy of the HTML template. The original template is never overwritten.</p></header>
+<section class="panel"><h2>1. Choose the template</h2><p class="help">Select your working copy of <code>Template-v2.html</code>.</p><label for="templateFile">Template HTML file</label><input id="templateFile" type="file" accept=".html,.htm,text/html"><div class="small" id="templateInfo">No template selected.</div></section>
+<section class="panel"><h2>2. Paste academic text</h2><p class="help">No JSON writing required. For best results, use <code># Course title</code>, <code>Course overview:</code>, <code>Learning outcomes:</code>, <code>## Topic title</code>, and optional <code>### Subtopic title</code>. Paragraphs under a topic become its explanation. Paragraphs under a subtopic become its explanation. Bullets such as <code>- Key idea: explanation</code> become subtopics. The tool does not call a cloud AI service, so review the generated structure before building.</p><label for="plainText">Academic content (plain text)</label><textarea id="plainText" spellcheck="true" placeholder="# Chapter 1: Example Subject
+Course overview: Introduce the subject and explain why it matters.
+Learning outcomes: Students should be able to explain the core concepts.
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#F8F7F2">
+## 1.1 Introduction
+This topic introduces the subject and its scope.
+- Core idea: Explain the first central concept.
+- Important terms: Define essential terms.
 
-  <title>IAE | Imperial Academy of Education</title>
-
-  <style>
-    :root {
-      --paper: #F8F7F2;
-      --sky-blue: #72C7E8;
-      --light-green: #91D6A4;
-      --light-red: #EF9999;
-      --ink: #34424A;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--paper);
-    }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      isolation: isolate;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: var(--paper);
-      color: var(--ink);
-    }
-
-    /* Outer border — Sky Blue */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      border: 4px solid var(--sky-blue);
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* Middle border — Light Green */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 7px;
-      border: 3px solid var(--light-green);
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* Inner border — Light Red */
-    .page-border-red {
-      position: fixed;
-      inset: 13px;
-      border: 2px solid var(--light-red);
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* Header */
-    header {
-      padding: 30px 20px;
-      text-align: center;
-      border-bottom: 1px solid #72C7E855;
-    }
-
-    .logo {
-      font-size: 38px;
-      font-weight: 800;
-      letter-spacing: 7px;
-      color: var(--sky-blue);
-    }
-
-    .academy-name {
-      margin-top: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #65B980;
-    }
-
-    /* Welcome section */
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 25px;
-      text-align: center;
-    }
-
-    .welcome {
-      max-width: 650px;
-    }
-
-    .welcome h1 {
-      font-size: clamp(28px, 5vw, 44px);
-      margin-bottom: 18px;
-      color: var(--ink);
-    }
-
-    .welcome h1 span {
-      color: var(--sky-blue);
-    }
-
-    .welcome p {
-      font-size: 18px;
-      line-height: 1.8;
-      color: #53636A;
-    }
-
-    /* Three-colour divider */
-    .divider {
-      width: 75px;
-      height: 4px;
-      margin: 25px auto;
-      border-radius: 3px;
-      background: linear-gradient(
-        to right,
-        var(--sky-blue) 0%,
-        var(--sky-blue) 33.33%,
-        var(--light-green) 33.33%,
-        var(--light-green) 66.66%,
-        var(--light-red) 66.66%,
-        var(--light-red) 100%
-      );
-    }
-
-    /* Subject notice */
-    .notice {
-      display: inline-block;
-      padding: 14px 22px;
-      background: #FFFFFFAA;
-      border: 1px solid var(--light-green);
-      border-radius: 8px;
-      color: #548E68;
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
-    /* Back to Class Index */
-    .back-container {
-      display: flex;
-      justify-content: center;
-      padding: 0 20px;
-      margin-bottom: 15px;
-    }
-
-    #previousPageButton {
-      padding: 10px 22px;
-      background: transparent;
-      color: #397F9D;
-      border: 1px solid var(--sky-blue);
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease,
-                  color 0.2s ease;
-    }
-
-    #previousPageButton:hover {
-      background: var(--sky-blue);
-      color: #FFFFFF;
-    }
-
-    #previousPageButton:focus-visible {
-      outline: 2px solid var(--light-red);
-      outline-offset: 3px;
-    }
-
-    /* Footer */
-    footer {
-      padding: 18px 20px;
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.6;
-      color: #657178;
-      border-top: 1px solid #EF999955;
-    }
-
-    /* Mobile layout */
-    @media (max-width: 480px) {
-      header {
-        padding: 25px 18px;
-      }
-
-      .logo {
-        font-size: 34px;
-      }
-
-      .academy-name {
-        font-size: 11px;
-        letter-spacing: 1.3px;
-      }
-
-      main {
-        padding: 30px 22px;
-      }
-
-      .welcome p {
-        font-size: 16px;
-      }
-
-      .notice {
-        padding: 12px 15px;
-        font-size: 14px;
-      }
-    }
-
-    /* Respect reduced-motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-      #previousPageButton {
-        transition: none;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- Inner red border -->
-  <div class="page-border-red" aria-hidden="true"></div>
-
-  <!-- Academy header -->
-  <header>
-    <div class="logo">IAE</div>
-    <div class="academy-name">
-      Imperial Academy of Education
-    </div>
-  </header>
-
-  <!-- Welcome content -->
-  <main>
-    <section class="welcome">
-
-      <h1>Welcome to <span>IAE</span></h1>
-
-      <p>
-        The Rector welcomes you to the<br>
-        Imperial Academy of Education.
-      </p>
-
-      <div class="divider"></div>
-
-      <div class="notice">
-        Your subject will be available here soon.
-      </div>
-
-    </section>
-  </main>
-
-  <!-- Return to Class Index -->
-  <div class="back-container">
-    <button id="previousPageButton" type="button">
-      &#8592; Back to Class Index
-    </button>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    &copy; 2026 Imperial Academy of Education.
-    All rights reserved.
-  </footer>
-
-  <!-- Navigation -->
-  <script>
-    document
-      .getElementById('previousPageButton')
-      .addEventListener('click', function () {
-        window.location.assign('../index.html');
-      });
-  </script>
-
-</body>
-</html>
+## 1.2 Main principles
+Explain the principles students need to understand.
+### Principle one
+Explain the first principle in detail."></textarea><div class="row" style="margin-top:10px"><button class="btn secondary" id="makeJson" type="button">Organize text into JSON</button><button class="btn secondary" id="clearText" type="button">Clear text</button></div><label for="contentJson">Generated JSON (optional to inspect or edit)</label><textarea id="contentJson" class="jsonarea" spellcheck="false" placeholder="The generated JSON will appear here after you organize the text."></textarea></section>
+<section class="panel"><h2>3. Generate the new HTML</h2><label class="check"><input id="confirmSeparate" type="checkbox" checked><span>Save as a separate output file and leave the selected template untouched.</span></label><label class="check"><input id="ackReview" type="checkbox"><span>I will review the generated file for subject-specific material that may exist outside the central academic content bank, such as custom questions or specialist diagrams.</span></label><div class="row" style="margin-top:14px"><button class="btn" id="buildBtn" type="button">Generate new HTML</button><button class="btn secondary" id="downloadJson" type="button">Download generated JSON</button></div><div id="status" class="status" role="status" aria-live="polite"></div></section>
+<footer>The text organizer uses headings and paragraph patterns to make JSON locally in your browser. It preserves the surrounding template code and replaces the course metadata and central academic topic bank. It is a deterministic text organizer, not an AI that can infer every possible document structure.</footer>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id);let templateText='',templateName='';
+function setStatus(message,isError=false){const el=$('status');el.textContent=message;el.classList.toggle('error',isError)}
+$('templateFile').addEventListener('change',async e=>{const file=e.target.files&&e.target.files[0];templateText='';templateName='';if(!file){$('templateInfo').textContent='No template selected.';return}try{templateText=await file.text();templateName=file.name;$('templateInfo').textContent=`Loaded ${file.name} (${templateText.length.toLocaleString()} characters).`;setStatus('Template loaded.')}catch(err){$('templateInfo').textContent='Could not read the selected file.';setStatus('Unable to read template: '+err.message,true)}});
+function clean(s){return String(s||'').trim().replace(/^\*\*(.*?)\*\*$/,'$1')}
+function parseAcademicText(raw){
+ const lines=String(raw||'').replace(/\r/g,'').split('\n'),course={title:'',definition:'',learningOutcomes:''},topics=[];let currentTopic=null,currentSub=null,mode='';
+ const addTopic=title=>{currentTopic={title:clean(title),definition:'',subtopics:[]};topics.push(currentTopic);currentSub=null;mode='topic'};
+ const addSub=(title,definition='')=>{if(!currentTopic)addTopic('Topic 1');currentSub={title:clean(title),definition:clean(definition)};currentTopic.subtopics.push(currentSub);mode='sub'};
+ for(const rawLine of lines){const line=clean(rawLine);if(!line)continue;
+  if(/^###\s+/.test(line)){addSub(line.replace(/^###\s+/,''));continue}
+  if(/^##\s+/.test(line)){addTopic(line.replace(/^##\s+/,''));continue}
+  if(/^#\s+/.test(line)){if(!course.title)course.title=clean(line.replace(/^#\s+/,''));else if(currentSub)currentSub.definition+=(currentSub.definition?' ':'')+line.replace(/^#\s+/, '');continue}
+  let m=line.match(/^(?:Topic\s+\d+\s*[:.)-]\s*)(.+)$/i);if(m){addTopic(m[1]);continue}
+  m=line.match(/^(\d+\.\d+(?:\.\d+)?\s+.+)$/);if(m){addTopic(m[1]);continue}
+  m=line.match(/^(?:Course\s+(?:title|name)\s*:\s*)(.+)$/i);if(m){course.title=m[1];continue}
+  m=line.match(/^(?:Course\s+overview|Overview|Course\s+definition)\s*:\s*(.*)$/i);if(m){course.definition=m[1];mode='overview';continue}
+  m=line.match(/^(?:Learning\s+outcomes?|Objectives)\s*:\s*(.*)$/i);if(m){course.learningOutcomes=m[1];mode='outcomes';continue}
+  m=line.match(/^(?:Definition|Explanation)\s*:\s*(.*)$/i);if(m&&currentTopic){if(currentSub)currentSub.definition+=(currentSub.definition?' ':'')+m[1];else currentTopic.definition+=(currentTopic.definition?' ':'')+m[1];continue}
+  m=line.match(/^[-*•]\s+([^:—–]+)\s*[:—–]\s*(.*)$/);if(m){addSub(m[1],m[2]);continue}
+  m=line.match(/^[-*•]\s+(.+)$/);if(m){addSub(m[1]);continue}
+  if(mode==='overview'&&!topics.length){course.definition+=(course.definition?' ':'')+line;continue}
+  if(mode==='outcomes'&&!topics.length){course.learningOutcomes+=(course.learningOutcomes?' ':'')+line;continue}
+  if(currentSub)currentSub.definition+=(currentSub.definition?' ':'')+line;else if(currentTopic)currentTopic.definition+=(currentTopic.definition?' ':'')+line;else if(!course.definition)course.definition=line;else course.definition+=' '+line;
+ }
+ if(!course.title)course.title='New Academic Course';if(!course.definition)course.definition='Academic course content provided by the author.';if(!course.learningOutcomes)course.learningOutcomes='Students should be able to explain and apply the concepts presented in this course.';
+ if(!topics.length){const paras=String(raw||'').split(/\n\s*\n/).map(clean).filter(Boolean).filter(x=>x!==course.title&&!/^(Course overview|Overview|Course definition|Learning outcomes?|Objectives)\s*:/i.test(x));paras.forEach((para,i)=>{addTopic(`Topic ${i+1}: ${para.split(/(?<=[.!?])\s+/)[0].slice(0,70)}`);currentTopic.definition=para})}
+ topics.forEach(t=>{if(!t.definition.trim()&&t.subtopics.length)t.definition=t.subtopics[0].definition||`Content for ${t.title}.`;if(!t.definition.trim())t.definition=`Content for ${t.title}.`});return {course,topics}
+}
+function validate(data){const errors=[];if(!data||typeof data!=='object'||Array.isArray(data))return ['The JSON must be an object.'];if(!data.course||typeof data.course!=='object')errors.push('Add a course object.');for(const k of ['title','definition','learningOutcomes'])if(!String(data.course?.[k]||'').trim())errors.push(`course.${k} is required.`);if(!Array.isArray(data.topics)||!data.topics.length)errors.push('Add at least one topic.');(Array.isArray(data.topics)?data.topics:[]).forEach((t,i)=>{if(!t||typeof t!=='object'){errors.push(`Topic ${i+1} must be an object.`);return}if(!String(t.title||'').trim())errors.push(`Topic ${i+1} needs a title.`);if(!String(t.definition||'').trim())errors.push(`Topic ${i+1} needs a definition.`);if(!Array.isArray(t.subtopics))errors.push(`Topic ${i+1} needs a subtopics array.`);(Array.isArray(t.subtopics)?t.subtopics:[]).forEach((sub,j)=>{const title=Array.isArray(sub)?sub[0]:sub?.title,def=Array.isArray(sub)?sub[1]:sub?.definition;if(!String(title||'').trim())errors.push(`Topic ${i+1}, subtopic ${j+1} needs a title.`);if(!String(def||'').trim())errors.push(`Topic ${i+1}, subtopic ${j+1} needs a definition.`)})});return errors}
+function jsString(v){return JSON.stringify(String(v??''))}
+function buildAcademic(topic){const subs=topic.subtopics.map(s=>Array.isArray(s)?[String(s[0]),String(s[1])]:[String(s.title),String(s.definition)]);return {title:String(topic.title),definition:String(topic.definition),subtopics:subs}}
+function execute(source,data){let html=source;const course=data.course;const cbPattern=/const CB=\{\s*course:\{[\s\S]*?\},\s*topics:null\s*\};/;if(!cbPattern.test(html))throw new Error('Could not find the expected central content bank (const CB). No output was generated.');const cb=`const CB={\n  course:{\n    title:${jsString(course.title)},\n    definition:${jsString(course.definition)},\n    learningOutcomes:${jsString(course.learningOutcomes)}\n  },\n  topics:null\n};`;html=html.replace(cbPattern,()=>cb);const lines=data.topics.map((t,i)=>`topicData[${i+1}].academic=${JSON.stringify(buildAcademic(t))};`).join('\n');const assignment=/^topicData\[\d+\]\.academic=.*;\r?$/gm;let inserted=false,count=0;html=html.replace(assignment,()=>{count++;if(!inserted){inserted=true;return lines}return ''});if(!count||!inserted)throw new Error('Could not replace the existing academic topic records. No output was generated.');const title=String(course.title).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');html=html.replace(/<title>[\s\S]*?<\/title>/i,()=>`<title>${title} — Academic Learning System</title>`);return {html,oldTopicCount:count,newTopicCount:data.topics.length,subtopicCount:data.topics.reduce((n,t)=>n+t.subtopics.length,0)}}
+$('makeJson').addEventListener('click',()=>{try{const data=parseAcademicText($('plainText').value);$('contentJson').value=JSON.stringify(data,null,2);const errs=validate(data);setStatus(errs.length?'Text organized; review issues:\n• '+errs.join('\n• '):`Text organized into JSON: ${data.topics.length} topic(s), ${data.topics.reduce((n,t)=>n+t.subtopics.length,0)} subtopic(s). Review it, then generate the HTML.`,errs.length>0)}catch(e){setStatus(e.message,true)}});
+$('clearText').addEventListener('click',()=>{$('plainText').value='';$('contentJson').value='';setStatus('')});
+$('buildBtn').addEventListener('click',()=>{try{if(!templateText)throw new Error('Choose a template HTML file first.');if(!$('confirmSeparate').checked)throw new Error('Confirm that the original template must remain untouched.');if(!$('ackReview').checked)throw new Error('Confirm that you will review the generated HTML for subject-specific material.');if(!$('contentJson').value.trim())$('contentJson').value=JSON.stringify(parseAcademicText($('plainText').value),null,2);let data;try{data=JSON.parse($('contentJson').value)}catch(e){throw new Error('Generated JSON is invalid. Click “Organize text into JSON” and review it.')};const errs=validate(data);if(errs.length)throw new Error('Please fix these content issues:\n• '+errs.join('\n• '));const result=execute(templateText,data);const blob=new Blob([result.html],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=String(data.course.title||'academic-course').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)+'.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);setStatus(`Generated a separate HTML file.\nCourse: ${data.course.title}\nTopics inserted: ${result.newTopicCount}\nSubtopics inserted: ${result.subtopicCount}\nOld academic records replaced: ${result.oldTopicCount}\nOriginal template changed: No\n\nReview the generated file in a browser. Test navigation, dictionary, revision, practice, readiness, translation, and visuals.`)}catch(e){setStatus(e.message||String(e),true)}});
+$('downloadJson').addEventListener('click',()=>{try{if(!$('contentJson').value.trim())$('contentJson').value=JSON.stringify(parseAcademicText($('plainText').value),null,2);const data=JSON.parse($('contentJson').value),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='academic-content.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);setStatus('Generated JSON downloaded.')}catch(e){setStatus('Could not generate JSON: '+e.message,true)}});
+</script></body></html>
